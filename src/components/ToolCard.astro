@@ -1,0 +1,39 @@
+---
+const { project } = Astro.props;
+---
+
+<div class="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 flex flex-col h-full">
+  <div class="flex-grow">
+    <h3 class="text-xl font-bold text-white mb-2">{project.titulo}</h3>
+    <p class="text-gray-300 mb-4 flex-grow">{project.descripcion}</p>
+    <div class="flex flex-wrap gap-2 mb-4">
+      {project.tecnologias.map((tech) => (
+        <span class="bg-blue-900/50 text-blue-300 text-xs px-2 py-1 rounded">
+          {tech}
+        </span>
+      ))}
+    </div>
+  </div>
+  <div class="flex space-x-2">
+    {project.demo && (
+      <a
+        href={project.demo}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors duration-200"
+      >
+        Live Demo
+      </a>
+    )}
+    {project.codigo && (
+      <a
+        href={project.codigo}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 text-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded transition-colors duration-200"
+      >
+        Código
+      </a>
+    )}
+  </div>
+</div>

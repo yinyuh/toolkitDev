@@ -65,7 +65,9 @@ const SkillsList = () => {
           Sobre mí y mi trabajo
         </h2>
         <ul className="mt-8 space-y-4 text-lg drop-shadow-[2px_2px_0_#7836cf]">
-          {Object.entries(skills).map(([category, items]) => (
+          {Object.entries(skills).map(([category, items]) => {
+            console.log("Category:", CategoryIcons[category]);  // 添加这行来查看每个category的值
+            return (
             <li key={category} className="w-full">
               <div
                 onClick={() => toggleItem(category)}
@@ -105,7 +107,7 @@ const SkillsList = () => {
                 </div>
               </div>
             </li>
-          ))}
+            )})}
         </ul>
       </div>
     </div>

@@ -2,17 +2,61 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/home/header/header.astro";
 import Slider from "../components/home/header/slider.astro";
-import AboutHome from "../components/home/aboutHome/aboutHome.astro";
-import HomeProyect from "../components/home/homeProyect/homeProyect.astro";
+import ToolCard from "../components/ToolCard.astro";
 import FAQS from "../components/home/faqs/faqs.jsx";
 import Banner from "../components/commons/banners/banner.astro";
+import { proyectos } from "../data/projectData.js";
+
+// Filter projects to show only featured ones (you can customize this)
+const featuredProjects = proyectos.filter(project => 
+  project.categoria === 'fullstack' || project.categoria === 'frontend'
+);
 ---
 
 <Layout>
-  <Header />
-  <Slider />
-  <AboutHome />
-  <HomeProyect />
-  <FAQS client:visible />
-  <Banner />
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center justify-center bg-gray-950 overflow-hidden">
+    <div class="absolute inset-0 grid grid-cols-2">
+      <div
+        class="animate-gradientMove h-80 bg-gradient-to-br from-[#982cf0] to-[#581f86] opacity-30 blur-[120px]"
+      ></div>
+      <div
+        class="animate-gradientMove2 h-80 bg-gradient-to-br from-[#277752] to-[#02ffee] opacity-30 blur-[120px]"
+      ></div>
+    </div>
+
+    <div class="relative z-10 text-center px-4 max-w-4xl">
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+        Hola! soy Lautaro
+      </h1>
+      <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+        Desarrollador Full Stack especializado en crear soluciones web modernas y eficientes. Explora mis proyectos y herramientas.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tools Grid Section -->
+  <section class="py-20 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">Mis Proyectos y Herramientas</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {featuredProjects.map((project) => (
+          <ToolCard project={project} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs and Banner Sections -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="mt-12">
+        <FAQS client:visible />
+      </div>
+      <div class="mt-12">
+        <Banner />
+      </div>
+    </div>
+  </section>
 </Layout>
