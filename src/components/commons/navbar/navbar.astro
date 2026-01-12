@@ -2,12 +2,23 @@
 import { FiMenu, FiX } from "react-icons/fi";
 import NotificationBell from "./notificationBell.jsx";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
+import { FaSun, FaMoon } from "react-icons/fa"; // 添加太阳和月亮图标用于主题切换
+import { BiGlobe } from "react-icons/bi"; // 添加地球图标用于语言选择
 
 const links = [
   { name: "Inicio", href: "/" },
   { name: "Proyectos", href: "/proyectos" },
   { name: "Sobre Mi", href: "/about" },
   { name: "Contacto", href: "/contact" },
+];
+
+// 添加语言选项
+const languages = [
+  { code: "en", name: "EN" },
+  { code: "zh", name: "中文" },
+  { code: "fr", name: "FR" },
+  { code: "es", name: "ES" },
+  { code: "pt", name: "PT" },
 ];
 ---
 
@@ -45,6 +56,36 @@ const links = [
         }
 
         <li class="flex items-center gap-3">
+          <!-- 主题切换按钮 -->
+          <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
+            <FaSun id="sun-icon" className="hidden h-5 w-5 text-yellow-400" />
+            <FaMoon id="moon-icon" className="h-5 w-5 text-gray-300" />
+          </button>
+
+          <!-- 语言选择下拉菜单 -->
+          <div class="relative group">
+            <button id="lang-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors flex items-center">
+              <BiGlobe className="h-5 w-5 text-white" />
+            </button>
+            <div id="lang-dropdown" class="absolute right-0 mt-2 w-32 bg-gray-800 border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <ul>
+                {
+                  languages.map((lang) => (
+                    <li>
+                      <a 
+                        href="#" 
+                        class="block px-4 py-2 text-sm text-white hover:bg-gray-700 lang-option"
+                        data-lang={lang.code}
+                      >
+                        {lang.name}
+                      </a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+
           <NotificationBell client:visible />
 
           <a
@@ -71,6 +112,36 @@ const links = [
 
       <!-- Mobile right-side icons -->
       <div class="flex md:hidden items-center gap-4 z-50">
+        <!-- Mobile theme toggle button -->
+        <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
+          <FaSun id="sun-icon-mobile" className="hidden h-5 w-5 text-yellow-400" />
+          <FaMoon id="moon-icon-mobile" className="h-5 w-5 text-gray-300" />
+        </button>
+        
+        <!-- Mobile language selector -->
+        <div class="relative group">
+          <button id="lang-toggle-mobile" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
+            <BiGlobe className="h-5 w-5 text-white" />
+          </button>
+          <div id="lang-dropdown-mobile" class="absolute right-0 mt-2 w-32 bg-gray-800 border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <ul>
+              {
+                languages.map((lang) => (
+                  <li>
+                    <a 
+                      href="#" 
+                      class="block px-4 py-2 text-sm text-white hover:bg-gray-700 lang-option"
+                      data-lang={lang.code}
+                    >
+                      {lang.name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+        
         <NotificationBell client:visible />
         <label for="menu-toggle" class="cursor-pointer">
           <FiMenu className="h-7 w-7 text-white peer-checked:hidden" />
@@ -109,6 +180,33 @@ const links = [
           </li>
         ))
       }
+      
+      <!-- Mobile menu language and theme controls -->
+      <li class="flex flex-col gap-2 pt-4 border-t border-gray-700">
+        <div class="flex justify-between">
+          <span class="text-white">Tema:</span>
+          <button id="theme-toggle-sidebar" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
+            <FaSun id="sun-icon-sidebar" className="hidden h-5 w-5 text-yellow-400" />
+            <FaMoon id="moon-icon-sidebar" className="h-5 w-5 text-gray-300" />
+          </button>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-white pb-2">Idioma:</span>
+          <div class="flex flex-wrap gap-2">
+            {
+              languages.map((lang) => (
+                <a 
+                  href="#" 
+                  class="px-3 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-600 lang-option"
+                  data-lang={lang.code}
+                >
+                  {lang.name}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 </nav>
@@ -153,4 +251,95 @@ const links = [
     document.addEventListener("astro:after-swap", markActiveLinks);
     window.addEventListener("load", () => setTimeout(markActiveLinks, 50));
   })();
+
+  // 主题切换功能
+  function initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+    const themeToggleSidebar = document.getElementById('theme-toggle-sidebar');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIconMobile = document.getElementById('sun-icon-mobile');
+    const moonIconMobile = document.getElementById('moon-icon-mobile');
+    const sunIconSidebar = document.getElementById('sun-icon-sidebar');
+    const moonIconSidebar = document.getElementById('moon-icon-sidebar');
+
+    // 检查存储的主题偏好
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      sunIcon?.classList.add('hidden');
+      moonIcon?.classList.remove('hidden');
+      sunIconMobile?.classList.add('hidden');
+      moonIconMobile?.classList.remove('hidden');
+      sunIconSidebar?.classList.add('hidden');
+      moonIconSidebar?.classList.remove('hidden');
+    } else {
+      document.documentElement.classList.remove('dark');
+      sunIcon?.classList.remove('hidden');
+      moonIcon?.classList.add('hidden');
+      sunIconMobile?.classList.remove('hidden');
+      moonIconMobile?.classList.add('hidden');
+      sunIconSidebar?.classList.remove('hidden');
+      moonIconSidebar?.classList.add('hidden');
+    }
+
+    // 切换主题函数
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark')) {
+        // 切换到浅色主题
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        sunIcon?.classList.remove('hidden');
+        moonIcon?.classList.add('hidden');
+        sunIconMobile?.classList.remove('hidden');
+        moonIconMobile?.classList.add('hidden');
+        sunIconSidebar?.classList.remove('hidden');
+        moonIconSidebar?.classList.add('hidden');
+      } else {
+        // 切换到深色主题
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        sunIcon?.classList.add('hidden');
+        moonIcon?.classList.remove('hidden');
+        sunIconMobile?.classList.add('hidden');
+        moonIconMobile?.classList.remove('hidden');
+        sunIconSidebar?.classList.add('hidden');
+        moonIconSidebar?.classList.remove('hidden');
+      }
+    }
+
+    // 为所有主题切换按钮添加事件监听器
+    [themeToggle, themeToggleMobile, themeToggleSidebar].forEach(button => {
+      if (button) {
+        button.addEventListener('click', toggleTheme);
+      }
+    });
+  }
+
+  // 语言选择功能
+  function initLanguageSelector() {
+    const langOptions = document.querySelectorAll('.lang-option');
+    
+    langOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedLang = this.getAttribute('data-lang');
+        console.log(`Selected language: ${selectedLang}`);
+        
+        // 这里可以添加实际的语言切换逻辑
+      });
+    });
+  }
+
+  // DOM准备就绪后初始化功能
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initThemeToggle();
+      initLanguageSelector();
+    });
+  } else {
+    initThemeToggle();
+    initLanguageSelector();
+  }
 </script>

@@ -11,38 +11,47 @@ import { proyectos } from "../data/projectData.js";
 const featuredProjects = proyectos.filter(project => 
   project.categoria === 'fullstack' || project.categoria === 'frontend'
 );
+
+// Get unique categories for filtering
+const categories = [...new Set(proyectos.map(project => project.categoria))];
 ---
 
 <Layout>
-  <!-- Hero Section -->
-  <section class="relative h-screen flex items-center justify-center bg-gray-950 overflow-hidden">
-    <div class="absolute inset-0 grid grid-cols-2">
-      <div
-        class="animate-gradientMove h-80 bg-gradient-to-br from-[#982cf0] to-[#581f86] opacity-30 blur-[120px]"
-      ></div>
-      <div
-        class="animate-gradientMove2 h-80 bg-gradient-to-br from-[#277752] to-[#02ffee] opacity-30 blur-[120px]"
-      ></div>
-    </div>
+  <!-- Tools Grid Section with Category Filter -->
+  <section class="py-12 bg-gray-900 min-h-screen">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Add margin-top to compensate for fixed navbar -->
+      <div class="mt-20 text-center mb-12">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Mis Proyectos y Herramientas</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Explora mis proyectos y herramientas de desarrollo web</p>
+      </div>
 
-    <div class="relative z-10 text-center px-4 max-w-4xl">
-      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-        Hola! soy Lautaro
-      </h1>
-      <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-        Desarrollador Full Stack especializado en crear soluciones web modernas y eficientes. Explora mis proyectos y herramientas.
-      </p>
-    </div>
-  </section>
+      <!-- Category Filter Buttons -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button 
+          class="filter-btn active px-5 py-2 rounded-full text-sm font-medium bg-blue-600 text-white border border-blue-500 transition-colors"
+          data-filter="all"
+          aria-label="Mostrar todos los proyectos"
+        >
+          Todos
+        </button>
+        {categories.map(category => (
+          <button 
+            class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-gray-800 text-gray-200 border border-gray-700 hover:bg-gray-700 transition-colors"
+            data-filter={category}
+            aria-label={`Mostrar proyectos de ${category}`}
+          >
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </button>
+        ))}
+      </div>
 
-  <!-- Tools Grid Section -->
-  <section class="py-20 bg-gray-900">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">Mis Proyectos y Herramientas</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <!-- Tools Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="tools-grid">
         {featuredProjects.map((project) => (
-          <ToolCard project={project} />
+          <div class="tool-card" data-categoria={project.categoria}>
+            <ToolCard project={project} />
+          </div>
         ))}
       </div>
     </div>
@@ -50,7 +59,7 @@ const featuredProjects = proyectos.filter(project =>
 
   <!-- FAQs and Banner Sections -->
   <section class="py-16">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 max-w-7xl">
       <div class="mt-12">
         <FAQS client:visible />
       </div>
@@ -59,4 +68,113 @@ const featuredProjects = proyectos.filter(project =>
       </div>
     </div>
   </section>
+
+  <script>
+    // Filter functionality
+    document.addEventListener('astro:page-load', function() {
+      const buttons = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.tool-card');
+      const TOOLS_CONTAINER = document.getElementById('tools-grid');
+      const HIDDEN_CLASS = 'hidden';
+      const VISIBLE_CLASS = 'block';
+      const HIDE_TIMEOUT = 300; // Configurable timeout for animation completion
+      
+      // Store original display values using setAttribute
+      for (let i = 0; i < cards.length; i++) {
+        /** @type {HTMLElement} */
+        const card = cards[i];
+        card.setAttribute('data-original-display', getComputedStyle(card).display || 'block');
+      }
+
+      function showCard(/** @type {HTMLElement} */ card) {
+        card.classList.remove(HIDDEN_CLASS);
+        card.style.display = card.getAttribute('data-original-display') || 'block'; // Restore original display value
+        requestAnimationFrame(() => {
+          card.classList.remove('opacity-0', 'scale-95');
+          card.classList.add('opacity-100', 'scale-100');
+        });
+      }
+
+      function hideCard(/** @type {HTMLElement} */ card) {
+        card.classList.remove('opacity-100', 'scale-100');
+        card.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => {
+          if (card.classList.contains(HIDDEN_CLASS)) {
+            card.style.display = "none";
+          }
+        }, HIDE_TIMEOUT);
+      }
+
+      function applyFilter(/** @type {string} */ filter) {
+        const normalized = filter.toLowerCase();
+        for (let i = 0; i < cards.length; i++) {
+          /** @type {HTMLElement} */
+          const card = cards[i];
+          const categoria = (
+            card.getAttribute("data-categoria") || ""
+          ).toLowerCase();
+          const match = normalized === "all" || categoria === normalized;
+          
+          // Only update if visibility state has changed
+          const isCurrentlyVisible = !card.classList.contains(HIDDEN_CLASS) && card.style.display !== 'none';
+          if (match && !isCurrentlyVisible) {
+            showCard(card);
+          } else if (!match && isCurrentlyVisible) {
+            hideCard(card);
+          }
+        }
+      }
+
+      function setActive(/** @type {Element} */ btn) {
+        for (let i = 0; i < buttons.length; i++) {
+          const b = buttons[i];
+          b.classList.remove("active", "bg-blue-600", "text-white", "border-blue-500");
+        }
+        btn.classList.add("active", "bg-blue-600", "text-white", "border-blue-500");
+      }
+
+      // Use event delegation to handle clicks efficiently
+      if (TOOLS_CONTAINER && TOOLS_CONTAINER.parentElement) {
+        TOOLS_CONTAINER.parentElement.addEventListener('click', function(e) {
+          /** @type {HTMLElement | null} */
+          const target = e.target;
+          if (target && target instanceof HTMLElement && target.classList.contains('filter-btn')) {
+            const filter = target.dataset.filter || "all";
+            setActive(target);
+            applyFilter(filter);
+          }
+        });
+      }
+
+      const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+      if (allBtn) {
+        setActive(allBtn);
+        applyFilter("all");
+      }
+    });
+  </script>
+
+  <style>
+    .tool-card {
+      transition: all 0.3s ease;
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .tool-card.hidden {
+      display: none;
+    }
+    
+    .tool-card.opacity-0 {
+      opacity: 0;
+    }
+    
+    .tool-card.scale-95 {
+      transform: scale(0.95);
+    }
+    
+    .tool-card.scale-100 {
+      transform: scale(1);
+    }
+  </style>
 </Layout>
