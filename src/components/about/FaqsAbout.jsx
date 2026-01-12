@@ -37,20 +37,20 @@ const SkillsList = () => {
   const [openItem, setOpenItem] = useState(null);
 
   const skills = {
-    "¿Qué tecnologías uso?": [
-      "Actualmente trabajo con tecnologías como React, Next.js, Vue.js, Astro, tailwind, Boostrap y demas librerias y frameworks para el frontend y en el backend trabajo con Node.js, Express, MongoDB, Firebase, entre otras.",
+    "我使用什么技术？": [
+      "目前我使用React、Next.js、Vue.js、Astro、Tailwind、Bootstrap等前端库和框架，后端使用Node.js、Express、MongoDB、Firebase等技术。",
     ],
-    "Mi Experiencia": [
-      "Tengo experiencia trabajando en startups y consultoras tecnológicas, desarrollando y maquetando sitios web a partir de diseños en Figma. Para ello, utilizo tecnologías frontend como Astro y React, junto con Tailwind CSS y otras librerías y frameworks para el estilizado y la optimización de interfaces.",
+    "我的经验": [
+      "我有在初创公司和技术咨询公司工作的经验，根据Figma设计开发和制作网站。为此，我使用Astro和React等前端技术，配合Tailwind CSS和其他库和框架进行界面样式设计和优化。",
     ],
-    "Mi formacion": [
-      "Estudié una tecnicatura en automatización de grado universitaria en el ITU, lo que me brindó las bases en programación. Posteriormente, decidí enfocarme en el desarrollo web y de software. Ademas, realicé diversos cursos, diplomados y capacitaciones en grandes universidades Argentinas, como la UTN, tambien, complemento mi formación con el aprendizaje autodidacta, lo que me permite mantenerme actualizado con los avances tecnológicos en el desarrollo de software.",
+    "我的教育背景": [
+      "我在ITU学习了大学级别的自动化技术，这为我提供了编程基础。之后，我决定专注于Web和软件开发。此外，我在阿根廷的大学如UTN完成了各种课程、文凭和培训，同时通过自学补充我的知识，使我能够跟上软件开发技术的最新进展。",
     ],
-    "¿Cómo trabajo en equipo?": [
-      "Tengo experiencia trabajando en equipos multidisciplinarios, donde me he encargado del desarrollo frontend de aplicaciones web. Para ello, utilizo metodologías ágiles como Scrum y Kanban, además de herramientas de control de versiones como Git y GitHub para gestionar el flujo de trabajo. También cuento con experiencia en el uso de herramientas de gestión de proyectos como Trello y Jira, facilitando la organización y colaboración dentro del equipo.",
+    "我如何团队合作？": [
+      "我有在跨学科团队工作的经验，负责Web应用程序的前端开发。为此，我使用Scrum和Kanban等敏捷方法，以及Git和GitHub等版本控制工具来管理工作流程。我还有使用Trello和Jira等项目管理工具的经验，促进团队内的组织和协作。",
     ],
-    "Metodolgias Agiles": [
-      "He trabajado con metodologías ágiles como Scrum y Kanban. En Scrum, participé en sprints de dos semanas, donde al finalizar cada sprint realizaba un pull request (PR) con mi trabajo, el cual pasaba por una fase de revisión y corrección antes de ser fusionado y enviado a producción. También he trabajado con Kanban, utilizando tableros para gestionar tareas y moverlas según su estado de progreso. Además, participé en reuniones diarias (dailies) para planificar y reportar avances del proyecto, asegurando una comunicación eficiente dentro del equipo.",
+    "敏捷方法": [
+      "我有使用Scrum和Kanban等敏捷方法的经验。在Scrum中，我参与了两周的冲刺，每个冲刺结束时提交包含我工作的pull request（PR），经过审查和修正阶段后合并并部署到生产环境。我也使用过Kanban，使用看板管理任务并根据进度状态移动任务。此外，我还参与每日站会（dailies）来规划和报告项目进展，确保团队内的有效沟通。",
     ],
   };
 
@@ -63,7 +63,7 @@ const SkillsList = () => {
       <div className="site-container mt-10">
         <h2 class="text-4xl font-bold flex flex-col items-center gap-6 text-center whitespace-nowrap text-white md:flex-row md:items-center md:text-end">
           <span class="hidden h-1.5 grow rounded-lg drop-shadow-[2px_2px_0_#0debd8] bg-[#7836cf] md:block"></span>
-          <span class="drop-shadow-[2px_2px_0_#7836cf]">Mas Sobre Mi</span>
+          <span class="drop-shadow-[2px_2px_0_#7836cf]">关于我</span>
         </h2>
         <ul className="mt-4 space-y-4 text-lg">
           {Object.entries(skills).map(([category, items]) => (

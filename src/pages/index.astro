@@ -22,8 +22,8 @@ const categories = [...new Set(proyectos.map(project => project.categoria))];
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Add margin-top to compensate for fixed navbar -->
       <div class="mt-20 text-center mb-12">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Mis Proyectos y Herramientas</h2>
-        <p class="text-gray-400 max-w-2xl mx-auto">Explora mis proyectos y herramientas de desarrollo web</p>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">我的项目与工具</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">探索我的Web开发项目和工具</p>
       </div>
 
       <!-- Category Filter Buttons -->
@@ -31,17 +31,17 @@ const categories = [...new Set(proyectos.map(project => project.categoria))];
         <button 
           class="filter-btn active px-5 py-2 rounded-full text-sm font-medium bg-blue-600 text-white border border-blue-500 transition-colors"
           data-filter="all"
-          aria-label="Mostrar todos los proyectos"
+          aria-label="显示所有项目"
         >
-          Todos
+          全部
         </button>
         {categories.map(category => (
           <button 
             class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-gray-800 text-gray-200 border border-gray-700 hover:bg-gray-700 transition-colors"
             data-filter={category}
-            aria-label={`Mostrar proyectos de ${category}`}
+            aria-label={`显示${category}项目`}
           >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
+            {category === 'fullstack' ? '全栈' : category === 'frontend' ? '前端' : category === 'backend' ? '后端' : category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
         ))}
       </div>

@@ -9,9 +9,9 @@ import PortfolioDev from "../assets/img-projects/PortfolioDev.jpg";
 
 export const proyectos = [
   {
-    titulo: "React Tiendita",
+    titulo: "React 电商",
     descripcion:
-      "E-commerce full stack desarrollado con React, Node.js y MongoDB. Incluye autenticación, carrito de compras, búsqueda, categorías, reseñas, etc.",
+      "使用React、Node.js和MongoDB开发的全栈电商系统。包含认证、购物车、搜索、分类、评论等功能。",
     imagen: ReactEcommerce.src,
     tecnologias: ["React", "Tailwind", "Express", "MongoDB"],
     demo: "https://react-e-commerce-three-phi.vercel.app",
@@ -19,9 +19,9 @@ export const proyectos = [
     categoria: "fullstack",
   },
   {
-    titulo: "App organizacion",
+    titulo: "组织应用",
     descripcion:
-      "App full-stack con funciones CRUD, creacion de tableros y listas, autentificacion de usuarios, desarrollada con MERN stack.",
+      "使用MERN栈开发的全栈应用，具有CRUD功能、看板和列表创建、用户认证等功能。",
     imagen: imgNote.src,
     tecnologias: ["React", "Tailwind", "Express", "MongoDB"],
     demo: "https://front-react-todo.onrender.com",
@@ -29,9 +29,9 @@ export const proyectos = [
     categoria: "fullstack",
   },
   {
-    titulo: "E-commerce Urban Style",
+    titulo: "Urban Style 电商",
     descripcion:
-      "E-commerce funcional de ropa y accesorios, con carrito de compras categorias y pasarela de pago desarrollado en React.",
+      "使用React开发的功能性服装和配饰电商，包含购物车、分类和支付网关。",
     imagen: urbanStyle.src,
     tecnologias: ["React", "Tailwind", "Firebase"],
     demo: "https://proyecto-final-rodriguez-sable.vercel.app/",
@@ -39,9 +39,9 @@ export const proyectos = [
     categoria: "fullstack",
   },
   {
-    titulo: "Tienda Artesana",
+    titulo: "手工艺品商店",
     descripcion:
-      "Ecommerce Full-Stack para ver, comprar y vender tus productos, con login para usuarios y vendedores.",
+      "全栈电商平台，用于查看、购买和销售产品，包含用户和卖家登录功能。",
     imagen:
       "https://i.pinimg.com/736x/c9/70/bf/c970bfbc24489e39418b2c1b1f8f74ef.jpg",
     tecnologias: ["React", "Node", "Express", "MongoDB"],
@@ -50,9 +50,9 @@ export const proyectos = [
     categoria: "fullstack",
   },
   {
-    titulo: "Traker Ingresos-Gastos",
+    titulo: "收支追踪器",
     descripcion:
-      "App que realiza operaciones CRUD para agregar, ver, editar y eliminar ingresos/gastos.",
+      "执行CRUD操作的应用，用于添加、查看、编辑和删除收入/支出。",
     imagen:
       "https://i.pinimg.com/736x/a4/85/c4/a485c4da3e78f4f518ddbcdb6637bacf.jpg",
     tecnologias: ["React", "contextAPI"],
@@ -61,9 +61,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "App-clima",
+    titulo: "天气应用",
     descripcion:
-      "Aplicación hecha con React que utiliza una API para mostrar el clima en tiempo real.",
+      "使用React开发的应用，通过API显示实时天气信息。",
     imagen:
       "https://i.pinimg.com/736x/10/6e/cd/106ecd1bfe5ed1c3defb83ea0f87a334.jpg",
     tecnologias: ["React", "contextAPI", "tailwind"],
@@ -72,9 +72,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "Portfolio developers astro",
+    titulo: "开发者作品集",
     descripcion:
-      "This is a modern, responsive developer portfolio built with Astro and Tailwind CSS.",
+      "这是一个使用Astro和Tailwind CSS构建的现代化响应式开发者作品集。",
     imagen: PortfolioDev.src,
     tecnologias: ["Astro", "tailwind", "JavaScript"],
     demo: "https://portfolio-developers-astro.vercel.app/",
@@ -84,9 +84,9 @@ export const proyectos = [
   },
 
   {
-    titulo: "Legal Staff",
+    titulo: "法律团队",
     descripcion:
-      "Web desarrollada con Astro y Tailwind, embudo de marketing para estudios jurídicos.",
+      "使用Astro和Tailwind开发的法律事务所营销漏斗网站。",
     imagen: legalWeb.src,
     tecnologias: ["Astro", "tailwind", "JavaScript"],
     demo: "https://legal-staff.vercel.app/",
@@ -94,9 +94,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "Medicare",
+    titulo: "医疗保险",
     descripcion:
-      "Web desarrollada con Astro y Tailwind, embudo de marketing para Obras Sociales.",
+      "使用Astro和Tailwind开发的社会保险营销漏斗网站。",
     imagen: mediCare.src,
     tecnologias: ["Astro", "tailwind", "JavaScript"],
     demo: "https://obra-social-landing.vercel.app/",
@@ -104,9 +104,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "AstroFit",
+    titulo: "健身顾问",
     descripcion:
-      "Web desarrollada con Astro y Tailwind, embudo de marketing para asesorias fitness.",
+      "使用Astro和Tailwind开发的健身顾问营销漏斗网站。",
     imagen: astroFit.src,
     tecnologias: ["Astro", "tailwind", "JavaScript"],
     demo: "https://gym-page-sandy.vercel.app/",
@@ -114,9 +114,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "API REST para Ecommerce",
+    titulo: "电商REST API",
     descripcion:
-      "API RESTful construida con Node.js, Express y MongoDB para gestionar tareas con operaciones CRUD, Registro de usuarios y login con JWT.",
+      "使用Node.js、Express和MongoDB构建的RESTful API，用于管理具有CRUD操作的任务、用户注册和JWT登录。",
     imagen: "https://miro.medium.com/1*47S4iWVwTicFkFL4-Z4uAA.png",
     tecnologias: ["Express", "Node.js", "MongoDB", "Mongoose"],
     demo: "https://react-e-commerce-three-phi.vercel.app/",
@@ -124,9 +124,9 @@ export const proyectos = [
     categoria: "backend",
   },
   {
-    titulo: "API REST",
+    titulo: "REST API",
     descripcion:
-      "API RESTful construida con Express y MongoDB para gestionar tareas con operaciones CRUD, Registro de usuarios y login con JWT.",
+      "使用Express和MongoDB构建的RESTful API，用于管理具有CRUD操作的任务、用户注册和JWT登录。",
     imagen: "https://miro.medium.com/1*47S4iWVwTicFkFL4-Z4uAA.png",
     tecnologias: ["Express", "Node.js", "MongoDB", "Mongoose"],
     demo: "https://back-express-todo.onrender.com",
@@ -136,7 +136,7 @@ export const proyectos = [
   {
     titulo: "PlaniFy",
     descripcion:
-      "App Web para organizar tus proyectos, hecha con React + Vite, TypeScript y Tailwind para los estilos.",
+      "用于组织项目的Web应用，使用React + Vite、TypeScript和Tailwind进行样式设计。",
     imagen:
       "https://i.pinimg.com/736x/8f/f0/bb/8ff0bbd0e5844ed254bede44522c8338.jpg",
     tecnologias: ["React", "Vite", "TypeScript", "Tailwind"],
@@ -145,9 +145,9 @@ export const proyectos = [
     categoria: "frontend",
   },
   {
-    titulo: "Verbenas Paisajes",
+    titulo: "Verbenas 景观",
     descripcion:
-      "Pagina estatica desarrollada con Astro y tailwind como reto para una startup.",
+      "使用Astro和Tailwind开发的静态页面，作为初创公司的挑战项目。",
     imagen: Verbenas.src,
     tecnologias: ["Astro", "Tailwind", "JavaScript"],
     demo: "https://challenge-neowyze.onrender.com/",
@@ -156,8 +156,8 @@ export const proyectos = [
   },
 
   {
-    titulo: "100 days coding in Js",
-    descripcion: "100 proyectos, realizados con HTML, CSS y JavaScript.",
+    titulo: "100天JS编程",
+    descripcion: "使用HTML、CSS和JavaScript完成的100个项目。",
     imagen:
       "https://i.pinimg.com/736x/3b/4f/4e/3b4f4e170fcb1795b88f4941f49df0a2.jpg",
     tecnologias: ["Next.js", "Tailwind", "GraphQL"],

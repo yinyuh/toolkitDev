@@ -8,10 +8,10 @@ export default function NotificationBell() {
 
   // Notificaciones
   const baseNotifications = [
-    { id: 1, text: "Nuevo proyecto publicado 🚀", read: false },
+    { id: 1, text: "新项目已发布 🚀", read: false },
     {
       id: 2,
-      text: "Hey como va?, te comento que actualmente estoy aprendiendo desarrollo móvil con React Native",
+      text: "你好！我想告诉你，我目前正在学习React Native移动开发",
       read: false,
     },
   ];
@@ -75,7 +75,7 @@ export default function NotificationBell() {
       <button
         type="button"
         aria-expanded={open}
-        aria-label="Notificaciones"
+        aria-label="通知"
         onClick={() => setOpen((v) => !v)}
         className="relative rounded-full p-2 hover:bg-gray-700"
       >
@@ -92,7 +92,7 @@ export default function NotificationBell() {
           <div className="p-3">
             <div className="mb-2 flex items-center justify-between">
               <h4 className="text-xm font-bold text-gray-200 drop-shadow-[1px_1px_0_#7836cf]">
-                Notificaciones
+                通知
               </h4>
             </div>
 
@@ -105,7 +105,7 @@ export default function NotificationBell() {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-gray-400">No hay notificaciones.</p>
+              <p className="text-sm text-gray-400">暂无通知。</p>
             )}
           </div>
         </div>

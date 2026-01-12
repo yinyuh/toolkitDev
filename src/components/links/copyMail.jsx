@@ -11,7 +11,7 @@ export default function EmailCopy() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Error al copiar: ", err);
+      console.error("复制错误: ", err);
     }
   };
 

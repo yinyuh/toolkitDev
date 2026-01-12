@@ -6,10 +6,10 @@ import { FaSun, FaMoon } from "react-icons/fa"; // 添加太阳和月亮图标�
 import { BiGlobe } from "react-icons/bi"; // 添加地球图标用于语言选择
 
 const links = [
-  { name: "Inicio", href: "/" },
-  { name: "Proyectos", href: "/proyectos" },
-  { name: "Sobre Mi", href: "/about" },
-  { name: "Contacto", href: "/contact" },
+  { name: "首页", href: "/" },
+  { name: "项目", href: "/proyectos" },
+  { name: "关于我", href: "/about" },
+  { name: "联系", href: "/contact" },
 ];
 
 // 添加语言选项
@@ -184,14 +184,14 @@ const languages = [
       <!-- Mobile menu language and theme controls -->
       <li class="flex flex-col gap-2 pt-4 border-t border-gray-700">
         <div class="flex justify-between">
-          <span class="text-white">Tema:</span>
+          <span class="text-white">主题:</span>
           <button id="theme-toggle-sidebar" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
             <FaSun id="sun-icon-sidebar" className="hidden h-5 w-5 text-yellow-400" />
             <FaMoon id="moon-icon-sidebar" className="h-5 w-5 text-gray-300" />
           </button>
         </div>
         <div class="flex flex-col">
-          <span class="text-white pb-2">Idioma:</span>
+          <span class="text-white pb-2">语言:</span>
           <div class="flex flex-wrap gap-2">
             {
               languages.map((lang) => (
