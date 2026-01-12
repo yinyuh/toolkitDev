@@ -57,18 +57,6 @@ const categories = [...new Set(proyectos.map(project => project.categoria))];
     </div>
   </section>
 
-  <!-- FAQs and Banner Sections -->
-  <section class="py-16">
-    <div class="container mx-auto px-4 max-w-7xl">
-      <div class="mt-12">
-        <FAQS client:visible />
-      </div>
-      <div class="mt-12">
-        <Banner />
-      </div>
-    </div>
-  </section>
-
   <script>
     // Filter functionality
     document.addEventListener('astro:page-load', function() {
