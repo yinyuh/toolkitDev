@@ -13,7 +13,7 @@ const { titulo, imagen, tecnologias, demo, codigo } = Astro.props;
 ---
 
 <div
-  class="group flex w-full max-w-md mx-auto flex-col overflow-hidden rounded-xl bg-gray-900 border border-none transition-all hover:scale-[1.015] drop-shadow-[4px_4px_0_#7836cf]"
+  class="group flex w-full max-w-md mx-auto flex-col overflow-hidden rounded-xl bg-div-theme border border-none transition-all hover:scale-[1.015] drop-shadow-[4px_4px_0_#7836cf]"
 >
   <img
     src={imagen}
@@ -22,7 +22,7 @@ const { titulo, imagen, tecnologias, demo, codigo } = Astro.props;
   />
 
   <div class="flex flex-col grow p-3">
-    <h3 class="text-lg font-semibold mb-2 text-white drop-shadow-[1px_1px_0_#7836cf]">{titulo}</h3>
+    <h3 class="text-lg font-semibold mb-2 text-div-theme drop-shadow-[1px_1px_0_#7836cf]">{titulo}</h3>
 
     <div class="flex flex-wrap gap-2 mb-4">
       {
@@ -39,7 +39,7 @@ const { titulo, imagen, tecnologias, demo, codigo } = Astro.props;
         href={demo}
         target="_blank"
         rel="noopener noreferrer"
-        class="w-full text-center border border-[#7836cf] text-[#7836cf] py-1.5 rounded-md text-sm font-semibold hover:bg-[#7836cf] hover:text-gray-900 transition-colors"
+        class="w-full text-center border border-theme-accent text-theme-accent py-1.5 rounded-md text-sm font-semibold hover:bg-theme-accent hover:text-theme-primary transition-colors"
       >
         Demo
       </a>
@@ -48,7 +48,7 @@ const { titulo, imagen, tecnologias, demo, codigo } = Astro.props;
         href={codigo}
         target="_blank"
         rel="noopener noreferrer"
-        class="w-full text-center border border-[#7836cf] text-[#7836cf] py-1.5 rounded-md text-sm font-semibold hover:bg-[#7836cf] hover:text-gray-900 transition-colors"
+        class="w-full text-center border border-theme-accent text-theme-accent py-1.5 rounded-md text-sm font-semibold hover:bg-theme-accent hover:text-theme-primary transition-colors"
       >
         代码
       </a>

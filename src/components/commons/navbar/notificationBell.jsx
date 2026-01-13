@@ -77,35 +77,35 @@ export default function NotificationBell() {
         aria-expanded={open}
         aria-label="通知"
         onClick={() => setOpen((v) => !v)}
-        className="relative rounded-full p-2 hover:bg-gray-700"
+        className="relative rounded-full p-2 hover:bg-theme-secondary"
       >
-        <FaBell className="text-2xl text-white cursor-pointer" />
+        <FaBell className="text-2xl text-theme-primary cursor-pointer" />
         {unreadCount > 0 && lastBaseId && (
-          <span className="absolute top-0 right-0 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+          <span className="absolute top-0 right-0 inline-flex h-4 w-4 items-center justify-center rounded-full bg-theme-notification text-xs text-theme-primary">
             {lastBaseId}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-70 max-w-sm rounded-lg border-none bg-gray-900 shadow-lg drop-shadow-[4px_4px_0_#7836cf]">
+        <div className="absolute right-0 z-50 mt-2 w-70 max-w-sm rounded-lg border-none bg-div-theme shadow-lg drop-shadow-[4px_4px_0_#7836cf]">
           <div className="p-3">
             <div className="mb-2 flex items-center justify-between">
-              <h4 className="text-xm font-bold text-gray-200 drop-shadow-[1px_1px_0_#7836cf]">
+              <h4 className="text-xm font-bold text-div-theme drop-shadow-[1px_1px_0_#7836cf]">
                 通知
               </h4>
             </div>
 
             {read.length > 0 ? (
-              <ul className="max-h-48 divide-y divide-gray-800 overflow-auto">
+              <ul className="max-h-48 divide-y divide-theme-border overflow-auto">
                 {read.map((n) => (
-                  <li key={n.id} className="py-2 text-sm text-gray-400">
+                  <li key={n.id} className="py-2 text-sm text-theme-secondary">
                     {n.text}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-gray-400">暂无通知。</p>
+              <p className="text-sm text-theme-secondary">暂无通知。</p>
             )}
           </div>
         </div>
