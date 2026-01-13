@@ -2,10 +2,10 @@
 const { project } = Astro.props;
 ---
 
-{/* React电商项目点击跳转到功能页面，其他项目保持原样 */}
-{project.titulo === "React 电商" ? (
+{/* 自动生成的工具页面或React电商项目点击跳转到功能页面，其他项目保持原样 */}
+{project.isToolPage || project.titulo === "React 电商" ? (
   <a 
-    href="/tools/react-ecommerce" 
+    href={project.url || "/tools/react-ecommerce"} 
     class="bg-gray-800 rounded-xl p-5 shadow-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 flex flex-col h-full group cursor-pointer"
   >
   <div class="flex-grow">

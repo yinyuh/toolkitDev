@@ -7,13 +7,73 @@ import FAQS from "../components/home/faqs/faqs.jsx";
 import Banner from "../components/commons/banners/banner.astro";
 import { proyectos } from "../data/projectData.js";
 
+// 导入Node.js的文件系统模块
+import fs from 'fs';
+import path from 'path';
+
+// 自动扫描tools目录下的页面文件
+const toolsDirectory = path.join(process.cwd(), 'src', 'pages', 'tools');
+let toolPages = [];
+
+if (fs.existsSync(toolsDirectory)) {
+  const files = fs.readdirSync(toolsDirectory);
+  
+  // 读取每个页面文件的元数据
+  toolPages = files
+    .filter(file => file.endsWith('.astro') || file.endsWith('.md'))
+    .map(file => {
+      const filePath = path.join(toolsDirectory, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      
+      // 从文件内容中提取frontmatter元数据
+      const frontmatterMatch = fileContent.match(/^---[\s\S]*?---/);
+      let metadata = {};
+      
+      if (frontmatterMatch) {
+        const frontmatter = frontmatterMatch[0];
+        // 简单解析frontmatter（实际项目中可以使用专门的解析库）
+        const lines = frontmatter.split('\n').slice(1, -1);
+        
+        lines.forEach(line => {
+          const [key, ...valueParts] = line.split(':');
+          if (key && valueParts.length > 0) {
+            const value = valueParts.join(':').trim().replace(/^["']|['"]$/g, '');
+            metadata[key.trim()] = value;
+          }
+        });
+      }
+      
+      // 生成页面URL
+      const fileNameWithoutExt = file.replace(/\.astro$|\.md$/, '');
+      const url = `/tools/${fileNameWithoutExt}`;
+      
+      // 如果有title字段，才将页面添加到列表中
+      if (metadata.title) {
+        return {
+          titulo: metadata.title,
+          descripcion: metadata.description || `这是${metadata.title}的详细页面`,
+          url: url,
+          tecnologias: metadata.technologies ? metadata.technologies.split(',').map(tech => tech.trim()) : [],
+          categoria: metadata.category || 'tool',
+          isToolPage: true
+        };
+      }
+      
+      return null;
+    })
+    .filter(Boolean);
+}
+
+// 合并传统项目数据和自动生成的工具页面数据
+const allProjects = [...proyectos, ...toolPages];
+
 // Filter projects to show only featured ones (you can customize this)
-const featuredProjects = proyectos.filter(project => 
-  project.categoria === 'fullstack' || project.categoria === 'frontend'
+const featuredProjects = allProjects.filter(project => 
+  project.categoria === 'fullstack' || project.categoria === 'frontend' || project.categoria === 'tool'
 );
 
 // Get unique categories for filtering
-const categories = [...new Set(proyectos.map(project => project.categoria))];
+const categories = [...new Set(allProjects.map(project => project.categoria))];
 ---
 
 <Layout>
@@ -66,81 +126,87 @@ const categories = [...new Set(proyectos.map(project => project.categoria))];
 
   <script>
     // Filter functionality
-    document.addEventListener('astro:page-load', function() {
+    // 使用DOMContentLoaded事件代替astro:page-load，确保DOM完全加载
+    document.addEventListener('DOMContentLoaded', function() {
       const buttons = document.querySelectorAll('.filter-btn');
       const cards = document.querySelectorAll('.tool-card');
-      const TOOLS_CONTAINER = document.getElementById('tools-grid');
       const HIDDEN_CLASS = 'hidden';
-      const VISIBLE_CLASS = 'block';
-      const HIDE_TIMEOUT = 300; // Configurable timeout for animation completion
       
-      // Store original display values using setAttribute
-      for (let i = 0; i < cards.length; i++) {
-        /** @type {HTMLElement} */
-        const card = cards[i];
-        card.setAttribute('data-original-display', getComputedStyle(card).display || 'block');
+      // 确保元素都存在
+      if (!buttons.length || !cards.length) {
+        console.error('Filter buttons or cards not found');
+        return;
       }
-
-      function showCard(/** @type {HTMLElement} */ card) {
+      
+      console.log('Filter system initialized with', buttons.length, 'buttons and', cards.length, 'cards');
+      
+      // 简化的显示/隐藏函数
+      function showCard(card) {
         card.classList.remove(HIDDEN_CLASS);
-        card.style.display = card.getAttribute('data-original-display') || 'block'; // Restore original display value
-        requestAnimationFrame(() => {
-          card.classList.remove('opacity-0', 'scale-95');
-          card.classList.add('opacity-100', 'scale-100');
-        });
+        card.style.display = 'block';
+        card.classList.add('opacity-100', 'scale-100');
+        card.classList.remove('opacity-0', 'scale-95');
       }
 
-      function hideCard(/** @type {HTMLElement} */ card) {
-        card.classList.remove('opacity-100', 'scale-100');
+      function hideCard(card) {
         card.classList.add('opacity-0', 'scale-95');
+        card.classList.remove('opacity-100', 'scale-100');
         setTimeout(() => {
-          if (card.classList.contains(HIDDEN_CLASS)) {
-            card.style.display = "none";
-          }
-        }, HIDE_TIMEOUT);
+          card.classList.add(HIDDEN_CLASS);
+          card.style.display = 'none';
+        }, 300);
       }
 
-      function applyFilter(/** @type {string} */ filter) {
+      function applyFilter(filter) {
         const normalized = filter.toLowerCase();
+        console.log('Applying filter:', normalized);
+        
+        let visibleCount = 0;
         for (let i = 0; i < cards.length; i++) {
-          /** @type {HTMLElement} */
           const card = cards[i];
-          const categoria = (
-            card.getAttribute("data-categoria") || ""
-          ).toLowerCase();
-          const match = normalized === "all" || categoria === normalized;
+          const categoria = card.getAttribute("data-categoria") || "";
+          const cardCategory = categoria.toLowerCase();
           
-          // Only update if visibility state has changed
-          const isCurrentlyVisible = !card.classList.contains(HIDDEN_CLASS) && card.style.display !== 'none';
-          if (match && !isCurrentlyVisible) {
+          console.log('Card', i, 'category:', cardCategory);
+          
+          const match = normalized === "all" || cardCategory === normalized;
+          
+          if (match) {
             showCard(card);
-          } else if (!match && isCurrentlyVisible) {
+            visibleCount++;
+          } else {
             hideCard(card);
           }
         }
+        
+        console.log('Filter applied, visible cards:', visibleCount);
       }
 
-      function setActive(/** @type {Element} */ btn) {
-        for (let i = 0; i < buttons.length; i++) {
-          const b = buttons[i];
-          b.classList.remove("active", "bg-blue-600", "text-white", "border-blue-500");
-        }
-        btn.classList.add("active", "bg-blue-600", "text-white", "border-blue-500");
-      }
-
-      // Use event delegation to handle clicks efficiently
-      if (TOOLS_CONTAINER && TOOLS_CONTAINER.parentElement) {
-        TOOLS_CONTAINER.parentElement.addEventListener('click', function(e) {
-          /** @type {HTMLElement | null} */
-          const target = e.target;
-          if (target && target instanceof HTMLElement && target.classList.contains('filter-btn')) {
-            const filter = target.dataset.filter || "all";
-            setActive(target);
-            applyFilter(filter);
-          }
+      function setActive(btn) {
+        // 移除所有按钮的激活状态
+        buttons.forEach(b => {
+          b.classList.remove("active", "bg-blue-600", "text-white");
+          b.classList.add("bg-gray-800", "text-gray-300");
         });
+        
+        // 添加当前按钮的激活状态
+        btn.classList.add("active", "bg-blue-600", "text-white");
+        btn.classList.remove("bg-gray-800", "text-gray-300");
+        
+        console.log('Active button set:', btn.dataset.filter);
       }
 
+      // 为每个按钮添加单独的事件监听器
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const filter = this.dataset.filter || "all";
+          setActive(this);
+          applyFilter(filter);
+        });
+      });
+
+      // 初始化默认显示所有项目
       const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
       if (allBtn) {
         setActive(allBtn);
