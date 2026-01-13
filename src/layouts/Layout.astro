@@ -5,15 +5,25 @@ import Footer from "../components/commons/footer/footer.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="theme-light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Lautaro Rodriguez Collins</title>
+    
+    <!-- Theme initialization script -->
+    <script>
+      // 初始化主题
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.documentElement.classList.add(`theme-${savedTheme}`);
+      })();
+    </script>
   </head>
-  <body class="bg-gray-950 text-white">
+  <body class="bg-theme-primary text-theme-primary transition-colors duration-300">
     <Navbar />
     <!-- Add top margin to avoid content being hidden behind fixed navbar -->
     <div class="pt-24">

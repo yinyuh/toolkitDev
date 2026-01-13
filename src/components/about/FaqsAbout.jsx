@@ -61,7 +61,7 @@ const SkillsList = () => {
   return (
     <div className="flex flex-col items-center text-left mx-auto max-w-6xl px-4">
       <div className="site-container mt-10">
-        <h2 class="text-4xl font-bold flex flex-col items-center gap-6 text-center whitespace-nowrap text-white md:flex-row md:items-center md:text-end">
+        <h2 class="text-4xl font-bold flex flex-col items-center gap-6 text-center whitespace-nowrap text-theme-primary md:flex-row md:items-center md:text-end">
           <span class="hidden h-1.5 grow rounded-lg drop-shadow-[2px_2px_0_#0debd8] bg-[#7836cf] md:block"></span>
           <span class="drop-shadow-[2px_2px_0_#7836cf]">关于我</span>
         </h2>
@@ -70,13 +70,13 @@ const SkillsList = () => {
             <li key={category} className="w-full">
               <div
                 onClick={() => toggleItem(category)}
-                className="bg-gray-900 hover:bg-opacity-80 w-full cursor-pointer overflow-hidden rounded-2xl text-left transition-all drop-shadow-[2px_2px_0_#7836cf]"
+                className="bg-div-theme hover:bg-opacity-80 w-full cursor-pointer overflow-hidden rounded-2xl text-left transition-all drop-shadow-[2px_2px_0_#7836cf]"
               >
                 <div className="flex items-center gap-3 p-4">
                   {CategoryIcons[category]}
                   <div className="flex grow items-center justify-between gap-2">
                     <div className="max-w-[200px] min-w-0 overflow-hidden md:max-w-none">
-                      <span className="block truncate text-lg text-white drop-shadow-[1px_1px_0_#7836cf] font-bold">
+                      <span className="block truncate text-lg text-div-theme drop-shadow-[1px_1px_0_#7836cf] font-bold">
                         {category}
                       </span>
                     </div>
@@ -100,7 +100,7 @@ const SkillsList = () => {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <p className="text-[0.8em] text-white">{skills[category]}</p>
+                  <p className="text-[0.8em] text-theme-secondary">{skills[category]}</p>
                 </div>
               </div>
             </li>

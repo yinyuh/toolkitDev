@@ -78,39 +78,39 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 
 <Layout>
   <!-- Tools Grid Section with Category Filter -->
-  <section class="py-10 bg-gray-900 min-h-screen">
+  <section class="py-10 bg-theme-primary min-h-screen">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Add margin-top to compensate for fixed navbar -->
       <div class="mt-20 mb-10">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-white">我的项目与工具</h1>
-            <p class="text-gray-400 mt-1">探索我的Web开发项目和工具</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-theme-primary">我的项目与工具</h1>
+            <p class="text-theme-secondary mt-1">探索我的Web开发项目和工具</p>
           </div>
-          <div class="mt-4 md:mt-0 text-sm text-gray-400">
+          <div class="mt-4 md:mt-0 text-sm text-theme-secondary">
             共 {featuredProjects.length} 个项目
           </div>
         </div>
 
         <!-- Category Filter Buttons -->
-        <div class="flex flex-wrap gap-2 p-2 bg-gray-800 rounded-lg border border-gray-700">
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button 
+          class="filter-btn active px-5 py-2 rounded-full text-sm font-medium btn-theme border border-theme transition-colors"
+          data-filter="all"
+          aria-label="显示所有项目"
+        >
+          全部
+        </button>
+        {categories.map(category => (
           <button 
-            class="filter-btn active px-4 py-2 rounded-md text-sm font-medium bg-blue-600 text-white transition-all hover:bg-blue-700"
-            data-filter="all"
-            aria-label="显示所有项目"
+            class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-theme-secondary text-theme-secondary border border-theme hover:bg-theme-primary transition-colors"
+            data-filter={category}
+            aria-label={`显示${category}项目`}
           >
-            全部
+            {category === 'fullstack' ? '全栈' : category === 'frontend' ? '前端' : category === 'backend' ? '后端' : category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
-          {categories.map(category => (
-            <button 
-              class="filter-btn px-4 py-2 rounded-md text-sm font-medium bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all"
-              data-filter={category}
-              aria-label={`显示${category}项目`}
-            >
-              {category === 'fullstack' ? '全栈' : category === 'frontend' ? '前端' : category === 'backend' ? '后端' : category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-          ))}
-        </div>
+        ))}
+      </div>
       </div>
 
       <!-- Tools Grid -->
@@ -185,13 +185,13 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
       function setActive(btn) {
         // 移除所有按钮的激活状态
         buttons.forEach(b => {
-          b.classList.remove("active", "bg-blue-600", "text-white");
-          b.classList.add("bg-gray-800", "text-gray-300");
+          b.classList.remove("active", "btn-theme");
+          b.classList.add("bg-theme-secondary", "text-theme-secondary");
         });
         
         // 添加当前按钮的激活状态
-        btn.classList.add("active", "bg-blue-600", "text-white");
-        btn.classList.remove("bg-gray-800", "text-gray-300");
+        btn.classList.add("active", "btn-theme");
+        btn.classList.remove("bg-theme-secondary", "text-theme-secondary");
         
         console.log('Active button set:', btn.dataset.filter);
       }

@@ -2,8 +2,8 @@
 import { FiMenu, FiX } from "react-icons/fi";
 import NotificationBell from "./notificationBell.jsx";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
-import { FaSun, FaMoon } from "react-icons/fa"; // 添加太阳和月亮图标用于主题切换
 import { BiGlobe } from "react-icons/bi"; // 添加地球图标用于语言选择
+import ThemeSwitcher from "../theme-switcher/ThemeSwitcher.jsx";
 
 const links = [
   { name: "首页", href: "/" },
@@ -28,7 +28,7 @@ const languages = [
 
   <!-- Navbar -->
   <nav
-    class="fixed top-0 left-0 w-full z-50 bg-gray-950/20 backdrop-blur-md border-b border-white/10"
+    class="fixed top-0 left-0 w-full z-50 bg-theme-primary/90 backdrop-blur-md border-b border-theme/10"
   >
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <!-- Logo -->
@@ -47,7 +47,7 @@ const languages = [
             <li>
               <a
                 href={link.href}
-                class="nav-link font-bold transition-colors duration-300 text-white hover:text-[#7d2dac]"
+                class="nav-link font-bold transition-colors duration-300 text-theme-primary hover:text-accent"
               >
                 {link.name}
               </a>
@@ -56,25 +56,22 @@ const languages = [
         }
 
         <li class="flex items-center gap-3">
-          <!-- 主题切换按钮 -->
-          <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-            <FaSun id="sun-icon" className="hidden h-5 w-5 text-yellow-400" />
-            <FaMoon id="moon-icon" className="h-5 w-5 text-gray-300" />
-          </button>
+          <!-- 主题切换器 -->
+          <ThemeSwitcher client:visible />
 
           <!-- 语言选择下拉菜单 -->
           <div class="relative group">
-            <button id="lang-toggle" class="p-2 rounded-full hover:bg-gray-700 transition-colors flex items-center">
-              <BiGlobe className="h-5 w-5 text-white" />
+            <button id="lang-toggle" class="p-2 rounded-full hover:bg-theme-secondary transition-colors flex items-center">
+              <BiGlobe className="h-5 w-5 text-theme-primary" />
             </button>
-            <div id="lang-dropdown" class="absolute right-0 mt-2 w-32 bg-gray-800 border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div id="lang-dropdown" class="absolute right-0 mt-2 w-32 bg-div-theme border border-theme-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <ul>
                 {
                   languages.map((lang) => (
                     <li>
                       <a 
                         href="#" 
-                        class="block px-4 py-2 text-sm text-white hover:bg-gray-700 lang-option"
+                        class="block px-4 py-2 text-sm text-div-theme hover:bg-theme-secondary lang-option"
                         data-lang={lang.code}
                       >
                         {lang.name}
@@ -112,25 +109,24 @@ const languages = [
 
       <!-- Mobile right-side icons -->
       <div class="flex md:hidden items-center gap-4 z-50">
-        <!-- Mobile theme toggle button -->
-        <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-          <FaSun id="sun-icon-mobile" className="hidden h-5 w-5 text-yellow-400" />
-          <FaMoon id="moon-icon-mobile" className="h-5 w-5 text-gray-300" />
-        </button>
+        <!-- Mobile theme switcher -->
+        <div class="md:hidden">
+          <ThemeSwitcher client:visible />
+        </div>
         
         <!-- Mobile language selector -->
         <div class="relative group">
-          <button id="lang-toggle-mobile" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-            <BiGlobe className="h-5 w-5 text-white" />
+          <button id="lang-toggle-mobile" class="p-2 rounded-full hover:bg-theme-secondary transition-colors">
+            <BiGlobe className="h-5 w-5 text-theme-primary" />
           </button>
-          <div id="lang-dropdown-mobile" class="absolute right-0 mt-2 w-32 bg-gray-800 border border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <div id="lang-dropdown-mobile" class="absolute right-0 mt-2 w-32 bg-div-theme border border-theme-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
             <ul>
               {
                 languages.map((lang) => (
                   <li>
                     <a 
                       href="#" 
-                      class="block px-4 py-2 text-sm text-white hover:bg-gray-700 lang-option"
+                      class="block px-4 py-2 text-sm text-div-theme hover:bg-theme-secondary lang-option"
                       data-lang={lang.code}
                     >
                       {lang.name}
@@ -144,8 +140,8 @@ const languages = [
         
         <NotificationBell client:visible />
         <label for="menu-toggle" class="cursor-pointer">
-          <FiMenu className="h-7 w-7 text-white peer-checked:hidden" />
-          <FiX className="h-7 w-7 text-white hidden peer-checked:block" />
+          <FiMenu className="h-7 w-7 text-theme-primary peer-checked:hidden" />
+          <FiX className="h-7 w-7 text-theme-primary hidden peer-checked:block" />
         </label>
       </div>
     </div>
@@ -159,45 +155,44 @@ const languages = [
 
   <!-- Sidebar móvil -->
   <div
-    class="fixed top-0 right-0 h-full w-64 bg-gray-900 shadow-lg transform translate-x-full transition-transform duration-300 peer-checked:translate-x-0 z-50 md:translate-x-full md:hidden"
+    class="fixed top-0 right-0 h-full w-64 bg-theme-primary shadow-lg transform translate-x-full transition-transform duration-300 peer-checked:translate-x-0 z-50 md:translate-x-full md:hidden"
   >
     <div class="flex justify-end p-4">
       <label for="menu-toggle" class="cursor-pointer">
-        <FiX className="h-7 w-7 text-white" />
+        <FiX className="h-7 w-7 text-theme-primary" />
       </label>
     </div>
 
     <ul id="navbar-links-mobile" class="flex flex-col space-y-6 mt-6 ml-6">
       {
         links.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              class="nav-link-mobile text-lg font-bold text-white hover:text-[#69c7c7] transition-colors duration-300"
-            >
-              {link.name}
-            </a>
-          </li>
-        ))
+        <li>
+          <a
+            href={link.href}
+            class="nav-link-mobile text-lg font-bold text-theme-primary hover:text-accent transition-colors duration-300"
+          >
+            {link.name}
+          </a>
+        </li>
+      ))
       }
       
       <!-- Mobile menu language and theme controls -->
-      <li class="flex flex-col gap-2 pt-4 border-t border-gray-700">
-        <div class="flex justify-between">
-          <span class="text-white">主题:</span>
-          <button id="theme-toggle-sidebar" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-            <FaSun id="sun-icon-sidebar" className="hidden h-5 w-5 text-yellow-400" />
-            <FaMoon id="moon-icon-sidebar" className="h-5 w-5 text-gray-300" />
-          </button>
+      <li class="flex flex-col gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center">
+          <span class="text-theme-primary">主题:</span>
+          <div class="md:hidden">
+            <ThemeSwitcher client:visible />
+          </div>
         </div>
         <div class="flex flex-col">
-          <span class="text-white pb-2">语言:</span>
+          <span class="text-theme-primary pb-2">语言:</span>
           <div class="flex flex-wrap gap-2">
             {
               languages.map((lang) => (
                 <a 
                   href="#" 
-                  class="px-3 py-1 bg-gray-700 text-white rounded text-sm hover:bg-gray-600 lang-option"
+                  class="px-3 py-1 bg-theme-secondary text-theme-primary rounded text-sm hover:bg-theme-primary lang-option"
                   data-lang={lang.code}
                 >
                   {lang.name}
@@ -229,13 +224,11 @@ const languages = [
         const href = hrefAttr?.replace(/\/$/, "") || "" || "/";
 
         if (href === currentPath) {
-          link.classList.add("text-[#7d2dac]", "font-extrabold");
-          link.classList.remove("text-white");
+          link.classList.add("text-accent", "font-extrabold");
+          link.classList.remove("text-theme-primary");
         } else {
-          link.classList.remove("text-[#7d2dac]", "font-extrabold");
-          if (!link.classList.contains("hover:text-[#7d2dac]")) {
-            link.classList.add("text-white");
-          }
+          link.classList.remove("text-accent", "font-extrabold");
+          link.classList.add("text-theme-primary");
         }
       });
     }
@@ -251,71 +244,6 @@ const languages = [
     document.addEventListener("astro:after-swap", markActiveLinks);
     window.addEventListener("load", () => setTimeout(markActiveLinks, 50));
   })();
-
-  // 主题切换功能
-  function initThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
-    const themeToggleSidebar = document.getElementById('theme-toggle-sidebar');
-    const sunIcon = document.getElementById('sun-icon');
-    const moonIcon = document.getElementById('moon-icon');
-    const sunIconMobile = document.getElementById('sun-icon-mobile');
-    const moonIconMobile = document.getElementById('moon-icon-mobile');
-    const sunIconSidebar = document.getElementById('sun-icon-sidebar');
-    const moonIconSidebar = document.getElementById('moon-icon-sidebar');
-
-    // 检查存储的主题偏好
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      sunIcon?.classList.add('hidden');
-      moonIcon?.classList.remove('hidden');
-      sunIconMobile?.classList.add('hidden');
-      moonIconMobile?.classList.remove('hidden');
-      sunIconSidebar?.classList.add('hidden');
-      moonIconSidebar?.classList.remove('hidden');
-    } else {
-      document.documentElement.classList.remove('dark');
-      sunIcon?.classList.remove('hidden');
-      moonIcon?.classList.add('hidden');
-      sunIconMobile?.classList.remove('hidden');
-      moonIconMobile?.classList.add('hidden');
-      sunIconSidebar?.classList.remove('hidden');
-      moonIconSidebar?.classList.add('hidden');
-    }
-
-    // 切换主题函数
-    function toggleTheme() {
-      if (document.documentElement.classList.contains('dark')) {
-        // 切换到浅色主题
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        sunIcon?.classList.remove('hidden');
-        moonIcon?.classList.add('hidden');
-        sunIconMobile?.classList.remove('hidden');
-        moonIconMobile?.classList.add('hidden');
-        sunIconSidebar?.classList.remove('hidden');
-        moonIconSidebar?.classList.add('hidden');
-      } else {
-        // 切换到深色主题
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        sunIcon?.classList.add('hidden');
-        moonIcon?.classList.remove('hidden');
-        sunIconMobile?.classList.add('hidden');
-        moonIconMobile?.classList.remove('hidden');
-        sunIconSidebar?.classList.add('hidden');
-        moonIconSidebar?.classList.remove('hidden');
-      }
-    }
-
-    // 为所有主题切换按钮添加事件监听器
-    [themeToggle, themeToggleMobile, themeToggleSidebar].forEach(button => {
-      if (button) {
-        button.addEventListener('click', toggleTheme);
-      }
-    });
-  }
 
   // 语言选择功能
   function initLanguageSelector() {
@@ -335,11 +263,9 @@ const languages = [
   // DOM准备就绪后初始化功能
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      initThemeToggle();
       initLanguageSelector();
     });
   } else {
-    initThemeToggle();
     initLanguageSelector();
   }
 </script>
