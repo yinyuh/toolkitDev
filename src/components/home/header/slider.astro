@@ -1,6 +1,6 @@
 ---
 const technologies = [
-  "astro",
+  "Earth",
   "react",
   "typeScript",
   "tailwindcss",
@@ -21,7 +21,7 @@ const technologies = [
       technologies.concat(technologies, technologies).map((tech) => (
         <div class="group flex items-center gap-2 transition-all duration-300">
           <img
-            src={`/svg/${tech}.svg`}
+            src={tech === "Earth" ? `/icons/Earth.svg` : `/svg/${tech}.svg`}
             alt={tech}
             class="h-7 w-auto object-contain  transition-transform group-hover:scale-110"
             width="30"
@@ -29,7 +29,7 @@ const technologies = [
             loading="lazy"
           />
           <span class="text-lg font-medium text-theme-primary">
-            {tech.charAt(0).toUpperCase() + tech.slice(1)}
+            {tech === "Earth" ? "Earth" : tech.charAt(0).toUpperCase() + tech.slice(1)}
           </span>
         </div>
       ))

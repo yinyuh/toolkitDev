@@ -78,7 +78,7 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 
 <Layout>
   <!-- Tools Grid Section with Category Filter -->
-  <section class="py-10 bg-theme-primary min-h-screen">
+  <section class="py-10 min-h-screen">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Add margin-top to compensate for fixed navbar -->
       <div class="mt-20 mb-10">
@@ -103,7 +103,7 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         </button>
         {categories.map(category => (
           <button 
-            class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-theme-secondary text-theme-secondary border border-theme hover:bg-theme-primary transition-colors"
+            class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-theme-secondary text-theme-secondary border border-theme-border hover:bg-theme-primary transition-colors"
             data-filter={category}
             aria-label={`显示${category}项目`}
           >
@@ -138,7 +138,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         return;
       }
       
-      console.log('Filter system initialized with', buttons.length, 'buttons and', cards.length, 'cards');
       
       // 简化的显示/隐藏函数
       function showCard(card) {
@@ -159,7 +158,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 
       function applyFilter(filter) {
         const normalized = filter.toLowerCase();
-        console.log('Applying filter:', normalized);
         
         let visibleCount = 0;
         for (let i = 0; i < cards.length; i++) {
@@ -167,7 +165,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
           const categoria = card.getAttribute("data-categoria") || "";
           const cardCategory = categoria.toLowerCase();
           
-          console.log('Card', i, 'category:', cardCategory);
           
           const match = normalized === "all" || cardCategory === normalized;
           
@@ -179,7 +176,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
           }
         }
         
-        console.log('Filter applied, visible cards:', visibleCount);
       }
 
       function setActive(btn) {
@@ -193,7 +189,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         btn.classList.add("active", "btn-theme");
         btn.classList.remove("bg-theme-secondary", "text-theme-secondary");
         
-        console.log('Active button set:', btn.dataset.filter);
       }
 
       // 为每个按钮添加单独的事件监听器

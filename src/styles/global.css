@@ -65,11 +65,11 @@
 }
 
 .animate-gradientMove {
-  animation: gradientMove 8s ease-in-out infinite alternate;
+  animation: gradientMove 12s ease-in-out infinite alternate;
 }
 
 .animate-gradientMove2 {
-  animation: gradientMove2 8s ease-in-out infinite alternate;
+  animation: gradientMove2 12s ease-in-out infinite alternate;
 }
 
 .text-shadow {
