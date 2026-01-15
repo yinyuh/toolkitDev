@@ -1,107 +1,119 @@
 ---
 const { project } = Astro.props;
+
+// 分类标签中英文映射
+const categoryMap = {
+  fullstack: "全栈",
+  frontend: "前端",
+  backend: "后端",
+  tool: "工具"
+};
+
+// 获取中文分类标签
+const getChineseCategory = (category: string) => {
+  return categoryMap[category as keyof typeof categoryMap] || category;
+};
+
+// 生成随机颜色
+const getRandomColor = () => {
+  const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#F44336', '#00BCD4', '#8BC34A', '#FFC107'];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+// 生成随机图标
+const getRandomIcon = (projectName: string) => {
+  const icons = [
+    'https://api.dicebear.com/7.x/shapes/svg?seed={seed}&backgroundColor=transparent&color={color}',
+    'https://api.dicebear.com/7.x/bottts/svg?seed={seed}&backgroundColor=transparent&color={color}',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed={seed}&backgroundColor=transparent&color={color}',
+    'https://api.dicebear.com/7.x/personas/svg?seed={seed}&backgroundColor=transparent&color={color}'
+  ];
+  const icon = icons[Math.floor(Math.random() * icons.length)];
+  const color = getRandomColor();
+  return icon.replace('{seed}', projectName).replace('{color}', color.replace('#', ''));
+};
 ---
 
-{/* 自动生成的工具页面或React电商项目点击跳转到功能页面，其他项目保持原样 */}
-{project.isToolPage || project.titulo === "React 电商" ? (
-  <a 
-    href={project.url || "/tools/react-ecommerce"} 
-    class="bg-div-theme rounded-xl p-5 shadow-lg border border-div-theme hover:border-blue-500 transition-all duration-300 flex flex-col h-full group cursor-pointer relative"
-  >
+{/* 工具卡片组件 */}
+<div class="bg-div-theme rounded-xl p-4 shadow-lg border border-div-theme hover:border-blue-500 transition-all duration-300 flex flex-col min-h-[200px] group relative">
   <div class="flex-grow">
-    <div class="flex items-start justify-between mb-3">
+    <div class="flex items-center gap-3 mb-3">
+      {/* 工具图标 */}
+      <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-theme-secondary">
+        <img src={getRandomIcon(project.titulo)} alt={project.titulo} class="w-6 h-6" />
+      </div>
       <h3 class="text-lg font-bold text-theme-primary group-hover:text-blue-400 transition-colors">{project.titulo}</h3>
     </div>
     <p class="text-theme-secondary mb-4 text-sm flex-grow">{project.descripcion}</p>
-    <div class="flex flex-wrap gap-2 mb-4">
-      {project.tecnologias.slice(0, 3).map((tech) => (
-        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded">
+    <div class="flex flex-wrap gap-2 mb-4 justify-center">
+      {project.tecnologias.slice(0, 3).map((tech: string) => (
+        <span class="bg-gray-50 text-gray-700 text-xs px-2 py-0.5 rounded border border-gray-200">
           {tech}
         </span>
       ))}
       {project.tecnologias.length > 3 && (
-        <span class="bg-theme-secondary text-theme-primary text-xs px-2 py-1 rounded">
+        <span class="bg-gray-50 text-gray-700 text-xs px-2 py-0.5 rounded border border-gray-200">
           +{project.tecnologias.length - 3}
         </span>
       )}
     </div>
   </div>
   
-  <div class="pt-2 mt-auto">
-    <div class="flex justify-center">
-      <span class="inline-block px-4 py-2 btn-theme text-xs rounded-lg transition-colors duration-200 flex items-center justify-center">
+  <div class="pt-3 mt-auto">
+    <div class="flex justify-center border border-gray-200 rounded-lg overflow-hidden max-w-xs mx-auto">
+      {/* 拷贝链接按钮 */}
+      <button class="flex-1 text-center px-3 py-2 bg-gray-100 text-gray-700 text-xs transition-colors duration-200 flex items-center justify-center hover:bg-gray-200 border-r border-gray-200">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        拷贝链接
+      </button>
+      <!-- 开始使用按钮 -->
+      <a href={project.isToolPage || project.titulo === "React 电商" ? (project.url || "/tools/react-ecommerce") : (project.demo || project.codigo || "#")} class="flex-1 text-center px-3 py-2 btn-theme text-xs transition-colors duration-200 flex items-center justify-center">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
         </svg>
-        查看工具
-      </span>
+        开始使用
+      </a>
     </div>
   </div>
   
-  <!-- Category badge -->
+  {/* Category badge */}
   <div class="absolute top-3 right-3">
-    <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-xs px-2 py-1 rounded-full">
-      {project.categoria}
+    <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
+      {getChineseCategory(project.categoria)}
     </span>
   </div>
-</a>
-) : (
-  <div class="bg-div-theme rounded-xl p-5 shadow-lg border border-div-theme hover:border-blue-500 transition-all duration-300 flex flex-col h-full group relative">
-    <div class="flex-grow">
-      <div class="flex items-start justify-between mb-3">
-        <h3 class="text-lg font-bold text-theme-primary group-hover:text-blue-400 transition-colors">{project.titulo}</h3>
-      </div>
-      <p class="text-theme-secondary mb-4 text-sm flex-grow">{project.descripcion}</p>
-      <div class="flex flex-wrap gap-2 mb-4">
-        {project.tecnologias.slice(0, 3).map((tech) => (
-          <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-0.5 rounded">
-            {tech}
-          </span>
-        ))}
-        {project.tecnologias.length > 3 && (
-          <span class="bg-theme-secondary text-theme-primary text-xs px-2 py-0.5 rounded">
-            +{project.tecnologias.length - 3}
-          </span>
-        )}
-      </div>
-    </div>
+</div>
+
+<script>
+  // 拷贝链接功能
+  document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('button');
     
-    <div class="pt-2 mt-auto">
-      <div class="flex space-x-2">
-        {project.demo && (
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex-1 text-center px-3 py-2 btn-theme text-xs rounded-lg transition-colors duration-200 flex items-center justify-center"
-          >
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-            </svg>
-            Demo
-          </a>
-        )}
-        {project.codigo && (
-          <a
-            href={project.codigo}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex-1 text-center px-3 py-2 bg-theme-secondary hover:bg-theme-hover text-theme-primary text-xs rounded-lg transition-colors duration-200 flex items-center justify-center"
-          >
-            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
-            </svg>
-            代码
-          </a>
-        )}
-      </div>
-    </div>
-    
-    <!-- Category badge -->
-    <div class="absolute top-3 right-3">
-      <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-xs px-2 py-1 rounded-full">
-        {project.categoria}
-      </span>
-    </div>
-  </div>
-)}
+    copyButtons.forEach(button => {
+      if (button.textContent.includes('拷贝链接')) {
+        button.addEventListener('click', function() {
+          // 获取当前卡片的链接
+          const card = this.closest('div');
+          if (!card) return;
+          
+          const startButton = card.querySelector('a[href]') as HTMLAnchorElement | null;
+          let url = startButton ? startButton.href : window.location.href;
+          
+          // 复制到剪贴板
+          navigator.clipboard.writeText(url).then(() => {
+            // 显示复制成功提示
+            const originalText = button.textContent.trim();
+            button.textContent = ' 已拷贝';
+            setTimeout(() => {
+              button.textContent = originalText;
+            }, 2000);
+          }).catch(err => {
+            console.error('复制失败:', err);
+          });
+        });
+      }
+    });
+  });
+</script>
