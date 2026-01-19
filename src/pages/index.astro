@@ -78,21 +78,12 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 
 <Layout>
   <!-- Tools Grid Section with Category Filter -->
-  <section class="py-10 min-h-screen">
+  <section class="py-4 min-h-screen">
     <div class="container mx-auto px-4 max-w-7xl">
-      <!-- Add margin-top to compensate for fixed navbar -->
-      <div class="mt-8 mb-10">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-          <div>
-            <!-- 网站介绍文字已移除 -->
-          </div>
-          <!-- 共 X 个项目 文字已移除 -->
-        </div>
-
-        <!-- Category Filter Buttons -->
-      <div class="flex flex-wrap justify-start gap-3 mb-12">
+      <!-- Category Filter Buttons -->
+      <div class="flex flex-wrap justify-start gap-2 mb-8">
         <button 
-          class="filter-btn active px-5 py-2 rounded-full text-sm font-medium btn-theme border border-theme transition-colors"
+          class="filter-btn active px-4 py-1.5 rounded-full text-xs font-medium btn-theme border border-theme transition-colors"
           data-filter="all"
           aria-label="显示所有项目"
         >
@@ -100,14 +91,13 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         </button>
         {categories.map(category => (
           <button 
-            class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-theme-secondary text-theme-secondary border border-theme-border hover:bg-theme-primary transition-colors"
+            class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-theme-secondary text-theme-secondary border border-theme-border hover:bg-theme-primary transition-colors"
             data-filter={category}
             aria-label={`显示${category}项目`}
           >
             {category === 'fullstack' ? '全栈' : category === 'frontend' ? '前端' : category === 'backend' ? '后端' : category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
         ))}
-      </div>
       </div>
 
       <!-- Tools Grid -->
