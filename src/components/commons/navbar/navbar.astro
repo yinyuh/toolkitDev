@@ -1,6 +1,5 @@
 ---
 import { FiMenu, FiX } from "react-icons/fi";
-import NotificationBell from "./notificationBell.jsx";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
 import { BiGlobe } from "react-icons/bi"; // 添加地球图标用于语言选择
 import ThemeSwitcher from "../theme-switcher/ThemeSwitcher.jsx";
@@ -32,12 +31,13 @@ const languages = [
   >
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <!-- Logo -->
-      <a href="/" class="flex items-center">
+      <a href="/" class="flex items-center gap-2">
         <img
           src="/icons/Earth.svg"
           alt="Earth"
           class="h-10 w-10 text-[#69c7c7] drop-shadow-[1.5px_1.5px_0_#7836cf]"
         />
+        <span class="text-xl font-bold text-theme-primary hidden md:inline">工具集成与优质博客导航平台</span>
       </a>
 
       <!-- Desktop Links -->
@@ -116,7 +116,7 @@ const languages = [
           </div>
         </div>
         
-        <NotificationBell client:visible />
+        <!-- NotificationBell已移除 -->
         <label for="menu-toggle" class="cursor-pointer">
           <FiMenu className="h-7 w-7 text-theme-primary peer-checked:hidden" />
           <FiX className="h-7 w-7 text-theme-primary hidden peer-checked:block" />

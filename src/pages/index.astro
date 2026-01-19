@@ -84,16 +84,13 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
       <div class="mt-8 mb-10">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 class="text-2xl md:text-3xl font-bold text-theme-primary">高效工具集成与优质博客导航平台</h1>
-            <p class="text-theme-secondary mt-1">轻量检索，一站直达 —— 帮你快速找到开发、设计、办公所需工具，聚合全网精选博客资源，让信息获取更高效。</p>
+            <!-- 网站介绍文字已移除 -->
           </div>
-          <div class="mt-4 md:mt-0 text-sm text-theme-secondary">
-            共 {featuredProjects.length} 个项目
-          </div>
+          <!-- 共 X 个项目 文字已移除 -->
         </div>
 
         <!-- Category Filter Buttons -->
-      <div class="flex flex-wrap justify-center gap-3 mb-12">
+      <div class="flex flex-wrap justify-start gap-3 mb-12">
         <button 
           class="filter-btn active px-5 py-2 rounded-full text-sm font-medium btn-theme border border-theme transition-colors"
           data-filter="all"
