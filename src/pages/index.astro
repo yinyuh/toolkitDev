@@ -55,7 +55,8 @@ if (fs.existsSync(toolsDirectory)) {
           url: url,
           tecnologias: metadata.technologies ? metadata.technologies.split(',').map(tech => tech.trim()) : [],
           categoria: metadata.category || 'tool',
-          isToolPage: true
+          isToolPage: true,
+          order: metadata.order ? parseInt(metadata.order) : undefined
         };
       }
       
@@ -67,10 +68,16 @@ if (fs.existsSync(toolsDirectory)) {
 // 合并传统项目数据和自动生成的工具页面数据
 const allProjects = [...proyectos, ...toolPages];
 
+// 为没有order字段的项目设置默认值
+const projectsWithOrder = allProjects.map((project, index) => ({
+  ...project,
+  order: project.order || index + 1
+}));
+
 // Filter projects to show only featured ones (you can customize this)
-const featuredProjects = allProjects.filter(project => 
+const featuredProjects = projectsWithOrder.filter(project => 
   project.categoria === 'fullstack' || project.categoria === 'frontend' || project.categoria === 'tool'
-);
+).sort((a, b) => a.order - b.order);
 
 // Get unique categories for filtering
 const categories = [...new Set(allProjects.map(project => project.categoria))];
