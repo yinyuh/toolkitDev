@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Navbar from "../components/commons/navbar/navbar.astro";
 import Footer from "../components/commons/footer/footer.astro";
+import Breadcrumb from "../components/commons/breadcrumb/Breadcrumb.astro";
 ---
 
 <!doctype html>
@@ -39,8 +40,10 @@ import Footer from "../components/commons/footer/footer.astro";
     </div>
 
     <Navbar />
-    <!-- Add top margin to avoid content being hidden behind fixed navbar -->
-    <div class="pt-16">
+    <!-- Breadcrumb Navigation -->
+    <Breadcrumb />
+    <!-- Main content area -->
+    <div class="pb-12">
       <slot />
     </div>
     <Footer />

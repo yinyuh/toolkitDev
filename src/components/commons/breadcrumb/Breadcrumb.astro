@@ -1,0 +1,77 @@
+---
+// 面包屑导航组件
+// 自动根据当前URL生成导航路径
+
+// 从URL中提取路径信息
+const pathname = Astro.url.pathname;
+const pathParts = pathname.split('/').filter(part => part !== '');
+
+// 生成面包屑项
+const breadcrumbItems = [
+  { name: '首页', path: '/' }
+];
+
+let currentPath = '';
+for (const part of pathParts) {
+  currentPath += `/${part}`;
+  
+  // 转换路径名称为友好显示名称
+  let displayName = part;
+  
+  // 特殊处理一些路径
+  if (part === 'tools') {
+    displayName = '工具';
+  } else if (part === 'proyectos') {
+    displayName = '项目';
+  } else if (part === 'about') {
+    displayName = '关于我';
+  } else if (part === 'contact') {
+    displayName = '联系';
+  } else {
+    // 处理连字符和下划线，首字母大写
+    displayName = part
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, char => char.toUpperCase());
+  }
+  
+  breadcrumbItems.push({
+    name: displayName,
+    path: currentPath
+  });
+}
+---
+
+<nav class="breadcrumb bg-theme-primary py-4 px-4 border-b border-theme-border mt-16 md:mt-20">
+  <div class="container mx-auto max-w-7xl flex items-center gap-2 text-sm md:text-base text-theme-secondary">
+    <a href="/" class="hover:text-blue-500 transition-colors">
+      <svg class="inline-block w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+      </svg>
+      {breadcrumbItems[0].name}
+    </a>
+    {breadcrumbItems.slice(1).map((item, index) => (
+      <>
+        <span class="text-theme-secondary mx-2">
+          <svg class="inline-block w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        </span>
+        {index === breadcrumbItems.length - 2 ? (
+          <span class="text-theme-primary font-medium">{item.name}</span>
+        ) : (
+          <a href={item.path} class="hover:text-blue-500 transition-colors">{item.name}</a>
+        )}
+      </>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .breadcrumb {
+    background-color: var(--color-theme-primary);
+    border-bottom: 1px solid var(--color-theme-border);
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
