@@ -17,6 +17,7 @@ export const proyectos = [
     demo: "https://react-e-commerce-three-phi.vercel.app",
     codigo: "https://github.com/Lautaro-R-collins/React-E-commerce.git",
     categoria: "fullstack",
+    order: 100,
   },
   {
     titulo: "组织应用",
@@ -27,6 +28,7 @@ export const proyectos = [
     demo: "https://front-react-todo.onrender.com",
     codigo: "https://github.com/Lautaro-R-collins/Front-react-todo",
     categoria: "fullstack",
+    order: 100,
   },
   {
     titulo: "Urban Style 电商",
@@ -37,6 +39,7 @@ export const proyectos = [
     demo: "https://proyecto-final-rodriguez-sable.vercel.app/",
     codigo: "https://github.com/Lautaro-R-collins/ProyectoFinal-Rodriguez.git",
     categoria: "fullstack",
+    order: 100,
   },
   {
     titulo: "手工艺品商店",
@@ -48,6 +51,7 @@ export const proyectos = [
     demo: "https://c21-05-ft-node-react-mirror-frontend-64qbwssi2-muyvisual.vercel.app/",
     codigo: "https://github.com/No-Country-simulation/c21-05-ft-node-react",
     categoria: "fullstack",
+    order: 100,
   },
   {
     titulo: "收支追踪器",
@@ -59,6 +63,7 @@ export const proyectos = [
     demo: "https://traker-gastos-ingresos.onrender.com/",
     codigo: "https://github.com/Lautaro-R-collins/Traker-Gastos-Ingresos",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "天气应用",
@@ -70,6 +75,7 @@ export const proyectos = [
     demo: "https://app-clima-om19.onrender.com/",
     codigo: "https://github.com/Lautaro-R-collins/app-clima",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "开发者作品集",
@@ -81,6 +87,7 @@ export const proyectos = [
     codigo:
       "https://github.com/Lautaro-R-collins/Portfolio-developers-astro.git",
     categoria: "frontend",
+    order: 100,
   },
 
   {
@@ -92,6 +99,7 @@ export const proyectos = [
     demo: "https://legal-staff.vercel.app/",
     codigo: "https://github.com/Lautaro-R-collins/legal-staff",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "医疗保险",
@@ -102,6 +110,7 @@ export const proyectos = [
     demo: "https://obra-social-landing.vercel.app/",
     codigo: "https://github.com/Lautaro-R-collins/obra-social-landing.git",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "健身顾问",
@@ -112,6 +121,7 @@ export const proyectos = [
     demo: "https://gym-page-sandy.vercel.app/",
     codigo: "https://github.com/Lautaro-R-collins/GymPage.git",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "电商REST API",
@@ -122,6 +132,7 @@ export const proyectos = [
     demo: "https://react-e-commerce-three-phi.vercel.app/",
     codigo: "https://github.com/Lautaro-R-collins/ApiRest-Ecommerce.git",
     categoria: "backend",
+    order: 100,
   },
   {
     titulo: "REST API",
@@ -132,6 +143,7 @@ export const proyectos = [
     demo: "https://back-express-todo.onrender.com",
     codigo: "https://github.com/Lautaro-R-collins/Back-express-todo.git",
     categoria: "backend",
+    order: 100,
   },
   {
     titulo: "PlaniFy",
@@ -143,6 +155,7 @@ export const proyectos = [
     demo: "https://planify-1tu6.onrender.com/",
     codigo: "https://github.com/Lautaro-R-collins/PlaniFy-organization-app",
     categoria: "frontend",
+    order: 100,
   },
   {
     titulo: "Verbenas 景观",
@@ -153,6 +166,7 @@ export const proyectos = [
     demo: "https://challenge-neowyze.onrender.com/",
     codigo: "https://github.com/Lautaro-R-collins/challenge-Neowyze.git",
     categoria: "frontend",
+    order: 100,
   },
 
   {
@@ -164,5 +178,6 @@ export const proyectos = [
     demo: "https://one00-proyects-web.onrender.com/",
     codigo: "https://github.com/Lautaro-R-collins/100-days-of-coding-in-JS",
     categoria: "frontend",
+    order: 100,
   },
 ];
