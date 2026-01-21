@@ -59,7 +59,12 @@ for (const part of pathParts) {
         {index === breadcrumbItems.length - 2 ? (
           <span class="text-theme-primary font-medium">{item.name}</span>
         ) : (
-          <a href={item.path} class="hover:text-blue-500 transition-colors">{item.name}</a>
+          // 检查路径是否存在对应的页面，只在存在时显示为链接
+          (item.path === '/tools' || item.path === '/about' || item.path === '/contact') ? (
+            <span class="text-theme-secondary">{item.name}</span>
+          ) : (
+            <a href={item.path} class="hover:text-blue-500 transition-colors">{item.name}</a>
+          )
         )}
       </>
     ))}
