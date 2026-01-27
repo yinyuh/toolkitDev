@@ -3,6 +3,11 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa6";
 import { BiGlobe } from "react-icons/bi"; // 添加地球图标用于语言选择
 import ThemeSwitcher from "../theme-switcher/ThemeSwitcher.jsx";
+import { proyectos } from "../../../data/projectData.js";
+
+// 导入Node.js的文件系统模块
+import fs from 'fs';
+import path from 'path';
 
 const links = [
   { name: "首页", href: "/" },
@@ -18,6 +23,72 @@ const languages = [
   { code: "es", name: "ES" },
   { code: "pt", name: "PT" },
 ];
+
+// 自动扫描tools目录下的页面文件
+const toolsDirectory = path.join(process.cwd(), 'src', 'pages', 'tools');
+let toolPages = [];
+
+if (fs.existsSync(toolsDirectory)) {
+  const files = fs.readdirSync(toolsDirectory);
+  
+  // 读取每个页面文件的元数据
+  toolPages = files
+    .filter(file => file.endsWith('.astro') || file.endsWith('.md'))
+    .map(file => {
+      const filePath = path.join(toolsDirectory, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      
+      // 从文件内容中提取frontmatter元数据
+      const frontmatterMatch = fileContent.match(/^---[\s\S]*?---/);
+      let metadata = {};
+      
+      if (frontmatterMatch) {
+        const frontmatter = frontmatterMatch[0];
+        // 简单解析frontmatter（实际项目中可以使用专门的解析库）
+        const lines = frontmatter.split('\n').slice(1, -1);
+        
+        lines.forEach(line => {
+          const [key, ...valueParts] = line.split(':');
+          if (key && valueParts.length > 0) {
+            const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
+            metadata[key.trim()] = value;
+          }
+        });
+      }
+      
+      // 生成页面URL
+      const fileNameWithoutExt = file.replace(/\.astro$|\.md$/, '');
+      const url = `/tools/${fileNameWithoutExt}`;
+      
+      // 如果有title字段，才将页面添加到列表中
+      if (metadata.title) {
+        return {
+          title: metadata.title,
+          description: metadata.description || `这是${metadata.title}的详细页面`,
+          url: url,
+          type: '工具',
+          technologies: metadata.technologies ? metadata.technologies.split(',').map(tech => tech.trim()) : [],
+          category: metadata.category || 'tool'
+        };
+      }
+      
+      return null;
+    })
+    .filter(Boolean);
+}
+
+// 从proyectos数据中提取文章
+const articles = proyectos.map(project => ({
+  title: project.titulo,
+  description: project.descripcion,
+  url: project.demo || '/',
+  type: '文章',
+  technologies: project.tecnologias || [],
+  category: project.categoria || 'article'
+}));
+
+// 合并工具和文章数据
+const searchableItems = [...toolPages, ...articles];
 ---
 
 <nav class="relative">
@@ -40,21 +111,52 @@ const languages = [
       </a>
 
       <!-- Desktop Links -->
-      <ul id="navbar-links" class="hidden md:flex items-center space-x-8">
-        {
-          links.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="nav-link font-bold transition-colors duration-300 text-theme-primary hover:text-accent"
-              >
-                {link.name}
-              </a>
-            </li>
-          ))
-        }
+      <div class="hidden md:flex items-center space-x-8">
+        <ul id="navbar-links" class="flex items-center space-x-8">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="nav-link font-bold transition-colors duration-300 text-theme-primary hover:text-accent"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
 
-        <li class="flex items-center gap-3">
+        <!-- Search Box -->
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="搜索工具或文章..."
+            class="pl-10 pr-4 py-2 rounded-full bg-theme-secondary text-theme-primary focus:outline-none focus:ring-2 focus:ring-accent w-64 transition-all duration-300"
+            id="search-input"
+          />
+          <svg
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-primary"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+          <!-- Search Results -->
+          <div id="search-results" class="absolute right-0 mt-2 w-80 bg-div-theme border border-theme-border rounded-md shadow-lg opacity-0 invisible transition-all duration-200 z-50 max-h-96 overflow-y-auto">
+            <!-- Results will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
           <!-- 主题切换器 -->
           <ThemeSwitcher client:visible />
 
@@ -81,8 +183,8 @@ const languages = [
               </ul>
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
 
       <!-- Mobile right-side icons -->
       <div class="flex md:hidden items-center gap-4 z-50">
@@ -183,6 +285,9 @@ const languages = [
   </div>
 </nav>
 
+<!-- 搜索数据 -->
+<div id="search-data" style="display: none;" data-searchable-items={JSON.stringify(searchableItems)}></div>
+
 <script>
   (function () {
     function markActiveLinks() {
@@ -229,19 +334,92 @@ const languages = [
     langOptions.forEach(option => {
       option.addEventListener('click', function(e) {
         e.preventDefault();
-        const selectedLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
+        const selectedLang = (e.currentTarget).getAttribute('data-lang');
         
         // 这里可以添加实际的语言切换逻辑
       });
     });
   }
 
+  // 搜索功能
+  function initSearchFunctionality() {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    if (!searchInput || !searchResults) return;
+
+    // 从隐藏元素中获取搜索数据
+    const searchDataElement = document.getElementById('search-data');
+    const searchableItems = JSON.parse(searchDataElement.dataset.searchableItems);
+
+    // 监听搜索输入
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      
+      if (query.length === 0) {
+        hideSearchResults();
+        return;
+      }
+
+      // 过滤搜索结果
+      const filteredItems = searchableItems.filter(item => 
+        item.title.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query) ||
+        item.type.toLowerCase().includes(query)
+      );
+
+      displaySearchResults(filteredItems);
+    });
+
+    // 点击外部关闭搜索结果
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        hideSearchResults();
+      }
+    });
+
+    // 显示搜索结果
+    function displaySearchResults(items) {
+      if (items.length === 0) {
+        searchResults.innerHTML = `
+          <div class="p-4 text-center text-theme-secondary">
+            没有找到匹配的结果
+          </div>
+        `;
+      } else {
+        searchResults.innerHTML = items.map(item => `
+          <a href="${item.url}" class="block p-3 hover:bg-theme-secondary/50 transition-colors">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-2 h-2 rounded-full mt-2 ${item.type === '工具' ? 'bg-blue-500' : 'bg-green-500'}"></div>
+              <div>
+                <h4 class="font-medium text-theme-primary">${item.title}</h4>
+                <p class="text-sm text-theme-secondary mt-1">${item.description}</p>
+                <span class="inline-block px-2 py-0.5 mt-2 text-xs rounded-full ${item.type === '工具' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}">${item.type}</span>
+              </div>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      searchResults.classList.remove('opacity-0', 'invisible');
+      searchResults.classList.add('opacity-100', 'visible');
+    }
+
+    // 隐藏搜索结果
+    function hideSearchResults() {
+      searchResults.classList.remove('opacity-100', 'visible');
+      searchResults.classList.add('opacity-0', 'invisible');
+    }
+  }
+
   // DOM准备就绪后初始化功能
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initLanguageSelector();
+      initSearchFunctionality();
     });
   } else {
     initLanguageSelector();
+    initSearchFunctionality();
   }
 </script>
