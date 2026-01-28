@@ -16,9 +16,11 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "astro": "^5.15.3",
+    "markdown-it": "^14.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-icons": "^5.5.0",
+    "sitdown": "^1.1.7",
     "tailwindcss": "^4.1.16",
     "typewriter-effect": "^2.21.0"
   },
