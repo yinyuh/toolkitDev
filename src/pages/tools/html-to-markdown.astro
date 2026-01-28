@@ -390,8 +390,398 @@ order: -1
         return html;
       }
 
-      // 简单的HTML转Markdown函数
+      /**
+       * 全新的HTML转Markdown转换函数
+       * 使用DOM解析方式处理HTML，支持复杂的嵌套结构和代码块
+       * @param {string} html - 输入的HTML字符串
+       * @returns {string} - 转换后的Markdown字符串
+       */
       function htmlToMarkdown(html) {
+        try {
+          // 创建临时DOM元素用于解析HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          
+          // 预处理：移除不需要转换的标签
+          removeUnwantedTags(tempDiv);
+          
+          // 开始转换
+          const markdown = convertNodeToMarkdown(tempDiv);
+          
+          // 后处理：清理和优化Markdown
+          return postProcessMarkdown(markdown);
+        } catch (error) {
+          console.error('HTML转Markdown错误:', error);
+          // 错误处理：返回原始HTML的简单转换
+          return simpleHtmlToMarkdown(html);
+        }
+      }
+      
+      /**
+       * 移除不需要转换的标签
+       * @param {HTMLElement} node - DOM节点
+       */
+      function removeUnwantedTags(node) {
+        const unwantedTags = ['script', 'style'];
+        unwantedTags.forEach(tagName => {
+          const elements = node.querySelectorAll(tagName);
+          elements.forEach(el => el.remove());
+        });
+        
+        // 移除注释
+        const comments = node.querySelectorAll('comment');
+        comments.forEach(comment => comment.remove());
+      }
+      
+      /**
+       * 将DOM节点转换为Markdown
+       * @param {Node} node - DOM节点
+       * @param {number} indent - 缩进级别
+       * @returns {string} - 转换后的Markdown
+       */
+      function convertNodeToMarkdown(node, indent = 0) {
+        let markdown = '';
+        const indentStr = '  '.repeat(indent);
+        
+        if (node.nodeType === Node.TEXT_NODE) {
+          // 处理文本节点
+          const text = node.textContent || '';
+          if (text.trim()) {
+            markdown += indentStr + text;
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          // 处理元素节点
+          const tagName = node.tagName.toLowerCase();
+          
+          switch (tagName) {
+            case 'h1':
+            case 'h2':
+            case 'h3':
+            case 'h4':
+            case 'h5':
+            case 'h6':
+              // 处理标题
+              const level = parseInt(tagName.charAt(1));
+              const headingPrefix = '#'.repeat(level) + ' ';
+              // 获取标题文本，忽略锚点链接
+              const headingText = getNodeText(node);
+              markdown += '\n\n' + headingPrefix + headingText + '\n\n';
+              break;
+              
+            case 'p':
+              // 处理段落
+              const paragraphContent = processChildren(node, 0);
+              if (paragraphContent.trim()) {
+                markdown += '\n\n' + paragraphContent + '\n\n';
+              }
+              break;
+              
+            case 'strong':
+            case 'b':
+              // 处理粗体
+              markdown += '**' + processChildren(node, 0) + '**';
+              break;
+              
+            case 'em':
+            case 'i':
+              // 处理斜体
+              markdown += '*' + processChildren(node, 0) + '*';
+              break;
+              
+            case 'ul':
+              // 处理无序列表
+              markdown += '\n\n';
+              const ulChildren = Array.from(node.children);
+              ulChildren.forEach((child, index) => {
+                if (child.tagName.toLowerCase() === 'li') {
+                  markdown += indentStr + '* ' + processChildren(child, indent + 1) + '\n';
+                }
+              });
+              markdown += '\n';
+              break;
+              
+            case 'ol':
+              // 处理有序列表
+              markdown += '\n\n';
+              const olChildren = Array.from(node.children);
+              olChildren.forEach((child, index) => {
+                if (child.tagName.toLowerCase() === 'li') {
+                  markdown += indentStr + (index + 1) + '. ' + processChildren(child, indent + 1) + '\n';
+                }
+              });
+              markdown += '\n';
+              break;
+              
+            case 'a':
+              // 处理链接
+              const linkHref = node.getAttribute('href');
+              const linkContent = getNodeText(node);
+              if (linkHref) {
+                markdown += '[' + linkContent + '](' + linkHref + ')';
+              } else {
+                markdown += linkContent;
+              }
+              break;
+              
+            case 'img':
+              // 处理图片
+              const src = node.getAttribute('src');
+              if (src) {
+                // 使用简洁的图片格式，不包含alt文本
+                markdown += '![](' + src + ')';
+              }
+              break;
+              
+            case 'pre':
+              // 处理代码块
+              const codeElement = node.querySelector('code');
+              if (codeElement) {
+                // 直接获取代码内容，保留原始缩进
+                const codeContent = codeElement.textContent || '';
+                // 获取代码语言
+                let language = 'plaintext';
+                
+                // 从class中提取语言信息
+                const classList = codeElement.className;
+                if (classList) {
+                  // 尝试匹配language-前缀的语言标识
+                  let langMatch = classList.match(/language-([a-z0-9]+)/i);
+                  if (langMatch && langMatch[1]) {
+                    language = langMatch[1];
+                  } else {
+                    // 尝试匹配prism-前缀的语言标识
+                    langMatch = classList.match(/prism-([a-z0-9]+)/i);
+                    if (langMatch && langMatch[1]) {
+                      language = langMatch[1];
+                    } else {
+                      // 尝试从相邻的code-language元素中获取语言信息
+                      const codeLanguageElement = node.querySelector('.code-language');
+                      if (codeLanguageElement) {
+                        const langText = codeLanguageElement.textContent || '';
+                        if (langText.trim()) {
+                          language = langText.trim();
+                        }
+                      }
+                    }
+                  }
+                }
+                
+                // 生成Markdown代码块，确保保留原始缩进
+                markdown += '\n\n```' + language + '\n' + codeContent + '\n```\n\n';
+              }
+              break;
+              
+            case 'code':
+              // 处理行内代码
+              const inlineCode = node.textContent || '';
+              markdown += '`' + inlineCode + '`';
+              break;
+              
+            case 'blockquote':
+              // 处理引用
+              const quoteContent = processChildren(node, 0);
+              if (quoteContent.trim()) {
+                const quoteLines = quoteContent.split('\n');
+                markdown += '\n\n';
+                quoteLines.forEach(line => {
+                  if (line.trim()) {
+                    markdown += '> ' + line + '\n';
+                  }
+                });
+                markdown += '\n';
+              }
+              break;
+              
+            case 'br':
+              // 处理换行
+              markdown += '\n';
+              break;
+              
+            case 'hr':
+              // 处理水平分隔线
+              markdown += '\n\n* * *\n\n';
+              break;
+              
+            case 'table':
+              // 处理表格
+              markdown += processTable(node);
+              break;
+              
+            case 'div':
+              // 处理div标签，根据class进行特殊处理
+              const divClass = node.getAttribute('class');
+              if (divClass && divClass.includes('pagination')) {
+                // 处理分页导航
+                markdown += '\n\n';
+                const paginationLinks = node.querySelectorAll('a');
+                if (paginationLinks.length > 0) {
+                  // 处理上一篇链接
+                  const prevLink = paginationLinks[0];
+                  if (prevLink) {
+                    const prevHref = prevLink.getAttribute('href');
+                    const prevText = prevLink.textContent || '';
+                    if (prevHref) {
+                      markdown += '[' + prevText + '](' + prevHref + ') ';
+                    }
+                  }
+                  // 处理下一篇链接
+                  const nextLink = paginationLinks[1];
+                  if (nextLink) {
+                    const nextHref = nextLink.getAttribute('href');
+                    const nextText = nextLink.textContent || '';
+                    if (nextHref) {
+                      markdown += '[' + nextText + '](' + nextHref + ')';
+                    }
+                  }
+                }
+                markdown += '\n\n';
+              } else if (divClass && (divClass.includes('article-meta') || divClass.includes('meta'))) {
+                // 处理文章元信息
+                markdown += '\n\n';
+                const metaLinks = node.querySelectorAll('a');
+                metaLinks.forEach(link => {
+                  const metaHref = link.getAttribute('href');
+                  const metaText = link.textContent || '';
+                  if (metaHref) {
+                    markdown += '* [' + metaText + '](' + metaHref + ')\n';
+                  }
+                });
+                markdown += '\n';
+              } else if (divClass && (divClass.includes('adsbygoogle') || divClass.includes('giscus'))) {
+                // 跳过广告和评论区
+                markdown += '\n\n' + '(adsbygoogle = window.adsbygoogle || []).push({});\n\n';
+              } else {
+                // 普通div标签，只转换内容
+                markdown += processChildren(node, indent);
+              }
+              break;
+              
+            case 'section':
+            case 'article':
+            case 'main':
+            case 'header':
+            case 'footer':
+            case 'nav':
+            case 'span':
+              // 处理容器标签，只转换内容
+              markdown += processChildren(node, indent);
+              break;
+              
+            default:
+              // 处理其他标签，只转换内容
+              markdown += processChildren(node, indent);
+          }
+        }
+        
+        return markdown;
+      }
+      
+      /**
+       * 处理节点的子节点
+       * @param {Node} node - DOM节点
+       * @param {number} indent - 缩进级别
+       * @returns {string} - 处理后的内容
+       */
+      function processChildren(node, indent) {
+        let result = '';
+        const children = Array.from(node.childNodes);
+        
+        children.forEach(child => {
+          result += convertNodeToMarkdown(child, indent);
+        });
+        
+        return result;
+      }
+      
+      /**
+       * 获取节点的文本内容
+       * @param {Node} node - DOM节点
+       * @returns {string} - 文本内容
+       */
+      function getNodeText(node) {
+        return node.textContent || '';
+      }
+      
+      /**
+       * 处理表格
+       * @param {HTMLElement} tableNode - 表格节点
+       * @returns {string} - 转换后的Markdown表格
+       */
+      function processTable(tableNode) {
+        let markdown = '\n\n';
+        
+        const thead = tableNode.querySelector('thead');
+        const tbody = tableNode.querySelector('tbody');
+        
+        // 处理表头
+        if (thead) {
+          const headerRow = thead.querySelector('tr');
+          if (headerRow) {
+            const headerCells = Array.from(headerRow.children);
+            const headerTexts = headerCells.map(cell => cell.textContent || '');
+            markdown += '| ' + headerTexts.join(' | ') + ' |\n';
+            markdown += '| ' + headerTexts.map(() => '---').join(' | ') + ' |\n';
+          }
+        }
+        
+        // 处理表格体
+        if (tbody) {
+          const rows = Array.from(tbody.children);
+          rows.forEach(row => {
+            if (row.tagName.toLowerCase() === 'tr') {
+              const cells = Array.from(row.children);
+              const cellTexts = cells.map(cell => cell.textContent || '');
+              markdown += '| ' + cellTexts.join(' | ') + ' |\n';
+            }
+          });
+        }
+        
+        markdown += '\n';
+        return markdown;
+      }
+      
+      /**
+       * 后处理Markdown，清理和优化
+       * @param {string} markdown - 转换后的Markdown
+       * @returns {string} - 优化后的Markdown
+       */
+      function postProcessMarkdown(markdown) {
+        // 移除多余的空白行
+        markdown = markdown.replace(/\n{3,}/g, '\n\n');
+        
+        // 保留代码块中的缩进，只处理非代码块部分
+        let result = '';
+        let inCodeBlock = false;
+        let codeLanguage = '';
+        
+        const lines = markdown.split('\n');
+        lines.forEach(line => {
+          if (line.startsWith('```')) {
+            // 代码块开始或结束
+            inCodeBlock = !inCodeBlock;
+            if (inCodeBlock) {
+              // 代码块开始，提取语言
+              codeLanguage = line.substring(3).trim();
+            }
+            result += line + '\n';
+          } else if (inCodeBlock) {
+            // 代码块内部，保留原始缩进
+            result += line + '\n';
+          } else {
+            // 非代码块部分，移除行首空白
+            result += line.replace(/^\s+/, '') + '\n';
+          }
+        });
+        
+        return result.trim();
+      }
+      
+      /**
+       * 简单的HTML转Markdown函数（作为备份）
+       * @param {string} html - 输入的HTML字符串
+       * @returns {string} - 转换后的Markdown
+       */
+      function simpleHtmlToMarkdown(html) {
         let markdown = html;
         
         // 预处理 HTML，移除不需要转换的标签
