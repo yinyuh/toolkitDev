@@ -352,9 +352,9 @@ const searchableItems = [...toolPages, ...articles];
     const searchDataElement = document.getElementById('search-data');
     const searchableItems = JSON.parse(searchDataElement.dataset.searchableItems);
 
-    // 监听搜索输入
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
+    // 搜索函数
+    function performSearch() {
+      const query = searchInput.value.toLowerCase().trim();
       
       if (query.length === 0) {
         hideSearchResults();
@@ -369,6 +369,19 @@ const searchableItems = [...toolPages, ...articles];
       );
 
       displaySearchResults(filteredItems);
+    }
+
+    // 监听搜索输入
+    searchInput.addEventListener('input', performSearch);
+
+    // 监听搜索框获得焦点
+    searchInput.addEventListener('focus', performSearch);
+
+    // 监听回车键
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
     });
 
     // 点击外部关闭搜索结果

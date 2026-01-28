@@ -29,9 +29,7 @@ order: -1
 
         <div class="toolbar mb-8">
           <div class="header-actions mb-6">
-            <a href="/" class="back-button inline-flex items-center gap-1">
-              返回首页
-            </a>
+            <!-- 返回首页按钮已移除 -->
           </div>
           
           <div class="controls flex flex-wrap gap-3 items-center">
@@ -71,15 +69,18 @@ order: -1
           <div class="input-section flex-1 flex flex-col">
             <div class="section-header flex justify-between items-center mb-4">
               <h2 class="text-xl font-bold text-theme-primary">HTML输入</h2>
-              <div class="stats text-theme-secondary text-sm">
-                行数: <span id="input-lines">0</span> | 字符数: <span id="input-chars">0</span>
+              <div class="flex items-center gap-3">
+                <div class="stats text-theme-secondary text-sm">
+                  行数: <span id="input-lines">0</span> | 字符数: <span id="input-chars">0</span>
+                </div>
+                <div class="w-20 h-8 flex items-center justify-center"></div>
               </div>
             </div>
             <textarea 
               id="html-input" 
-              class="w-full min-h-[300px] p-4 border border-theme-border rounded-lg resize-vertical font-mono"
+              class="w-full flex-1 min-h-[300px] p-4 border border-theme-border rounded-lg resize-vertical font-mono"
               placeholder="在此粘贴HTML代码..."
-              style="font-size: 14px;"
+              style="font-size: 14px; min-height: 300px;"
             ></textarea>
           </div>
 
@@ -97,10 +98,10 @@ order: -1
             </div>
             <textarea 
               id="markdown-output" 
-              class="w-full min-h-[300px] p-4 border border-theme-border rounded-lg resize-vertical font-mono bg-theme-secondary"
+              class="w-full flex-1 min-h-[300px] p-4 border border-theme-border rounded-lg resize-vertical font-mono bg-theme-secondary"
               placeholder="转换结果将显示在这里..."
               readonly
-              style="font-size: 14px;"
+              style="font-size: 14px; min-height: 300px;"
             ></textarea>
           </div>
         </div>
@@ -181,7 +182,7 @@ order: -1
     </div>
   </section>
 
-  <!-- 简化版HTML转Markdown工具，不依赖外部库 -->
+  <!-- HTML转Markdown工具 -->
   <script>
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
@@ -206,148 +207,273 @@ order: -1
       const outputLines = document.getElementById('output-lines');
       const outputChars = document.getElementById('output-chars');
 
+      // 增强版Markdown解析器，支持完整的Markdown语法
+      function markdownToHtml(markdown) {
+        console.log('Input markdown:', markdown);
+        
+        // 先处理空白行，保留它们用于分割元素
+        let lines = markdown.split('\n');
+        let html = '';
+        
+        let i = 0;
+        while (i < lines.length) {
+          let line = lines[i];
+          
+          // 处理空白行
+          if (line.trim() === '') {
+            html += '\n';
+            i++;
+            continue;
+          }
+          
+          // 处理分割线
+          if (line.match(/^\s*([-\*_])\1{2,}\s*$/)) {
+            html += '<hr style="border: 0; height: 1px; background: #ddd; margin: 1em 0;">\n';
+            i++;
+            continue;
+          }
+          
+          // 处理标题
+          if (line.match(/^\s*(\#{1,6})\s+(.*)$/)) {
+            const match = line.match(/^\s*(\#{1,6})\s+(.*)$/);
+            const level = match[1].length;
+            const text = match[2];
+            let fontSize = '';
+            let margin = '';
+            
+            switch(level) {
+              case 1:
+                fontSize = '2em';
+                margin = '0.67em 0';
+                break;
+              case 2:
+                fontSize = '1.5em';
+                margin = '0.83em 0';
+                break;
+              case 3:
+                fontSize = '1.17em';
+                margin = '1em 0';
+                break;
+              case 4:
+                fontSize = '1em';
+                margin = '1.33em 0';
+                break;
+              case 5:
+                fontSize = '0.83em';
+                margin = '1.67em 0';
+                break;
+              case 6:
+                fontSize = '0.67em';
+                margin = '2.33em 0';
+                break;
+            }
+            
+            html += `<h${level} style="font-size: ${fontSize}; font-weight: bold; margin: ${margin};">${text}</h${level}>\n`;
+            i++;
+            continue;
+          }
+          
+          // 处理代码块
+          if (line.match(/^\s*```/)) {
+            let codeBlock = '';
+            i++;
+            while (i < lines.length && !lines[i].match(/^\s*```/)) {
+              codeBlock += lines[i] + '\n';
+              i++;
+            }
+            if (i < lines.length) {
+              i++;
+            }
+            html += `<pre style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 1em 0;"><code style="font-family: 'Consolas', 'Courier New', monospace;">${codeBlock}</code></pre>\n`;
+            continue;
+          }
+          
+          // 处理表格
+          if (line.match(/^\s*\|/)) {
+            let tableLines = [line];
+            i++;
+            while (i < lines.length && lines[i].match(/^\s*\|/)) {
+              tableLines.push(lines[i]);
+              i++;
+            }
+            
+            let tableHtml = '<table style="width: 100%; border-collapse: collapse; margin: 1em 0;"><tbody>';
+            tableLines.forEach((row, index) => {
+              // 跳过分隔行
+              if (row.match(/^\s*\|\s*---\s*\|/)) {
+                return;
+              }
+              let cells = row.replace(/^\s*\||\|\s*$/g, '').split('|').map(cell => cell.trim());
+              tableHtml += '<tr>';
+              cells.forEach((cell) => {
+                if (index === 0) {
+                  tableHtml += `<th style="padding: 10px; border: 1px solid #ddd; text-align: left; font-weight: bold; background-color: #f5f5f5;">${cell}</th>`;
+                } else {
+                  tableHtml += `<td style="padding: 10px; border: 1px solid #ddd; text-align: left;">${cell}</td>`;
+                }
+              });
+              tableHtml += '</tr>';
+            });
+            tableHtml += '</tbody></table>\n';
+            html += tableHtml;
+            continue;
+          }
+          
+          // 处理无序列表
+          if (line.match(/^\s*([\-\*])\s+/)) {
+            let listItems = [];
+            while (i < lines.length && lines[i].match(/^\s*([\-\*])\s+/)) {
+              const match = lines[i].match(/^\s*([\-\*])\s+(.*)$/);
+              // 处理列表项中的链接
+              let listItemContent = match[2];
+              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+              listItems.push(`<li style="margin-bottom: 0.25rem;">${listItemContent}</li>`);
+              i++;
+              // 跳过可能的空白行
+              while (i < lines.length && lines[i].trim() === '') {
+                i++;
+              }
+            }
+            if (listItems.length > 0) {
+              html += '<ul style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: disc;">' + listItems.join('') + '</ul>\n';
+            }
+            continue;
+          }
+          
+          // 处理有序列表
+          if (line.match(/^\s*(\d+)\.\s+/)) {
+            let listItems = [];
+            while (i < lines.length && lines[i].match(/^\s*(\d+)\.\s+/)) {
+              const match = lines[i].match(/^\s*(\d+)\.\s+(.*)$/);
+              // 处理列表项中的链接
+              let listItemContent = match[2];
+              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+              listItems.push(`<li style="margin-bottom: 0.25rem;">${listItemContent}</li>`);
+              i++;
+              // 跳过可能的空白行
+              while (i < lines.length && lines[i].trim() === '') {
+                i++;
+              }
+            }
+            if (listItems.length > 0) {
+              html += '<ol style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: decimal;">' + listItems.join('') + '</ol>\n';
+            }
+            continue;
+          }
+          
+          // 处理导航链接（包含箭头符号的链接）
+          if (line.match(/^[←→]/)) {
+            // 处理导航链接行
+            let navLine = line;
+            
+            // 处理链接（确保链接正确显示）
+            navLine = navLine.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+            
+            // 添加导航样式
+            html += `<div style="margin: 1rem 0;">${navLine}</div>\n`;
+            i++;
+            continue;
+          }
+          
+          // 处理普通段落
+          let paragraph = line;
+          
+          // 处理段落中的链接
+          paragraph = paragraph.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+          
+          // 为普通段落添加样式
+          html += `<p style="margin: 0 0 1rem 0;">${paragraph}</p>\n`;
+          i++;
+        }
+        
+        console.log('Output html:', html);
+        return html;
+      }
+
       // 简单的HTML转Markdown函数
       function htmlToMarkdown(html) {
         let markdown = html;
         
+        // 预处理 HTML，移除不需要转换的标签
+        markdown = markdown.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+        markdown = markdown.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+        markdown = markdown.replace(/<!--[\s\S]*?-->/g, '');
+        
+        // 处理容器标签（移除标签但保留内容）
+        markdown = markdown.replace(/<div[^>]*>([\s\S]*?)<\/div>/g, '$1');
+        markdown = markdown.replace(/<section[^>]*>([\s\S]*?)<\/section>/g, '$1');
+        markdown = markdown.replace(/<article[^>]*>([\s\S]*?)<\/article>/g, '$1');
+        markdown = markdown.replace(/<main[^>]*>([\s\S]*?)<\/main>/g, '$1');
+        markdown = markdown.replace(/<header[^>]*>([\s\S]*?)<\/header>/g, '$1');
+        markdown = markdown.replace(/<footer[^>]*>([\s\S]*?)<\/footer>/g, '$1');
+        markdown = markdown.replace(/<nav[^>]*>([\s\S]*?)<\/nav>/g, '$1');
+        
         // 处理标题
-        markdown = markdown.replace(/<h1>(.*?)<\/h1>/g, '# $1\n\n');
-        markdown = markdown.replace(/<h2>(.*?)<\/h2>/g, '## $1\n\n');
-        markdown = markdown.replace(/<h3>(.*?)<\/h3>/g, '### $1\n\n');
-        markdown = markdown.replace(/<h4>(.*?)<\/h4>/g, '#### $1\n\n');
-        markdown = markdown.replace(/<h5>(.*?)<\/h5>/g, '##### $1\n\n');
-        markdown = markdown.replace(/<h6>(.*?)<\/h6>/g, '###### $1\n\n');
+        markdown = markdown.replace(/<h1[^>]*>(.*?)<\/h1>/g, '# $1\n\n');
+        markdown = markdown.replace(/<h2[^>]*>(.*?)<\/h2>/g, '## $1\n\n');
+        markdown = markdown.replace(/<h3[^>]*>(.*?)<\/h3>/g, '### $1\n\n');
+        markdown = markdown.replace(/<h4[^>]*>(.*?)<\/h4>/g, '#### $1\n\n');
+        markdown = markdown.replace(/<h5[^>]*>(.*?)<\/h5>/g, '##### $1\n\n');
+        markdown = markdown.replace(/<h6[^>]*>(.*?)<\/h6>/g, '###### $1\n\n');
         
         // 处理段落
-        markdown = markdown.replace(/<p>(.*?)<\/p>/g, '$1\n\n');
+        markdown = markdown.replace(/<p[^>]*>(.*?)<\/p>/g, '$1\n\n');
         
         // 处理粗体和斜体
-        markdown = markdown.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
-        markdown = markdown.replace(/<b>(.*?)<\/b>/g, '**$1**');
-        markdown = markdown.replace(/<em>(.*?)<\/em>/g, '*$1*');
-        markdown = markdown.replace(/<i>(.*?)<\/i>/g, '*$1*');
+        markdown = markdown.replace(/<strong[^>]*>(.*?)<\/strong>/g, '**$1**');
+        markdown = markdown.replace(/<b[^>]*>(.*?)<\/b>/g, '**$1**');
+        markdown = markdown.replace(/<em[^>]*>(.*?)<\/em>/g, '*$1*');
+        markdown = markdown.replace(/<i[^>]*>(.*?)<\/i>/g, '*$1*');
         
         // 处理列表
-        markdown = markdown.replace(/<ul>([\s\S]*?)<\/ul>/g, (match, content) => {
-          return content.replace(/<li>(.*?)<\/li>/g, '- $1\n') + '\n';
+        markdown = markdown.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/g, (match, content) => {
+          return content.replace(/<li[^>]*>(.*?)<\/li>/g, '- $1\n') + '\n';
         });
         
-        markdown = markdown.replace(/<ol>([\s\S]*?)<\/ol>/g, (match, content) => {
+        markdown = markdown.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/g, (match, content) => {
           let index = 1;
-          return content.replace(/<li>(.*?)<\/li>/g, () => `${index++}. $1\n`) + '\n';
+          return content.replace(/<li[^>]*>(.*?)<\/li>/g, (match, liContent) => `${index++}. ${liContent}\n`) + '\n';
         });
         
         // 处理链接
-        markdown = markdown.replace(/<a href="(.*?)">(.*?)<\/a>/g, '[$2]($1)');
-        
-        // 处理图片
-        markdown = markdown.replace(/<img src="(.*?)" alt="(.*?)"\s*\/?>/g, '![$2]($1)');
-        
-        // 处理代码块
-        markdown = markdown.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '```\n$1\n```\n\n');
-        
-        // 处理行内代码
-        markdown = markdown.replace(/<code>(.*?)<\/code>/g, '`$1`');
-        
-        // 处理引用
-        markdown = markdown.replace(/<blockquote>(.*?)<\/blockquote>/g, '> $1\n\n');
-        
-        // 处理表格（简单版）
-        markdown = markdown.replace(/<table>([\s\S]*?)<\/table>/g, (match, content) => {
-          let tableMarkdown = '\n';
-          let rows = content.match(/<tr>([\s\S]*?)<\/tr>/g);
-          
-          if (rows) {
-            // 处理表头
-            let headerMatch = rows[0].match(/<th>(.*?)<\/th>/g);
-            if (headerMatch) {
-              let headers = headerMatch.map(th => th.replace(/<\/?th>/g, '').trim());
-              tableMarkdown += `| ${headers.join(' | ')} |\n`;
-              tableMarkdown += `| ${headers.map(() => '---').join(' | ')} |\n`;
-              
-              // 处理数据行
-              for (let i = 1; i < rows.length; i++) {
-                let cellMatch = rows[i].match(/<td>(.*?)<\/td>/g);
-                if (cellMatch) {
-                  let cells = cellMatch.map(td => td.replace(/<\/?td>/g, '').trim());
-                  tableMarkdown += `| ${cells.join(' | ')} |\n`;
-                }
-              }
-            }
-          }
-          
-          return tableMarkdown + '\n';
+        markdown = markdown.replace(/<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g, (match, href, content) => {
+          const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+          const cleanHref = href.replace(/[`]/g, '').trim();
+          return `[${cleanContent}](${cleanHref})`;
         });
         
-        // 处理换行
-        markdown = markdown.replace(/<br\s*\/?>/g, '\n');
+        // 处理图片
+        markdown = markdown.replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/g, '![$2]($1)');
+        markdown = markdown.replace(/<img[^>]*src="([^"]*)"[^>]*\/?>/g, '![图片]($1)');
         
-        // 移除多余的空白
+        // 处理代码块
+        markdown = markdown.replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/g, '```\n$1\n```\n\n');
+        
+        // 处理行内代码
+        markdown = markdown.replace(/<code[^>]*>(.*?)<\/code>/g, '`$1`');
+        
+        // 处理引用
+        markdown = markdown.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/g, '> $1\n\n');
+        
+        // 处理换行
+        markdown = markdown.replace(/<br[^>]*\/?>/g, '\n');
+        
+        // 处理水平分隔线
+        markdown = markdown.replace(/<hr[^>]*\/?>/g, '---\n\n');
+        
+        // 移除span标签但保留内容
+        markdown = markdown.replace(/<span[^>]*>(.*?)<\/span>/g, '$1');
+        
+        // 移除其他未处理的HTML标签
+        markdown = markdown.replace(/<[^>]*>/g, '');
+        
+        // 移除多余的空白和缩进
+        markdown = markdown.replace(/^\s+/gm, '');
+        
+        // 移除多余的空白行
         markdown = markdown.replace(/\n\s*\n/g, '\n\n');
         
         return markdown.trim();
-      }
-      
-      // 简单的Markdown转HTML函数（用于预览）
-      function markdownToHtml(markdown) {
-        let html = markdown;
-        
-        // 处理标题
-        html = html.replace(/^(\#{1,6})\s+(.*)$/gm, (match, hashes, text) => {
-          const level = hashes.length;
-          return `<h${level}>${text}</h${level}>`;
-        });
-        
-        // 处理粗体和斜体
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        
-        // 处理列表
-        html = html.replace(/^(\-|\*)\s+(.*)$/gm, '<li>$2</li>');
-        html = html.replace(/(<li>.*?<\/li>)\s*/g, '$1');
-        html = html.replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>');
-        
-        html = html.replace(/^\d+\.\s+(.*)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*?<\/li>)+/g, '<ol>$&</ol>');
-        
-        // 处理链接
-        html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
-        
-        // 处理图片
-        html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
-        
-        // 处理代码块
-        html = html.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
-        
-        // 处理行内代码
-        html = html.replace(/`(.*?)`/g, '<code>$1</code>');
-        
-        // 处理引用
-        html = html.replace(/^>\s+(.*)$/gm, '<blockquote>$1</blockquote>');
-        
-        // 处理表格
-        html = html.replace(/^(\|.*?\|)$(\n\|.*?\|)+/gm, (match) => {
-          let tableHtml = '<table><tbody>';
-          let rows = match.split('\n');
-          
-          rows.forEach((row, index) => {
-            if (index === 1) return; // 跳过分隔行
-            let cells = row.replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
-            tableHtml += '<tr>';
-            cells.forEach(cell => {
-              tableHtml += `<td>${cell}</td>`;
-            });
-            tableHtml += '</tr>';
-          });
-          
-          tableHtml += '</tbody></table>';
-          return tableHtml;
-        });
-        
-        // 处理段落
-        html = html.replace(/^(?!<h|<ul|<ol|<pre|<blockquote|<table).*$/gm, '<p>$&</p>');
-        
-        return html;
       }
       
       // 转换函数
@@ -370,7 +496,11 @@ order: -1
 
       // 更新预览
       function updatePreview(markdown) {
-        previewContent.innerHTML = markdownToHtml(markdown);
+        console.log('Updating preview with markdown:', markdown);
+        const html = markdownToHtml(markdown);
+        console.log('Generated html:', html);
+        previewContent.innerHTML = html;
+        console.log('Preview content updated:', previewContent.innerHTML);
       }
 
       // 复制到剪贴板
@@ -402,11 +532,7 @@ order: -1
       function clearInput() {
         htmlInput.value = '';
         updateInputStats('');
-        if (realtimeMode.checked) {
-          markdownOutput.value = '';
-          previewContent.innerHTML = '';
-          updateOutputStats('');
-        }
+        startBtn.disabled = true;
       }
 
       // 清空输出
@@ -459,6 +585,7 @@ order: -1
 </table>`;
         htmlInput.value = exampleHtml;
         updateInputStats(exampleHtml);
+        startBtn.disabled = false;
         if (realtimeMode.checked) {
           convertToMarkdown();
         }
@@ -484,10 +611,34 @@ order: -1
       htmlInput.addEventListener('input', () => {
         const text = htmlInput.value;
         updateInputStats(text);
+        startBtn.disabled = text.trim() === '';
         if (realtimeMode.checked) {
           convertToMarkdown();
         }
       });
+      
+      // 监听粘贴事件，确保粘贴内容后按钮状态也能更新
+      htmlInput.addEventListener('paste', () => {
+        setTimeout(() => {
+          const text = htmlInput.value;
+          startBtn.disabled = text.trim() === '';
+        }, 0);
+      });
+      
+      // 监听页面焦点事件，确保页面重新获得焦点时按钮状态正确
+      window.addEventListener('focus', () => {
+        const text = htmlInput.value;
+        startBtn.disabled = text.trim() === '';
+      });
+      
+      // 监听页面加载完成事件，确保页面刷新后按钮状态正确
+      window.addEventListener('load', () => {
+        const text = htmlInput.value;
+        startBtn.disabled = text.trim() === '';
+      });
+
+      // 初始化按钮状态
+      startBtn.disabled = htmlInput.value.trim() === '';
 
       // 事件监听器
       startBtn.addEventListener('click', convertToMarkdown);
@@ -516,11 +667,6 @@ order: -1
         htmlInput.style.fontSize = `${size}px`;
         markdownOutput.style.fontSize = `${size}px`;
         previewContent.style.fontSize = `${size}px`;
-      });
-
-      // 禁用/启用转换按钮
-      htmlInput.addEventListener('input', () => {
-        startBtn.disabled = htmlInput.value.trim() === '';
       });
     });
   </script>
@@ -758,10 +904,16 @@ order: -1
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
+      height: 32px;
     }
 
     .section-header h2 {
       margin: 0;
+      line-height: 32px;
+    }
+
+    .section-header .stats {
+      line-height: 32px;
     }
 
     /* Stats Styles */
@@ -779,6 +931,23 @@ order: -1
       border-radius: 4px;
       resize: vertical;
       font-family: 'Consolas', 'Courier New', monospace;
+      box-sizing: border-box;
+    }
+
+    /* Specific Textarea Styles for Input and Output */
+    #html-input,
+    #markdown-output {
+      width: 100%;
+      min-height: 300px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: 'Consolas', 'Courier New', monospace;
+      box-sizing: border-box;
+      font-size: 14px;
+      line-height: 1.5;
+      flex: 1;
     }
 
     /* Reference Guide Styles */
@@ -845,6 +1014,13 @@ order: -1
     }
 
     [data-theme="dark"] textarea {
+      background-color: #2d2d2d;
+      color: #fff;
+      border-color: #555;
+    }
+
+    [data-theme="dark"] #html-input,
+    [data-theme="dark"] #markdown-output {
       background-color: #2d2d2d;
       color: #fff;
       border-color: #555;
