@@ -54,7 +54,7 @@ order: -1
             </label>
             
             <label class="flex items-center gap-2">
-              <input type="checkbox" id="show-preview"> 显示预览
+              <input type="checkbox" id="show-preview" checked> 显示预览
             </label>
             
             <label class="flex items-center gap-2">
@@ -268,7 +268,7 @@ order: -1
                 break;
             }
             
-            html += `<h${level} style="font-size: ${fontSize}; font-weight: bold; margin: ${margin};">${text}</h${level}>\n`;
+            html += `<h${level} style="font-size: ${fontSize}; font-weight: bold; margin: ${margin}; color: var(--text-primary);">${text}</h${level}>\n`;
             i++;
             continue;
           }
@@ -284,7 +284,7 @@ order: -1
             if (i < lines.length) {
               i++;
             }
-            html += `<pre style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 1em 0;"><code style="font-family: 'Consolas', 'Courier New', monospace;">${codeBlock}</code></pre>\n`;
+            html += `<pre style="background-color: var(--bg-secondary); padding: 10px; border-radius: 5px; overflow-x: auto; margin: 1em 0; border: 1px solid var(--border-color);"><code style="font-family: 'Consolas', 'Courier New', monospace; color: var(--text-primary);">${codeBlock}</code></pre>\n`;
             continue;
           }
           
@@ -307,9 +307,9 @@ order: -1
               tableHtml += '<tr>';
               cells.forEach((cell) => {
                 if (index === 0) {
-                  tableHtml += `<th style="padding: 10px; border: 1px solid #ddd; text-align: left; font-weight: bold; background-color: #f5f5f5;">${cell}</th>`;
+                  tableHtml += `<th style="padding: 10px; border: 1px solid var(--border-color); text-align: left; font-weight: bold; background-color: var(--bg-secondary); color: var(--text-primary);">${cell}</th>`;
                 } else {
-                  tableHtml += `<td style="padding: 10px; border: 1px solid #ddd; text-align: left;">${cell}</td>`;
+                  tableHtml += `<td style="padding: 10px; border: 1px solid var(--border-color); text-align: left; color: var(--text-primary);">${cell}</td>`;
                 }
               });
               tableHtml += '</tr>';
@@ -324,9 +324,12 @@ order: -1
             let listItems = [];
             while (i < lines.length && lines[i].match(/^\s*([\-\*])\s+/)) {
               const match = lines[i].match(/^\s*([\-\*])\s+(.*)$/);
-              // 处理列表项中的链接
+              // 处理列表项中的加粗语法
               let listItemContent = match[2];
-              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+              listItemContent = listItemContent.replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold;">$1</strong>');
+              listItemContent = listItemContent.replace(/\_\_(.*?)\_\_/g, '<strong style="font-weight: bold;">$1</strong>');
+              // 处理列表项中的链接
+              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--link-color); text-decoration: none;">$1</a>');
               listItems.push(`<li style="margin-bottom: 0.25rem;">${listItemContent}</li>`);
               i++;
               // 跳过可能的空白行
@@ -335,7 +338,7 @@ order: -1
               }
             }
             if (listItems.length > 0) {
-              html += '<ul style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: disc;">' + listItems.join('') + '</ul>\n';
+              html += '<ul style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: disc; color: var(--text-primary);">' + listItems.join('') + '</ul>\n';
             }
             continue;
           }
@@ -345,9 +348,12 @@ order: -1
             let listItems = [];
             while (i < lines.length && lines[i].match(/^\s*(\d+)\.\s+/)) {
               const match = lines[i].match(/^\s*(\d+)\.\s+(.*)$/);
-              // 处理列表项中的链接
+              // 处理列表项中的加粗语法
               let listItemContent = match[2];
-              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+              listItemContent = listItemContent.replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold;">$1</strong>');
+              listItemContent = listItemContent.replace(/\_\_(.*?)\_\_/g, '<strong style="font-weight: bold;">$1</strong>');
+              // 处理列表项中的链接
+              listItemContent = listItemContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--link-color); text-decoration: none;">$1</a>');
               listItems.push(`<li style="margin-bottom: 0.25rem;">${listItemContent}</li>`);
               i++;
               // 跳过可能的空白行
@@ -356,7 +362,35 @@ order: -1
               }
             }
             if (listItems.length > 0) {
-              html += '<ol style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: decimal;">' + listItems.join('') + '</ol>\n';
+              html += '<ol style="margin: 0 0 1rem 0; padding-left: 2rem; list-style-type: decimal; color: var(--text-primary);">' + listItems.join('') + '</ol>\n';
+            }
+            continue;
+          }
+          
+          // 处理引用块
+          if (line.match(/^\s*>\s+/)) {
+            let quoteItems = [];
+            while (i < lines.length && lines[i].match(/^\s*>\s+/)) {
+              const match = lines[i].match(/^\s*>\s+(.*)$/);
+              // 处理引用项中的加粗语法
+              let quoteContent = match[1];
+              quoteContent = quoteContent.replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold;">$1</strong>');
+              quoteContent = quoteContent.replace(/\_\_(.*?)\_\_/g, '<strong style="font-weight: bold;">$1</strong>');
+              // 处理引用项中的链接
+              quoteContent = quoteContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--link-color); text-decoration: none;">$1</a>');
+              quoteItems.push(quoteContent);
+              i++;
+              // 跳过可能的空白行
+              while (i < lines.length && lines[i].trim() === '') {
+                i++;
+              }
+            }
+            if (quoteItems.length > 0) {
+              html += '<blockquote style="margin: 0 0 1rem; padding: 0.5rem 1rem; border-left: 4px solid var(--accent-color); background-color: var(--bg-secondary); color: var(--text-secondary);">';
+              quoteItems.forEach(quoteItem => {
+                html += `<p style="margin: 0 0 0.5rem 0; color: var(--text-secondary);">${quoteItem}</p>`;
+              });
+              html += '</blockquote>\n';
             }
             continue;
           }
@@ -367,10 +401,10 @@ order: -1
             let navLine = line;
             
             // 处理链接（确保链接正确显示）
-            navLine = navLine.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+            navLine = navLine.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--link-color); text-decoration: none;">$1</a>');
             
             // 添加导航样式
-            html += `<div style="margin: 1rem 0;">${navLine}</div>\n`;
+            html += `<div style="margin: 1rem 0; color: var(--text-primary);">${navLine}</div>\n`;
             i++;
             continue;
           }
@@ -378,11 +412,18 @@ order: -1
           // 处理普通段落
           let paragraph = line;
           
+          // 处理段落中的加粗语法
+          paragraph = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold;">$1</strong>');
+          paragraph = paragraph.replace(/\_\_(.*?)\_\_/g, '<strong style="font-weight: bold;">$1</strong>');
+          
+          // 处理段落中的图片
+          paragraph = paragraph.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; height: auto;" onerror="this.src=\'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjRjNGM0YzIi8+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjRkZGRkZGIi8+PHBhdGggZD0iTTkgOVYxNSIgc3Ryb2tlPSIjOTY5Njk2IiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTUgOVYxNSIgc3Ryb2tlPSIjOTY5Njk2IiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTIgNVYxOSIgc3Ryb2tlPSIjOTY5Njk2IiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTIgMTRMMTUgMTciIHN0cm9rZT0iIzE4MThlMSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMTIiIHk9IjEyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGN4PSIxMiIgY3k9IjEyIiBmaWxsPSIjOTY5Njk2Ij7nlLXlj5Hlj5HmiJDnlLXlj5Hku6Xlj5HmiJDmjIfku6Xlj5HmiJDnlLXlj5HmiJDnkIPlj5HnlLXlj5HmiJDmjIfmiJDmiJDmnLrnlLXlj5HmiJDnmoTnrYfliLDku6Xlj5HmiJDrrqHvvJo8L3RleHQ+PC9zdmc+\'; this.onerror=null;">');
+          
           // 处理段落中的链接
-          paragraph = paragraph.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #007bff; text-decoration: none;">$1</a>');
+          paragraph = paragraph.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: var(--link-color); text-decoration: none;">$1</a>');
           
           // 为普通段落添加样式
-          html += `<p style="margin: 0 0 1rem 0;">${paragraph}</p>\n`;
+          html += `<p style="margin: 0 0 1rem 0; color: var(--text-primary);">${paragraph}</p>\n`;
           i++;
         }
         
@@ -1029,6 +1070,9 @@ order: -1
 
       // 初始化按钮状态
       startBtn.disabled = htmlInput.value.trim() === '';
+      
+      // 初始化预览状态
+      previewSection.style.display = showPreview.checked ? 'block' : 'none';
 
       // 事件监听器
       startBtn.addEventListener('click', convertToMarkdown);
@@ -1175,9 +1219,9 @@ order: -1
       flex-direction: column;
       margin: 20px auto 0 auto;
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       border-radius: 4px;
-      background-color: #f9f9f9;
+      background-color: var(--bg-secondary);
       width: 100%;
     }
 
@@ -1185,25 +1229,28 @@ order: -1
       flex: 1;
       padding: 10px;
       overflow-y: auto;
-      background-color: #f9f9f9;
-      border: 1px solid #eee;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 4px;
       text-align: left;
+      color: var(--text-primary);
     }
 
     /* Preview Content Styles */
     .preview-content code {
-      background-color: #f0f0f0;
+      background-color: var(--bg-secondary);
       padding: 2px 4px;
       border-radius: 3px;
       font-family: 'Consolas', 'Courier New', monospace;
+      color: var(--text-primary);
     }
 
     .preview-content pre {
-      background-color: #f0f0f0;
+      background-color: var(--bg-secondary);
       padding: 10px;
       border-radius: 5px;
       overflow-x: auto;
+      border: 1px solid var(--border-color);
     }
 
     .preview-content pre code {
@@ -1212,12 +1259,13 @@ order: -1
     }
 
     .preview-content a {
-      color: #007bff !important;
+      color: var(--link-color) !important;
       text-decoration: none;
     }
 
     .preview-content a:hover {
       text-decoration: underline;
+      color: var(--link-hover-color) !important;
     }
 
     .preview-content table {
@@ -1229,21 +1277,22 @@ order: -1
     .preview-content th,
     .preview-content td {
       padding: 10px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       text-align: left;
+      color: var(--text-primary);
     }
 
     .preview-content th {
-      background-color: #f5f5f5;
+      background-color: var(--bg-secondary);
       font-weight: bold;
     }
 
     .preview-content blockquote {
       margin: 0 0 1rem;
       padding: 0.5rem 1rem;
-      border-left: 4px solid #007bff;
-      background-color: #f8f9fa;
-      color: #6c757d;
+      border-left: 4px solid var(--accent-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
     }
 
     .preview-content blockquote p:last-child {
@@ -1256,6 +1305,7 @@ order: -1
       margin-top: 0.5em;
       margin-bottom: 0.5em;
       font-weight: bold;
+      color: var(--text-primary);
     }
 
     .preview-content h1 {
@@ -1274,10 +1324,12 @@ order: -1
     .preview-content ol {
       margin: 0 0 1rem 0;
       padding-left: 2rem;
+      color: var(--text-primary);
     }
 
     .preview-content li {
       margin-bottom: 0.25rem;
+      color: var(--text-primary);
     }
 
     .preview-content ul li {
@@ -1401,6 +1453,15 @@ order: -1
       border-left-color: #4d90fe;
       background-color: #2d2d2d;
       color: #adb5bd;
+    }
+
+    [data-theme="dark"] .preview-section {
+      border-color: #555;
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .preview-section h2 {
+      color: #fff;
     }
 
     [data-theme="dark"] textarea {
