@@ -227,8 +227,8 @@ order: -1
           }
           
           // 处理分割线
-          if (line.match(/^\s*([-\*_])\1{2,}\s*$/)) {
-            html += '<hr style="border: 0; height: 1px; background: #ddd; margin: 1em 0;">\n';
+          if (line.match(/^\s*([*\-_])\s*(?:\1\s*){2,}\s*$/)) {
+            html += '<hr style="border: 0; height: 1px; background: var(--border-color); margin: 1em 0; width: 100%;">\n';
             i++;
             continue;
           }
@@ -504,8 +504,10 @@ order: -1
               // 处理标题
               const level = parseInt(tagName.charAt(1));
               const headingPrefix = '#'.repeat(level) + ' ';
-              // 获取标题文本，忽略锚点链接
-              const headingText = getNodeText(node);
+              // 获取标题文本，忽略锚点链接和空白
+              let headingText = getNodeText(node);
+              // 清理标题文本，移除前后空白和注释
+              headingText = headingText.replace(/<!---->/g, '').trim();
               markdown += '\n\n' + headingPrefix + headingText + '\n\n';
               break;
               
@@ -556,7 +558,9 @@ order: -1
             case 'a':
               // 处理链接
               const linkHref = node.getAttribute('href');
-              const linkContent = getNodeText(node);
+              let linkContent = getNodeText(node);
+              // 清理链接文本，移除前后空白和注释
+              linkContent = linkContent.replace(/<!---->/g, '').trim();
               if (linkHref) {
                 markdown += '[' + linkContent + '](' + linkHref + ')';
               } else {
