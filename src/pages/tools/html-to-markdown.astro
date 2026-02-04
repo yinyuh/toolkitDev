@@ -149,7 +149,6 @@ order: -1
 
       // 增强版Markdown解析器，支持完整的Markdown语法
       function markdownToHtml(markdown) {
-        console.log('Input markdown:', markdown);
         
         // 先处理空白行，保留它们用于分割元素
         let lines = markdown.split('\n');
@@ -367,7 +366,6 @@ order: -1
           i++;
         }
         
-        console.log('Output html:', html);
         return html;
       }
 
@@ -392,7 +390,6 @@ order: -1
           // 后处理：清理和优化Markdown
           return postProcessMarkdown(markdown);
         } catch (error) {
-          console.error('HTML转Markdown错误:', error);
           // 错误处理：返回原始HTML的简单转换
           return simpleHtmlToMarkdown(html);
         }
@@ -869,7 +866,6 @@ order: -1
           // 更新统计信息
           updateOutputStats(markdown);
         } catch (error) {
-          console.error('转换错误:', error);
           markdownOutput.value = '转换失败，请检查HTML格式';
           updatePreview('转换失败，请检查HTML格式');
         }
@@ -877,11 +873,8 @@ order: -1
 
       // 更新预览
       function updatePreview(markdown) {
-        console.log('Updating preview with markdown:', markdown);
         const html = markdownToHtml(markdown);
-        console.log('Generated html:', html);
         previewContent.innerHTML = html;
-        console.log('Preview content updated:', previewContent.innerHTML);
       }
 
       // 复制到剪贴板
@@ -891,7 +884,7 @@ order: -1
             showTemporaryToast('复制成功');
           })
           .catch((error) => {
-            console.warn('复制失败:', error);
+            // console.warn('复制失败:', error);
           });
       }
 
