@@ -118,66 +118,6 @@ order: -1
           ></div>
         </div>
 
-        <!-- Reference Guide -->
-        <div class="reference-guide pt-8 border-t border-theme-border">
-          <h3 class="text-xl font-bold text-theme-primary mb-4">HTML标签与Markdown语法对照表</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
-              <thead>
-                <tr class="bg-theme-secondary">
-                  <th class="p-4 border border-theme-border text-left font-bold">HTML标签</th>
-                  <th class="p-4 border border-theme-border text-left font-bold">Markdown语法</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;h1&gt;标题&lt;/h1&gt;</td>
-                  <td class="p-4 border border-theme-border"># 标题</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;p&gt;段落&lt;/p&gt;</td>
-                  <td class="p-4 border border-theme-border">段落</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;strong&gt;粗体&lt;/strong&gt;</td>
-                  <td class="p-4 border border-theme-border">**粗体**</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;em&gt;斜体&lt;/em&gt;</td>
-                  <td class="p-4 border border-theme-border">*斜体*</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;ul&gt;&lt;li&gt;列表项&lt;/li&gt;&lt;/ul&gt;</td>
-                  <td class="p-4 border border-theme-border">- 列表项</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;ol&gt;&lt;li&gt;列表项&lt;/li&gt;&lt;/ol&gt;</td>
-                  <td class="p-4 border border-theme-border">1. 列表项</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;a href="url"&gt;链接&lt;/a&gt;</td>
-                  <td class="p-4 border border-theme-border">[链接](url)</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;img src="url" alt="描述"&gt;</td>
-                  <td class="p-4 border border-theme-border">![描述](url)</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;table&gt;&lt;tr&gt;&lt;td&gt;单元格&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</td>
-                  <td class="p-4 border border-theme-border">| 单元格 |\n|--------|</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;pre&gt;&lt;code&gt;代码块&lt;/code&gt;&lt;/pre&gt;</td>
-                  <td class="p-4 border border-theme-border">```\n代码块\n```</td>
-                </tr>
-                <tr>
-                  <td class="p-4 border border-theme-border">&lt;blockquote&gt;引用&lt;/blockquote&gt;</td>
-                  <td class="p-4 border border-theme-border">&gt; 引用</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -515,7 +455,13 @@ order: -1
               // 处理段落
               const paragraphContent = processChildren(node, 0);
               if (paragraphContent.trim()) {
-                markdown += '\n\n' + paragraphContent + '\n\n';
+                // 检查父节点是否为li标签，如果是则不添加额外的换行符
+                const parentTagName = node.parentElement ? node.parentElement.tagName.toLowerCase() : '';
+                if (parentTagName === 'li') {
+                  markdown += paragraphContent;
+                } else {
+                  markdown += '\n\n' + paragraphContent + '\n\n';
+                }
               }
               break;
               
@@ -1400,99 +1346,6 @@ order: -1
     .reference-guide {
       border-top: 1px solid #eee;
       padding-top: 20px;
-    }
-
-    .reference-guide table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1em 0;
-    }
-
-    .reference-guide th,
-    .reference-guide td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    .reference-guide th {
-      background-color: #f5f5f5;
-      font-weight: bold;
-    }
-
-    /* Dark Theme Support */
-    [data-theme="dark"] .preview-content {
-      background-color: #2d2d2d;
-      border-color: #555;
-      color: #fff;
-    }
-
-    [data-theme="dark"] .preview-content code {
-      background-color: #333;
-      color: #fff;
-    }
-
-    [data-theme="dark"] .preview-content pre {
-      background-color: #333;
-    }
-
-    [data-theme="dark"] .preview-content a {
-      color: #4d90fe !important;
-    }
-
-    [data-theme="dark"] .preview-content a:hover {
-      color: #8ab4f8 !important;
-    }
-
-    [data-theme="dark"] .preview-content th {
-      background-color: #333;
-    }
-
-    [data-theme="dark"] .preview-content th,
-    [data-theme="dark"] .preview-content td {
-      border-color: #555;
-    }
-
-    [data-theme="dark"] .preview-content blockquote {
-      border-left-color: #4d90fe;
-      background-color: #2d2d2d;
-      color: #adb5bd;
-    }
-
-    [data-theme="dark"] .preview-section {
-      border-color: #555;
-      background-color: #2d2d2d;
-    }
-
-    [data-theme="dark"] .preview-section h2 {
-      color: #fff;
-    }
-
-    [data-theme="dark"] textarea {
-      background-color: #2d2d2d;
-      color: #fff;
-      border-color: #555;
-    }
-
-    [data-theme="dark"] #html-input,
-    [data-theme="dark"] #markdown-output {
-      background-color: #2d2d2d;
-      color: #fff;
-      border-color: #555;
-    }
-
-    [data-theme="dark"] .reference-guide th {
-      background-color: #333;
-    }
-
-    [data-theme="dark"] .reference-guide th,
-    [data-theme="dark"] .reference-guide td {
-      border-color: #555;
-    }
-
-    [data-theme="dark"] .preview-section {
-      border-color: #555;
-      background-color: #2d2d2d;
     }
   </style>
 </Layout>
