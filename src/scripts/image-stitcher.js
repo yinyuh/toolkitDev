@@ -668,9 +668,46 @@ function sortImages() {
   updateImageList();
 }
 
+// 添加全局样式
+function addGlobalStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    #imageList .image-item {
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: 2px solid var(--border-color) !important;
+    }
+    #imageList .image-item:hover {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5) !important;
+    }
+    #imageList .image-item.border-blue-500 {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+      background-color: rgba(96, 165, 250, 0.05) !important;
+    }
+    #imageList .image-item.border-theme-secondary {
+      cursor: pointer !important;
+      border: 2px solid var(--border-color) !important;
+    }
+    #imageList .image-item.border-theme-secondary:hover {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5) !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 // 当DOM加载完成时初始化
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => {
+    addGlobalStyles();
+    init();
+  });
 } else {
+  addGlobalStyles();
   init();
 }
