@@ -62,7 +62,7 @@ const getRandomIcon = (projectName: string) => {
   <div class="mt-auto">
     <div class="flex rounded-b-xl overflow-hidden">
       {/* 拷贝链接按钮 */}
-      <button class="flex-1 text-center py-3 btn-theme text-xs transition-colors duration-200 flex items-center justify-center border-r border-gray-200">
+      <button class="flex-1 text-center py-3 btn-theme text-xs transition-colors duration-200 flex items-center justify-center hover:bg-gray-200 border-r border-gray-200 cursor-pointer">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
         </svg>
@@ -101,13 +101,16 @@ const getRandomIcon = (projectName: string) => {
           const startButton = card.querySelector('a[href]') as HTMLAnchorElement | null;
           let url = startButton ? startButton.href : window.location.href;
           
+          // 保存按钮的原始HTML结构
+          const originalHTML = this.innerHTML;
+          
           // 复制到剪贴板
           navigator.clipboard.writeText(url).then(() => {
             // 显示复制成功提示
-            const originalText = button.textContent.trim();
-            button.textContent = ' 已拷贝';
+            this.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> 已拷贝';
             setTimeout(() => {
-              button.textContent = originalText;
+              // 恢复原始HTML结构，包括图标
+              this.innerHTML = originalHTML;
             }, 2000);
           }).catch(err => {
             console.error('复制失败:', err);
