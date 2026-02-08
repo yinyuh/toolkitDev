@@ -666,6 +666,8 @@ function sortImages() {
   }
   // 更新图片列表
   updateImageList();
+  // 更新预览效果窗口
+  updatePreview();
 }
 
 // 添加全局样式
