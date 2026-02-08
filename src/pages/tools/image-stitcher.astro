@@ -8,6 +8,41 @@ order: -1
 ---
 
 <Layout title="在线拼接长图" description="一个功能强大的在线图片拼接工具，支持多张图片合并、格式转换、压缩和编辑">
+  <style>
+    /* 基础样式 */
+    #imageList .image-item {
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: 2px solid var(--border-color) !important;
+    }
+    
+    /* 鼠标悬停效果 */
+    #imageList .image-item:hover {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5) !important;
+    }
+    
+    /* 选中状态效果 */
+    #imageList .image-item.border-blue-500 {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+      background-color: rgba(96, 165, 250, 0.05) !important;
+    }
+    
+    /* 确保未选中状态的样式不会覆盖 */
+    #imageList .image-item.border-theme-secondary {
+      cursor: pointer !important;
+      border: 2px solid var(--border-color) !important;
+    }
+    
+    #imageList .image-item.border-theme-secondary:hover {
+      cursor: pointer !important;
+      border: 2px solid var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5) !important;
+    }
+  </style>
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Tool Header -->
