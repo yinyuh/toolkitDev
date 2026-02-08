@@ -35,8 +35,8 @@ const getRandomIcon = (projectName: string) => {
 ---
 
 {/* 工具卡片组件 */}
-<div class="bg-div-theme rounded-xl p-4 shadow-lg border border-div-theme hover:border-blue-500 transition-all duration-300 flex flex-col min-h-[200px] group relative">
-  <div class="flex-grow">
+<div class="bg-div-theme rounded-xl shadow-lg border border-div-theme hover:border-blue-500 transition-all duration-300 flex flex-col min-h-[200px] group relative">
+  <div class="p-4 flex-grow">
     <div class="flex items-center gap-3 mb-3">
       {/* 工具图标 */}
       <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-theme-secondary">
@@ -59,17 +59,17 @@ const getRandomIcon = (projectName: string) => {
     </div>
   </div>
   
-  <div class="pt-3 mt-auto">
-    <div class="flex justify-center border border-gray-200 rounded-lg overflow-hidden max-w-xs mx-auto">
+  <div class="mt-auto">
+    <div class="flex rounded-b-xl overflow-hidden">
       {/* 拷贝链接按钮 */}
-      <button class="flex-1 text-center px-3 py-2 bg-gray-100 text-gray-700 text-xs transition-colors duration-200 flex items-center justify-center hover:bg-gray-200 border-r border-gray-200">
+      <button class="flex-1 text-center py-3 btn-theme text-xs transition-colors duration-200 flex items-center justify-center border-r border-gray-200">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
         </svg>
         拷贝链接
       </button>
       <!-- 开始使用按钮 -->
-      <a href={project.isToolPage || project.titulo === "React 电商" ? (project.url || "/tools/react-ecommerce") : (project.demo || project.codigo || "#")} class="flex-1 text-center px-3 py-2 btn-theme text-xs transition-colors duration-200 flex items-center justify-center">
+      <a href={project.isToolPage || project.titulo === "React 电商" ? (project.url || "/tools/react-ecommerce") : (project.demo || project.codigo || "#")} class="flex-1 text-center py-3 bg-gray-100 text-gray-700 text-xs transition-colors duration-200 flex items-center justify-center hover:bg-gray-200">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
         </svg>
