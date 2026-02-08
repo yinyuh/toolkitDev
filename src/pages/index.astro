@@ -35,9 +35,14 @@ if (fs.existsSync(toolsDirectory)) {
         const lines = frontmatter.split('\n').slice(1, -1);
         
         lines.forEach(line => {
+          // 跳过import语句
+          if (line.trim().startsWith('import ')) {
+            return;
+          }
+          
           const [key, ...valueParts] = line.split(':');
           if (key && valueParts.length > 0) {
-            const value = valueParts.join(':').trim().replace(/^["']|['"]$/g, '');
+            const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
             metadata[key.trim()] = value;
           }
         });
