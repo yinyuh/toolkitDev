@@ -252,6 +252,61 @@ function updateImageList() {
       updatePreview();
     });
   });
+
+  // 实现拖拽排序
+  let draggedItem = null;
+
+  document.querySelectorAll('.image-item').forEach(item => {
+    item.setAttribute('draggable', 'true');
+
+    item.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      setTimeout(() => {
+        item.style.opacity = '0.5';
+      }, 0);
+    });
+
+    item.addEventListener('dragend', (e) => {
+      draggedItem = null;
+      item.style.opacity = '1';
+      document.querySelectorAll('.image-item').forEach(i => {
+        i.classList.remove('border-blue-500');
+      });
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    item.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      if (item !== draggedItem) {
+        item.classList.add('border-blue-500');
+      }
+    });
+
+    item.addEventListener('dragleave', (e) => {
+      if (item !== draggedItem) {
+        item.classList.remove('border-blue-500');
+      }
+    });
+
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      item.classList.remove('border-blue-500');
+      
+      if (draggedItem !== item) {
+        const draggedIndex = parseInt(draggedItem.dataset.index);
+        const targetIndex = parseInt(item.dataset.index);
+        
+        const [draggedImage] = images.splice(draggedIndex, 1);
+        images.splice(targetIndex, 0, draggedImage);
+        
+        updateImageList();
+        updatePreview();
+      }
+    });
+  });
 }
 
 // 旋转图片
