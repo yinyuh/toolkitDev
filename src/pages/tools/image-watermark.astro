@@ -1,0 +1,553 @@
+---
+import Layout from "../../layouts/Layout.astro";
+title: "图片水印处理工具"
+description: "一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数"
+technologies: "图片水印处理"
+category: "tool"
+order: -1
+---
+
+<Layout title="图片水印处理工具" description="一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Tool Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">图片水印处理工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数，所有操作均在本地完成。
+        </p>
+      </div>
+
+      <!-- Tool Content -->
+      <div class="max-w-6xl mx-auto">
+        <div class="image-watermark-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Image Upload and Preview Section -->
+            <div class="upload-preview-section">
+              <h2 class="text-2xl font-semibold text-theme-primary mb-4">图片上传与预览</h2>
+              
+              <!-- File Input -->
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-theme-primary mb-2">选择图片文件</label>
+                <input 
+                  type="file" 
+                  id="imageUpload" 
+                  accept="image/*" 
+                  class="block w-full text-sm text-theme-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-300 hover:file:bg-blue-100 dark:hover:file:bg-blue-800"
+                >
+                <p class="mt-2 text-sm text-theme-secondary">支持 JPG、PNG、WEBP 等常见图片格式</p>
+              </div>
+
+              <!-- Image Preview -->
+              <div id="imagePreviewContainer" class="relative border-2 border-dashed border-theme-secondary rounded-lg p-6 min-h-[500px] flex items-center justify-center">
+                <div id="noImageState" class="text-center">
+                  <svg class="mx-auto h-20 w-20 text-theme-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p class="mt-2 text-sm text-theme-secondary">请选择一张图片以上传</p>
+                </div>
+                <canvas id="imagePreview" class="max-w-full max-h-[600px] hidden"></canvas>
+              </div>
+
+              <!-- Download Button -->
+              <div class="mt-6 text-center">
+                <button 
+                  id="downloadButton" 
+                  class="btn-theme px-6 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mx-auto cursor-pointer"
+                  disabled
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  下载水印图片
+                </button>
+              </div>
+            </div>
+
+            <!-- Watermark Configuration Section -->
+            <div class="watermark-config-section">
+              <h2 class="text-2xl font-semibold text-theme-primary mb-4">水印配置</h2>
+
+              <!-- Watermark Text -->
+              <div class="mb-6">
+                <label for="watermarkText" class="block text-sm font-medium text-theme-primary mb-2">水印文字</label>
+                <input 
+                  type="text" 
+                  id="watermarkText" 
+                  value="Sample Watermark" 
+                  class="block w-full px-4 py-2 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary"
+                >
+              </div>
+
+              <!-- Watermark Color -->
+              <div class="mb-6">
+                <label for="watermarkColor" class="block text-sm font-medium text-theme-primary mb-2">水印颜色</label>
+                <div class="flex items-center gap-4">
+                  <input 
+                    type="color" 
+                    id="watermarkColor" 
+                    value="#000000" 
+                    class="w-12 h-12 rounded-lg cursor-pointer"
+                  >
+                  <span id="colorValue" class="text-sm font-medium text-theme-primary">#000000</span>
+                </div>
+              </div>
+
+              <!-- Watermark Opacity -->
+              <div class="mb-6">
+                <label for="watermarkOpacity" class="block text-sm font-medium text-theme-primary mb-2">
+                  透明度: <span id="opacityValue">50%</span>
+                </label>
+                <input 
+                  type="range" 
+                  id="watermarkOpacity" 
+                  min="0" 
+                  max="100" 
+                  value="50" 
+                  class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                >
+              </div>
+
+              <!-- Watermark Angle -->
+              <div class="mb-6">
+                <label for="watermarkAngle" class="block text-sm font-medium text-theme-primary mb-2">
+                  旋转角度: <span id="angleValue">30°</span>
+                </label>
+                <input 
+                  type="range" 
+                  id="watermarkAngle" 
+                  min="0" 
+                  max="360" 
+                  value="30" 
+                  class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                >
+              </div>
+
+              <!-- Watermark Spacing -->
+              <div class="mb-6">
+                <label for="watermarkSpacing" class="block text-sm font-medium text-theme-primary mb-2">
+                  水印间隔: <span id="spacingValue">50px</span>
+                </label>
+                <input 
+                  type="range" 
+                  id="watermarkSpacing" 
+                  min="20" 
+                  max="200" 
+                  value="50" 
+                  class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                >
+              </div>
+
+              <!-- Watermark Font Size -->
+              <div class="mb-6">
+                <label for="watermarkFontSize" class="block text-sm font-medium text-theme-primary mb-2">
+                  字体大小: <span id="fontSizeValue">24px</span>
+                </label>
+                <input 
+                  type="range" 
+                  id="watermarkFontSize" 
+                  min="12" 
+                  max="72" 
+                  value="24" 
+                  class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                >
+              </div>
+
+              <!-- Watermark Position -->
+              <div class="mb-6">
+                <label class="block text-sm font-medium text-theme-primary mb-2">水印位置</label>
+                <div class="watermark-position-grid">
+                  <!-- Top Row -->
+                  <div class="flex justify-center gap-2 mb-2">
+                    <button type="button" data-position="top-left" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">TL</button>
+                    <button type="button" data-position="top-center" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">顶部</button>
+                    <button type="button" data-position="top-right" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">TR</button>
+                  </div>
+                  
+                  <!-- Middle Row -->
+                  <div class="flex justify-between gap-2 mb-2">
+                    <div class="flex flex-col gap-2">
+                      <button type="button" data-position="left-top" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">左上角</button>
+                      <button type="button" data-position="left-center" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">左侧</button>
+                      <button type="button" data-position="left-bottom" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">LB</button>
+                    </div>
+                    
+                    <div class="flex items-center">
+                      <button type="button" data-position="center" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">中</button>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                      <button type="button" data-position="right-top" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">右侧</button>
+                      <button type="button" data-position="right-center" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">右</button>
+                      <button type="button" data-position="right-bottom" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">RB</button>
+                    </div>
+                  </div>
+                  
+                  <!-- Bottom Row -->
+                  <div class="flex justify-center gap-2">
+                    <button type="button" data-position="bottom-left" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">BL</button>
+                    <button type="button" data-position="bottom-center" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">底</button>
+                    <button type="button" data-position="bottom-right" class="position-btn px-4 py-2 border border-theme-border rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">BR</button>
+                  </div>
+                </div>
+                <input type="hidden" id="watermarkPosition" value="center">
+              </div>
+
+              <!-- Watermark Repeat -->
+              <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                  <label for="watermarkRepeat" class="block text-sm font-medium text-theme-primary">重复水印</label>
+                  <input 
+                    type="checkbox" 
+                    id="watermarkRepeat" 
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-theme-border rounded dark:bg-div-theme dark:border-theme-border"
+                  >
+                </div>
+                <input 
+                  type="range" 
+                  id="watermarkRepeatDensity" 
+                  min="1" 
+                  max="10" 
+                  value="5" 
+                  class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  disabled
+                >
+                <p class="mt-1 text-xs text-theme-secondary">重复密度: <span id="repeatDensityValue">5</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Image Watermark Tool functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageUpload = document.getElementById('imageUpload');
+      const imagePreview = document.getElementById('imagePreview');
+      const noImageState = document.getElementById('noImageState');
+      const downloadButton = document.getElementById('downloadButton');
+      
+      const watermarkText = document.getElementById('watermarkText');
+      const watermarkColor = document.getElementById('watermarkColor');
+      const watermarkOpacity = document.getElementById('watermarkOpacity');
+      const watermarkAngle = document.getElementById('watermarkAngle');
+      const watermarkSpacing = document.getElementById('watermarkSpacing');
+      const watermarkFontSize = document.getElementById('watermarkFontSize');
+      const watermarkPosition = document.getElementById('watermarkPosition');
+      const watermarkRepeat = document.getElementById('watermarkRepeat');
+      const watermarkRepeatDensity = document.getElementById('watermarkRepeatDensity');
+      
+      const colorValue = document.getElementById('colorValue');
+      const opacityValue = document.getElementById('opacityValue');
+      const angleValue = document.getElementById('angleValue');
+      const spacingValue = document.getElementById('spacingValue');
+      const fontSizeValue = document.getElementById('fontSizeValue');
+      const repeatDensityValue = document.getElementById('repeatDensityValue');
+      
+      let uploadedImage = null;
+      let canvasContext = null;
+      
+      // Initialize canvas context
+      if (imagePreview) {
+        canvasContext = imagePreview.getContext('2d');
+      }
+      
+      // File input change event
+      if (imageUpload) {
+        imageUpload.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          // Check if file is an image
+          if (!file.type.startsWith('image/')) {
+            alert('请选择图片文件！');
+            this.value = '';
+            return;
+          }
+          
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+              uploadedImage = img;
+              if (noImageState) {
+                noImageState.classList.add('hidden');
+              }
+              if (imagePreview) {
+                imagePreview.classList.remove('hidden');
+                imagePreview.width = img.width;
+                imagePreview.height = img.height;
+              }
+              if (downloadButton) {
+                downloadButton.disabled = false;
+              }
+              // 确保角度值显示正确
+              if (angleValue) {
+                angleValue.textContent = '30°';
+              }
+              // 自动更新预览，显示图片和水印
+              updatePreview();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      
+      // Update color value display
+      if (watermarkColor && colorValue) {
+        watermarkColor.addEventListener('input', function() {
+          colorValue.textContent = this.value;
+          updatePreview();
+        });
+      }
+      
+      // Update opacity value display
+      if (watermarkOpacity && opacityValue) {
+        watermarkOpacity.addEventListener('input', function() {
+          opacityValue.textContent = this.value + '%';
+          updatePreview();
+        });
+      }
+      
+      // Update angle value display
+      if (watermarkAngle && angleValue) {
+        watermarkAngle.addEventListener('input', function() {
+          angleValue.textContent = this.value + '°';
+          updatePreview();
+        });
+      }
+      
+      // Update spacing value display
+      if (watermarkSpacing && spacingValue) {
+        watermarkSpacing.addEventListener('input', function() {
+          spacingValue.textContent = this.value + 'px';
+          updatePreview();
+        });
+      }
+      
+      // Update font size value display
+      if (watermarkFontSize && fontSizeValue) {
+        watermarkFontSize.addEventListener('input', function() {
+          fontSizeValue.textContent = this.value + 'px';
+          updatePreview();
+        });
+      }
+      
+      // Update repeat density value display
+      if (watermarkRepeatDensity && repeatDensityValue) {
+        watermarkRepeatDensity.addEventListener('input', function() {
+          repeatDensityValue.textContent = this.value;
+          updatePreview();
+        });
+      }
+      
+      // Toggle repeat density slider enabled state
+      if (watermarkRepeat && watermarkRepeatDensity) {
+        watermarkRepeat.addEventListener('change', function() {
+          watermarkRepeatDensity.disabled = !this.checked;
+          updatePreview();
+        });
+      }
+      
+      // Update preview on other settings changes
+      const settingsElements = [
+        watermarkText
+      ];
+      
+      settingsElements.forEach(element => {
+        if (element) {
+          element.addEventListener('input', updatePreview);
+          element.addEventListener('change', updatePreview);
+        }
+      });
+      
+      // Handle position buttons
+      const positionButtons = document.querySelectorAll('.position-btn');
+      if (positionButtons.length > 0) {
+        // Set initial active state for center position
+        const centerButton = document.querySelector('.position-btn[data-position="center"]');
+        if (centerButton) {
+          centerButton.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+        }
+        
+        // Add click event listeners to position buttons
+        positionButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            positionButtons.forEach(btn => {
+              btn.classList.remove('bg-blue-500', 'text-white', 'border-blue-500');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('bg-blue-500', 'text-white', 'border-blue-500');
+            
+            // Update hidden input value
+            if (watermarkPosition) {
+              watermarkPosition.value = this.dataset.position;
+              updatePreview();
+            }
+          });
+        });
+      }
+      
+      // Update preview function
+      function updatePreview() {
+        if (!uploadedImage || !canvasContext || !imagePreview) return;
+        
+        // Clear canvas
+        canvasContext.clearRect(0, 0, imagePreview.width, imagePreview.height);
+        
+        // Draw original image
+        canvasContext.drawImage(uploadedImage, 0, 0, imagePreview.width, imagePreview.height);
+        
+        // Get watermark settings
+        const text = watermarkText ? watermarkText.value : 'Sample Watermark';
+        const color = watermarkColor ? watermarkColor.value : '#000000';
+        const opacity = watermarkOpacity ? parseFloat(watermarkOpacity.value) / 100 : 0.5;
+        const angle = watermarkAngle ? parseFloat(watermarkAngle.value) : 0;
+        const spacing = watermarkSpacing ? parseFloat(watermarkSpacing.value) : 50;
+        const fontSize = watermarkFontSize ? parseFloat(watermarkFontSize.value) : 24;
+        const position = watermarkPosition ? watermarkPosition.value : 'center';
+        const repeat = watermarkRepeat ? watermarkRepeat.checked : false;
+        const repeatDensity = watermarkRepeatDensity ? parseFloat(watermarkRepeatDensity.value) : 5;
+        
+        // Set watermark style
+        canvasContext.font = fontSize + 'px Arial';
+        canvasContext.fillStyle = color;
+        canvasContext.globalAlpha = opacity;
+        canvasContext.textAlign = 'center';
+        canvasContext.textBaseline = 'middle';
+        
+        if (repeat) {
+          // Draw repeated watermarks
+          const densityFactor = 11 - repeatDensity; // Invert density (higher value = more dense)
+          const stepX = spacing * densityFactor;
+          const stepY = spacing * densityFactor;
+          
+          for (let x = -stepX; x < imagePreview.width + stepX; x += stepX) {
+            for (let y = -stepY; y < imagePreview.height + stepY; y += stepY) {
+              drawWatermark(x, y, text, angle);
+            }
+          }
+        } else {
+          // Draw single watermark at selected position
+          let posX, posY;
+          
+          switch (position) {
+            case 'top-left':
+              posX = fontSize * 1.5;
+              posY = fontSize * 1.5;
+              canvasContext.textAlign = 'left';
+              canvasContext.textBaseline = 'top';
+              break;
+            case 'top-center':
+              posX = imagePreview.width / 2;
+              posY = fontSize * 1.5;
+              canvasContext.textAlign = 'center';
+              canvasContext.textBaseline = 'top';
+              break;
+            case 'top-right':
+              posX = imagePreview.width - fontSize * 1.5;
+              posY = fontSize * 1.5;
+              canvasContext.textAlign = 'right';
+              canvasContext.textBaseline = 'top';
+              break;
+            case 'right-top':
+              posX = imagePreview.width - fontSize * 1.5;
+              posY = imagePreview.height / 4;
+              canvasContext.textAlign = 'right';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'right-center':
+              posX = imagePreview.width - fontSize * 1.5;
+              posY = imagePreview.height / 2;
+              canvasContext.textAlign = 'right';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'right-bottom':
+              posX = imagePreview.width - fontSize * 1.5;
+              posY = imagePreview.height * 3 / 4;
+              canvasContext.textAlign = 'right';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'bottom-right':
+              posX = imagePreview.width - fontSize * 1.5;
+              posY = imagePreview.height - fontSize * 1.5;
+              canvasContext.textAlign = 'right';
+              canvasContext.textBaseline = 'bottom';
+              break;
+            case 'bottom-center':
+              posX = imagePreview.width / 2;
+              posY = imagePreview.height - fontSize * 1.5;
+              canvasContext.textAlign = 'center';
+              canvasContext.textBaseline = 'bottom';
+              break;
+            case 'bottom-left':
+              posX = fontSize * 1.5;
+              posY = imagePreview.height - fontSize * 1.5;
+              canvasContext.textAlign = 'left';
+              canvasContext.textBaseline = 'bottom';
+              break;
+            case 'left-bottom':
+              posX = fontSize * 1.5;
+              posY = imagePreview.height * 3 / 4;
+              canvasContext.textAlign = 'left';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'left-center':
+              posX = fontSize * 1.5;
+              posY = imagePreview.height / 2;
+              canvasContext.textAlign = 'left';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'left-top':
+              posX = fontSize * 1.5;
+              posY = imagePreview.height / 4;
+              canvasContext.textAlign = 'left';
+              canvasContext.textBaseline = 'middle';
+              break;
+            case 'center':
+            default:
+              posX = imagePreview.width / 2;
+              posY = imagePreview.height / 2;
+              canvasContext.textAlign = 'center';
+              canvasContext.textBaseline = 'middle';
+              break;
+          }
+          
+          drawWatermark(posX, posY, text, angle);
+        }
+        
+        // Reset global alpha
+        canvasContext.globalAlpha = 1;
+      }
+      
+      // Draw watermark function
+      function drawWatermark(x, y, text, angle) {
+        if (!canvasContext) return;
+        
+        canvasContext.save();
+        canvasContext.translate(x, y);
+        canvasContext.rotate(angle * Math.PI / 180);
+        canvasContext.fillText(text, 0, 0);
+        canvasContext.restore();
+      }
+      
+      // Download button click event
+      if (downloadButton) {
+        downloadButton.addEventListener('click', function() {
+          if (!uploadedImage || !imagePreview) return;
+          
+          // Create download link
+          const link = document.createElement('a');
+          link.download = 'watermarked-image.png';
+          link.href = imagePreview.toDataURL('image/png');
+          link.click();
+        });
+      }
+    });
+  </script>
+</Layout>

@@ -89,6 +89,8 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 ---
 
 <Layout>
+
+
   <!-- Tools Grid Section with Category Filter -->
   <section class="py-4 min-h-screen">
     <div class="container mx-auto px-4 max-w-7xl">
@@ -127,6 +129,7 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
     // Filter functionality
     // 使用DOMContentLoaded事件代替astro:page-load，确保DOM完全加载
     document.addEventListener('DOMContentLoaded', function() {
+      // Filter functionality
       const buttons = document.querySelectorAll('.filter-btn');
       const cards = document.querySelectorAll('.tool-card');
       const HIDDEN_CLASS = 'hidden';
@@ -134,77 +137,75 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
       // 确保元素都存在
       if (!buttons.length || !cards.length) {
         console.error('Filter buttons or cards not found');
-        return;
-      }
-      
-      
-      // 简化的显示/隐藏函数
-      function showCard(card) {
-        card.classList.remove(HIDDEN_CLASS);
-        card.style.display = 'block';
-        card.classList.add('opacity-100', 'scale-100');
-        card.classList.remove('opacity-0', 'scale-95');
-      }
-
-      function hideCard(card) {
-        card.classList.add('opacity-0', 'scale-95');
-        card.classList.remove('opacity-100', 'scale-100');
-        setTimeout(() => {
-          card.classList.add(HIDDEN_CLASS);
-          card.style.display = 'none';
-        }, 300);
-      }
-
-      function applyFilter(filter) {
-        const normalized = filter.toLowerCase();
-        
-        let visibleCount = 0;
-        for (let i = 0; i < cards.length; i++) {
-          const card = cards[i];
-          const categoria = card.getAttribute("data-categoria") || "";
-          const cardCategory = categoria.toLowerCase();
-          
-          
-          const match = normalized === "all" || cardCategory === normalized;
-          
-          if (match) {
-            showCard(card);
-            visibleCount++;
-          } else {
-            hideCard(card);
-          }
+      } else {
+        // 简化的显示/隐藏函数
+        function showCard(card) {
+          card.classList.remove(HIDDEN_CLASS);
+          card.style.display = 'block';
+          card.classList.add('opacity-100', 'scale-100');
+          card.classList.remove('opacity-0', 'scale-95');
         }
-        
-      }
 
-      function setActive(btn) {
-        // 移除所有按钮的激活状态
-        buttons.forEach(b => {
-          b.classList.remove("active", "btn-theme");
-          b.classList.add("bg-theme-secondary", "text-theme-secondary");
+        function hideCard(card) {
+          card.classList.add('opacity-0', 'scale-95');
+          card.classList.remove('opacity-100', 'scale-100');
+          setTimeout(() => {
+            card.classList.add(HIDDEN_CLASS);
+            card.style.display = 'none';
+          }, 300);
+        }
+
+        function applyFilter(filter) {
+          const normalized = filter.toLowerCase();
+          
+          let visibleCount = 0;
+          for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const categoria = card.getAttribute("data-categoria") || "";
+            const cardCategory = categoria.toLowerCase();
+            
+            
+            const match = normalized === "all" || cardCategory === normalized;
+            
+            if (match) {
+              showCard(card);
+              visibleCount++;
+            } else {
+              hideCard(card);
+            }
+          }
+          
+        }
+
+        function setActive(btn) {
+          // 移除所有按钮的激活状态
+          buttons.forEach(b => {
+            b.classList.remove("active", "btn-theme");
+            b.classList.add("bg-theme-secondary", "text-theme-secondary");
+          });
+          
+          // 添加当前按钮的激活状态
+          btn.classList.add("active", "btn-theme");
+          btn.classList.remove("bg-theme-secondary", "text-theme-secondary");
+          
+        }
+
+        // 为每个按钮添加单独的事件监听器
+        buttons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filter = this.dataset.filter || "all";
+            setActive(this);
+            applyFilter(filter);
+          });
         });
-        
-        // 添加当前按钮的激活状态
-        btn.classList.add("active", "btn-theme");
-        btn.classList.remove("bg-theme-secondary", "text-theme-secondary");
-        
-      }
 
-      // 为每个按钮添加单独的事件监听器
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          e.preventDefault();
-          const filter = this.dataset.filter || "all";
-          setActive(this);
-          applyFilter(filter);
-        });
-      });
-
-      // 初始化默认显示所有项目
-      const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-      if (allBtn) {
-        setActive(allBtn);
-        applyFilter("all");
+        // 初始化默认显示所有项目
+        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+        if (allBtn) {
+          setActive(allBtn);
+          applyFilter("all");
+        }
       }
     });
   </script>
