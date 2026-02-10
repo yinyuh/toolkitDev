@@ -1,0 +1,563 @@
+---
+import Layout from "../../layouts/Layout.astro";
+title: "Base64编码解码工具"
+description: "一个功能强大的在线Base64编码解码工具，支持文本编解码和图片Base64解码预览"
+technologies: "Base64编码解码"
+category: "tool"
+order: -1
+---
+
+<Layout title="Base64编码解码工具" description="一个功能强大的在线Base64编码解码工具，支持文本编解码和图片Base64解码预览">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Tool Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">Base64编码解码工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一个功能强大的在线Base64编码解码工具，支持文本编解码和图片Base64解码预览，所有操作均在本地完成。
+        </p>
+      </div>
+
+      <!-- Tool Content -->
+      <div class="max-w-6xl mx-auto">
+        <div class="base64-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+          <!-- Mode Switcher -->
+          <div class="mode-switcher mb-8">
+            <div class="flex justify-center gap-4">
+              <button id="textModeBtn" class="mode-btn px-6 py-3 rounded-lg bg-blue-500 text-white font-medium transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                文本处理
+              </button>
+              <button id="imageModeBtn" class="mode-btn px-6 py-3 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                图片处理
+              </button>
+            </div>
+          </div>
+
+          <!-- Text Encoding/Decoding Section -->
+          <div class="text-section mb-8">
+            <!-- Input Area -->
+            <div class="input-section mb-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
+                <div class="flex gap-2">
+                  <button id="clearInputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    清空
+                  </button>
+                </div>
+              </div>
+              <textarea 
+                id="textInput" 
+                class="w-full min-h-[200px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
+                placeholder="请输入要编码或解码的文本..."
+              ></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center gap-4 mb-6">
+              <button id="encodeBtn" class="btn-theme px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                编码
+              </button>
+              <button id="decodeBtn" class="btn-theme px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+                解码
+              </button>
+            </div>
+
+            <!-- Output Area -->
+            <div class="output-section">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-theme-primary">转换结果</h2>
+                <div class="flex gap-2">
+                  <button id="copyOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    复制
+                  </button>
+                  <button id="clearOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    清空
+                  </button>
+                </div>
+              </div>
+              <textarea 
+                id="textOutput" 
+                class="w-full min-h-[200px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
+                placeholder="转换结果将显示在这里..."
+                readonly
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Image Processing Section -->
+          <div class="image-section pt-8">
+            
+            <!-- Image to Base64 -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-theme-primary mb-4">图片转Base64编码</h3>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Image Upload Area -->
+                <div class="image-upload-section">
+                  <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-md font-semibold text-theme-primary">上传图片</h4>
+                  </div>
+                  <div class="upload-area border-2 border-dashed border-theme-secondary rounded-lg p-6 text-center mb-4">
+                    <svg class="mx-auto h-12 w-12 text-theme-secondary mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <p class="text-theme-secondary mb-4">点击或拖拽图片到此处上传</p>
+                    <input type="file" id="imageUpload" accept="image/*" class="hidden">
+                    <button id="browseImageBtn" class="btn-theme px-6 py-2 rounded-lg transition-colors flex items-center gap-2 mx-auto">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      浏览文件
+                    </button>
+                  </div>
+                  <div class="action-buttons flex gap-4 mt-4">
+                    <button id="encodeImageBtn" class="btn-theme px-6 py-2 rounded-lg transition-colors flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      转换为Base64
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Base64 Output -->
+                <div class="image-encode-result-section">
+                  <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-md font-semibold text-theme-primary">Base64编码输出</h4>
+                    <div class="flex gap-2">
+                      <button id="copyImageEncodeBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        复制
+                      </button>
+                      <button id="clearImageEncodeBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        清空
+                      </button>
+                    </div>
+                  </div>
+                  <textarea 
+                    id="imageBase64Output" 
+                    class="w-full min-h-[300px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
+                    placeholder="Base64编码将显示在这里..."
+                    readonly
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Base64 to Image -->
+            <div>
+              <h3 class="text-lg font-semibold text-theme-primary mb-4">Base64编码转图片</h3>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Image Base64 Input Area -->
+                <div class="image-base64-input-section">
+                  <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-md font-semibold text-theme-primary">图片Base64输入</h4>
+                    <div class="flex gap-2">
+                      <button id="clearImageBase64InputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        清空
+                      </button>
+                    </div>
+                  </div>
+                  <textarea 
+                    id="imageBase64Input" 
+                    class="w-full min-h-[200px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
+                    placeholder="请输入图片的Base64编码..."
+                  ></textarea>
+                  <div class="action-buttons flex gap-4 mt-4">
+                    <button id="decodeImageBtn" class="btn-theme px-6 py-2 rounded-lg transition-colors flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                      </svg>
+                      解码并显示图片
+                    </button>
+                    <button id="copyImageBase64Btn" class="btn-theme px-6 py-2 rounded-lg transition-colors flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                      </svg>
+                      复制原始编码
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Image Preview Area -->
+                <div class="image-preview-section">
+                  <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-md font-semibold text-theme-primary">图片预览</h4>
+                  </div>
+                  <div id="imagePreviewContainer" class="relative border-2 border-dashed border-theme-secondary rounded-lg p-4 min-h-[300px] flex items-center justify-center">
+                    <div id="noImageState" class="text-center">
+                      <svg class="mx-auto h-16 w-16 text-theme-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p class="mt-2 text-sm text-theme-secondary">解码图片将显示在这里...</p>
+                    </div>
+                    <div id="imagePreviewWrapper" class="hidden">
+                      <img id="imagePreview" class="max-w-full max-h-[300px] rounded-lg" alt="Decoded Image">
+                      <div class="absolute bottom-4 right-4">
+                        <button id="downloadImageBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                          </svg>
+                          下载图片
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMessage">操作成功！</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const textModeBtn = document.getElementById('textModeBtn');
+      const imageModeBtn = document.getElementById('imageModeBtn');
+      const textSection = document.querySelector('.text-section');
+      const imageSection = document.querySelector('.image-section');
+      const textInput = document.getElementById('textInput');
+      const textOutput = document.getElementById('textOutput');
+      const clearInputBtn = document.getElementById('clearInputBtn');
+      const clearOutputBtn = document.getElementById('clearOutputBtn');
+      const copyOutputBtn = document.getElementById('copyOutputBtn');
+      const encodeBtn = document.getElementById('encodeBtn');
+      const decodeBtn = document.getElementById('decodeBtn');
+      const imageBase64Input = document.getElementById('imageBase64Input');
+      const clearImageBase64InputBtn = document.getElementById('clearImageBase64InputBtn');
+      const decodeImageBtn = document.getElementById('decodeImageBtn');
+      const copyImageBase64Btn = document.getElementById('copyImageBase64Btn');
+      const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+      const noImageState = document.getElementById('noImageState');
+      const imagePreviewWrapper = document.getElementById('imagePreviewWrapper');
+      const imagePreview = document.getElementById('imagePreview');
+      const downloadImageBtn = document.getElementById('downloadImageBtn');
+      const imageUpload = document.getElementById('imageUpload');
+      const browseImageBtn = document.getElementById('browseImageBtn');
+      const encodeImageBtn = document.getElementById('encodeImageBtn');
+      const imageBase64Output = document.getElementById('imageBase64Output');
+      const copyImageEncodeBtn = document.getElementById('copyImageEncodeBtn');
+      const clearImageEncodeBtn = document.getElementById('clearImageEncodeBtn');
+      const toastNotification = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+
+      // Current mode: 'text' or 'image'
+      let currentMode = 'text';
+
+      // Show toast notification
+      function showToast(message, isError = false) {
+        toastMessage.textContent = message;
+        toastNotification.className = 'fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-0 opacity-100 transition-all duration-300 z-50 flex items-center gap-2';
+        toastNotification.classList.add(isError ? 'bg-red-500' : 'bg-blue-500');
+        toastNotification.classList.add('text-white');
+
+        setTimeout(() => {
+          toastNotification.classList.remove('translate-x-0', 'opacity-100');
+          toastNotification.classList.add('translate-x-full', 'opacity-0');
+        }, 3000);
+      }
+
+      // Switch mode between text and image
+      function switchMode(mode) {
+        currentMode = mode;
+
+        if (mode === 'text') {
+          textModeBtn.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
+          textModeBtn.classList.add('bg-blue-500', 'text-white');
+          imageModeBtn.classList.remove('bg-blue-500', 'text-white');
+          imageModeBtn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
+          textSection.classList.remove('hidden');
+          imageSection.classList.add('hidden');
+        } else {
+          imageModeBtn.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
+          imageModeBtn.classList.add('bg-blue-500', 'text-white');
+          textModeBtn.classList.remove('bg-blue-500', 'text-white');
+          textModeBtn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
+          textSection.classList.add('hidden');
+          imageSection.classList.remove('hidden');
+        }
+      }
+
+      // Base64 encode function
+      function base64Encode(text) {
+        try {
+          return btoa(unescape(encodeURIComponent(text)));
+        } catch (error) {
+          throw new Error('编码失败，请检查输入内容');
+        }
+      }
+
+      // Base64 decode function
+      function base64Decode(encoded) {
+        try {
+          // Remove data URL prefix if present
+          const pureBase64 = encoded.replace(/^data:image\/[^;]+;base64,/, '');
+          return decodeURIComponent(escape(atob(pureBase64)));
+        } catch (error) {
+          throw new Error('解码失败，请检查Base64编码是否正确');
+        }
+      }
+
+      // Encode text to Base64
+      function encodeText() {
+        const input = textInput.value.trim();
+
+        if (!input) {
+          showToast('请输入要编码的文本', true);
+          return;
+        }
+
+        try {
+          const encoded = base64Encode(input);
+          textOutput.value = encoded;
+          showToast('编码成功');
+        } catch (error) {
+          showToast(error.message, true);
+        }
+      }
+
+      // Decode Base64 to text
+      function decodeText() {
+        const input = textInput.value.trim();
+
+        if (!input) {
+          showToast('请输入要解码的Base64编码', true);
+          return;
+        }
+
+        try {
+          const decoded = base64Decode(input);
+          textOutput.value = decoded;
+          showToast('解码成功');
+        } catch (error) {
+          showToast(error.message, true);
+        }
+      }
+
+      // Decode and show image
+      function decodeAndShowImage() {
+        const input = imageBase64Input.value.trim();
+
+        if (!input) {
+          // Reset to no image state when input is empty
+          noImageState.classList.remove('hidden');
+          imagePreviewWrapper.classList.add('hidden');
+          return;
+        }
+
+        try {
+          // Show loading state
+          showToast('正在解码图片...');
+
+          // Check if input has data URL prefix, if not add it
+          let imageDataUrl = input;
+          if (!input.startsWith('data:image/')) {
+            // Try to detect image format or use png as default
+            imageDataUrl = 'data:image/png;base64,' + input;
+          }
+
+          // Test if the base64 is valid
+          const img = new Image();
+          img.onload = function() {
+            imagePreview.src = imageDataUrl;
+            noImageState.classList.add('hidden');
+            imagePreviewWrapper.classList.remove('hidden');
+            showToast('图片解码成功');
+          };
+          img.onerror = function() {
+            showToast('无效的图片Base64编码，请检查编码格式是否正确', true);
+            // Reset to no image state on error
+            noImageState.classList.remove('hidden');
+            imagePreviewWrapper.classList.add('hidden');
+          };
+          img.src = imageDataUrl;
+        } catch (error) {
+          showToast('解码失败，请检查Base64编码是否正确和完整', true);
+          // Reset to no image state on error
+          noImageState.classList.remove('hidden');
+          imagePreviewWrapper.classList.add('hidden');
+        }
+      }
+
+      // Copy image base64 without prefix
+      function copyImageBase64() {
+        const input = imageBase64Input.value.trim();
+
+        if (!input) {
+          showToast('请输入图片的Base64编码', true);
+          return;
+        }
+
+        try {
+          const pureBase64 = input.replace(/^data:image\/[^;]+;base64,/, '');
+          navigator.clipboard.writeText(pureBase64)
+            .then(() => {
+              showToast('复制成功');
+            })
+            .catch(() => {
+              showToast('复制失败，请手动复制', true);
+            });
+        } catch (error) {
+          showToast('操作失败', true);
+        }
+      }
+
+      // Download image
+      function downloadImage() {
+        if (!imagePreview.src) {
+          showToast('没有可下载的图片', true);
+          return;
+        }
+
+        const link = document.createElement('a');
+        link.href = imagePreview.src;
+        link.download = 'decoded-image.png';
+        link.click();
+        showToast('图片下载成功');
+      }
+
+      // Encode image to Base64
+      function encodeImageToBase64() {
+        const file = imageUpload.files[0];
+
+        if (!file) {
+          showToast('请选择图片文件', true);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64String = e.target.result;
+          imageBase64Output.value = base64String;
+          showToast('图片转换成功');
+        };
+        reader.onerror = function() {
+          showToast('图片读取失败，请重试', true);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Add debounce function to handle input events
+      function debounce(func, wait) {
+        let timeout;
+        return function() {
+          const context = this;
+          const args = arguments;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+      }
+
+      // Event listeners
+      textModeBtn.addEventListener('click', () => switchMode('text'));
+      imageModeBtn.addEventListener('click', () => switchMode('image'));
+      clearInputBtn.addEventListener('click', () => textInput.value = '');
+      clearOutputBtn.addEventListener('click', () => textOutput.value = '');
+      copyOutputBtn.addEventListener('click', () => {
+        const output = textOutput.value.trim();
+        if (!output) {
+          showToast('没有可复制的内容', true);
+          return;
+        }
+        navigator.clipboard.writeText(output)
+          .then(() => {
+            showToast('复制成功');
+          })
+          .catch(() => {
+            showToast('复制失败，请手动复制', true);
+          });
+      });
+      encodeBtn.addEventListener('click', encodeText);
+      decodeBtn.addEventListener('click', decodeText);
+      clearImageBase64InputBtn.addEventListener('click', () => imageBase64Input.value = '');
+      decodeImageBtn.addEventListener('click', decodeAndShowImage);
+      copyImageBase64Btn.addEventListener('click', copyImageBase64);
+      downloadImageBtn.addEventListener('click', downloadImage);
+      browseImageBtn.addEventListener('click', () => imageUpload.click());
+      imageUpload.addEventListener('change', encodeImageToBase64);
+      encodeImageBtn.addEventListener('click', encodeImageToBase64);
+      copyImageEncodeBtn.addEventListener('click', () => {
+        const output = imageBase64Output.value.trim();
+        if (!output) {
+          showToast('没有可复制的内容', true);
+          return;
+        }
+        navigator.clipboard.writeText(output)
+          .then(() => {
+            showToast('复制成功');
+          })
+          .catch(() => {
+            showToast('复制失败，请手动复制', true);
+          });
+      });
+      clearImageEncodeBtn.addEventListener('click', () => {
+        imageBase64Output.value = '';
+        imageUpload.value = '';
+      });
+      
+      // Add input event listener for automatic decoding
+      imageBase64Input.addEventListener('input', debounce(decodeAndShowImage, 500));
+
+      // Keyboard shortcuts
+      textInput.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+          e.preventDefault();
+          encodeText();
+        }
+      });
+
+      // Initialize with text mode
+      switchMode('text');
+    });
+  </script>
+
+  <style>
+    /* Button hover effects */
+    button {
+      cursor: pointer;
+    }
+    
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</Layout>
