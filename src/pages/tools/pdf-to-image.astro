@@ -1,0 +1,253 @@
+---
+import Layout from "../../layouts/Layout.astro";
+title: "PDF转图片"
+description: "一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出"
+technologies: "PDF转图片"
+category: "tool"
+order: -1
+---
+
+<Layout title="PDF转图片" description="一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Tool Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">PDF转图片</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出，所有操作均在本地完成，保护您的隐私安全。
+        </p>
+      </div>
+
+      <!-- Tool Content -->
+      <div class="max-w-6xl mx-auto">
+        <div class="pdf-to-image-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+          <!-- Upload Section -->
+          <div class="upload-section mb-8">
+            <h2 class="text-2xl font-semibold text-theme-primary mb-4">上传PDF文件</h2>
+            <div class="upload-area border-2 border-dashed border-theme-secondary rounded-lg p-8 text-center mb-6 cursor-pointer hover:border-blue-500 transition-colors">
+              <div class="upload-icon text-4xl mb-4">📄</div>
+              <p class="text-theme-secondary mb-4">点击或拖拽PDF文件到此处上传</p>
+              <p class="text-sm text-theme-secondary opacity-70">支持 PDF 格式，最大 2048MB，最多 100 页</p>
+              <input type="file" id="fileInput" accept=".pdf" class="hidden">
+              <button id="browseBtn" class="btn-theme px-6 py-3 rounded transition-colors mt-4 cursor-pointer">浏览文件</button>
+            </div>
+          </div>
+
+          <!-- PDF Preview Section -->
+          <div class="pdf-preview-section mb-8 hidden" id="pdfPreviewSection">
+            <h2 class="text-2xl font-semibold text-theme-primary mb-4">PDF预览</h2>
+            <div class="pdf-preview-container bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <div class="flex flex-col md:flex-row gap-6">
+                <!-- Main Preview -->
+                <div class="flex-1">
+                  <div class="preview-area bg-div-theme rounded-lg p-4 overflow-auto max-h-[600px] border border-theme-secondary">
+                    <div id="pdfPreview" class="pdf-preview">
+                      <div class="empty-preview text-center py-12 text-theme-secondary">
+                        正在加载PDF预览...
+                      </div>
+                    </div>
+                  </div>
+                  <div class="preview-controls flex justify-between items-center mt-4">
+                    <div class="page-info text-theme-secondary">
+                      <span id="currentPage">1</span> / <span id="totalPages">0</span>
+                    </div>
+                    <div class="page-controls flex gap-2">
+                      <button id="prevPage" class="btn-theme px-3 py-1 rounded text-sm cursor-pointer">上一页</button>
+                      <button id="nextPage" class="btn-theme px-3 py-1 rounded text-sm cursor-pointer">下一页</button>
+                    </div>
+                    <div class="zoom-controls flex gap-2">
+                      <button id="zoomOut" class="btn-theme px-3 py-1 rounded text-sm cursor-pointer">缩小</button>
+                      <button id="zoomIn" class="btn-theme px-3 py-1 rounded text-sm cursor-pointer">放大</button>
+                      <button id="resetZoom" class="btn-theme px-3 py-1 rounded text-sm cursor-pointer">重置</button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Thumbnails -->
+                <div class="w-full md:w-64">
+                  <h3 class="text-lg font-semibold text-theme-primary mb-3">页面缩略图</h3>
+                  <div class="thumbnails-container bg-div-theme rounded-lg p-4 overflow-y-auto max-h-[600px] border border-theme-secondary">
+                    <div id="thumbnailsList" class="thumbnails-list space-y-2">
+                      <!-- Thumbnails will be generated here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conversion Options Section -->
+          <div class="conversion-section mb-8 hidden" id="conversionSection">
+            <h2 class="text-2xl font-semibold text-theme-primary mb-4">转换选项</h2>
+            <div class="conversion-options bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <!-- Conversion Mode Tabs -->
+              <div class="tabs flex border-b border-theme-secondary mb-6">
+                <button id="tabSinglePage" class="tab-btn flex-1 py-3 px-4 font-medium text-theme-primary border-b-2 border-accent">单页导出</button>
+                <button id="tabMerge" class="tab-btn flex-1 py-3 px-4 font-medium text-theme-secondary hover:text-theme-primary">合并导出</button>
+                <button id="tabRange" class="tab-btn flex-1 py-3 px-4 font-medium text-theme-secondary hover:text-theme-primary">指定页数导出</button>
+              </div>
+
+              <!-- Tab Contents -->
+              <div class="tab-content">
+                <!-- Single Page Export -->
+                <div id="contentSinglePage" class="tab-pane">
+                  <div class="space-y-4">
+                    <div class="option flex items-center justify-between">
+                      <label for="imageFormat" class="text-theme-primary">图片格式:</label>
+                      <select id="imageFormat" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="png">PNG (高清无压缩)</option>
+                        <option value="jpeg">JPG (可调节压缩)</option>
+                      </select>
+                    </div>
+                    <div class="option flex flex-col gap-2" id="jpegOptions">
+                      <label for="jpegQuality" class="text-theme-primary">JPG压缩比例:</label>
+                      <div class="flex items-center gap-4">
+                        <input type="range" id="jpegQuality" min="10" max="100" value="80" class="flex-1">
+                        <span id="jpegQualityValue" class="text-theme-secondary w-12 text-center">80%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Merge Export -->
+                <div id="contentMerge" class="tab-pane hidden">
+                  <div class="space-y-4">
+                    <div class="option flex items-center justify-between">
+                      <label for="mergeImageFormat" class="text-theme-primary">图片格式:</label>
+                      <select id="mergeImageFormat" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="png">PNG (高清无压缩)</option>
+                        <option value="jpeg">JPG (可调节压缩)</option>
+                      </select>
+                    </div>
+                    <div class="option flex flex-col gap-2" id="mergeJpegOptions">
+                      <label for="mergeJpegQuality" class="text-theme-primary">JPG压缩比例:</label>
+                      <div class="flex items-center gap-4">
+                        <input type="range" id="mergeJpegQuality" min="10" max="100" value="80" class="flex-1">
+                        <span id="mergeJpegQualityValue" class="text-theme-secondary w-12 text-center">80%</span>
+                      </div>
+                    </div>
+                    <div class="option flex items-center justify-between">
+                      <label for="mergeGap" class="text-theme-primary">拼接间隙:</label>
+                      <select id="mergeGap" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="0">无间隙</option>
+                        <option value="10">有间隙 (10px)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Range Export -->
+                <div id="contentRange" class="tab-pane hidden">
+                  <div class="space-y-4">
+                    <div class="option flex items-center justify-between">
+                      <label class="text-theme-primary">页数范围:</label>
+                      <div class="flex gap-2">
+                        <input type="number" id="startPage" min="1" value="1" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary w-24">
+                        <span class="text-theme-secondary">-</span>
+                        <input type="number" id="endPage" min="1" value="1" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary w-24">
+                        <span id="pageRangeError" class="text-red-500 text-sm hidden">页码范围无效</span>
+                      </div>
+                    </div>
+                    <div class="option flex items-center justify-between">
+                      <label for="rangeExportMode" class="text-theme-primary">导出方式:</label>
+                      <select id="rangeExportMode" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="single">单页拆分</option>
+                        <option value="merge">合并为长图</option>
+                      </select>
+                    </div>
+                    <div class="option flex items-center justify-between">
+                      <label for="rangeImageFormat" class="text-theme-primary">图片格式:</label>
+                      <select id="rangeImageFormat" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="png">PNG (高清无压缩)</option>
+                        <option value="jpeg">JPG (可调节压缩)</option>
+                      </select>
+                    </div>
+                    <div class="option flex flex-col gap-2" id="rangeJpegOptions">
+                      <label for="rangeJpegQuality" class="text-theme-primary">JPG压缩比例:</label>
+                      <div class="flex items-center gap-4">
+                        <input type="range" id="rangeJpegQuality" min="10" max="100" value="80" class="flex-1">
+                        <span id="rangeJpegQualityValue" class="text-theme-secondary w-12 text-center">80%</span>
+                      </div>
+                    </div>
+                    <div class="option flex items-center justify-between" id="rangeGapOption">
+                      <label for="rangeMergeGap" class="text-theme-primary">拼接间隙:</label>
+                      <select id="rangeMergeGap" class="bg-div-theme border border-theme-primary rounded px-4 py-2 text-theme-primary cursor-pointer">
+                        <option value="0">无间隙</option>
+                        <option value="10">有间隙 (10px)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons flex flex-wrap gap-4 justify-center mt-8">
+                <button id="convertBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-105 flex items-center justify-center gap-2 min-w-[160px]">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  开始转换
+                </button>
+                <button id="clearBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-105 flex items-center justify-center gap-2 min-w-[160px]">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  清除文件
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conversion Progress -->
+          <div class="progress-section mb-8 hidden" id="progressSection">
+            <h2 class="text-2xl font-semibold text-theme-primary mb-4">转换进度</h2>
+            <div class="progress-container bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <div class="progress-bar bg-div-theme rounded-full h-4 mb-4 overflow-hidden">
+                <div id="progressFill" class="progress-fill bg-accent h-full w-0 transition-all duration-300"></div>
+              </div>
+              <div class="progress-info text-center">
+                <p id="progressText" class="text-theme-primary">准备开始转换...</p>
+                <p id="progressDetail" class="text-theme-secondary text-sm mt-2"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Preview Section -->
+          <div class="image-preview-section mb-8 hidden" id="imagePreviewSection">
+            <h2 class="text-2xl font-semibold text-theme-primary mb-4">图片预览</h2>
+            <div class="image-preview-container bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <div id="imagePreviewArea" class="image-preview-area">
+                <!-- Images will be generated here -->
+              </div>
+              <div class="image-controls flex flex-wrap gap-4 justify-center mt-6">
+                <button id="downloadAllBtn" class="btn-theme px-6 py-3 rounded transition-colors cursor-pointer hover:bg-opacity-90 flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  批量下载
+                </button>
+                <button id="backToPDFBtn" class="btn-theme px-6 py-3 rounded transition-colors cursor-pointer hover:bg-opacity-90 flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                  返回PDF预览
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- External Script -->
+  <script src="../../scripts/pdf-to-image.js"></script>
+
+  <!-- PDF.js 库 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // 设置PDF.js工作器
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+</Layout>
