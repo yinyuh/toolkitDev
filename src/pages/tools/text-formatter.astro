@@ -1,0 +1,1211 @@
+---
+import Layout from "../../layouts/Layout.astro";
+title: "多格式文本格式化工具"
+description: "一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验"
+technologies: "文本格式化"
+category: "tool"
+order: -1
+---
+
+<Layout title="多格式文本格式化工具" description="一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Tool Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">多格式文本格式化工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验，所有操作均在本地完成。
+        </p>
+      </div>
+
+      <!-- Tool Content -->
+      <div class="max-w-6xl mx-auto">
+        <div class="text-formatter-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+          <!-- Main Content Area -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Input Section -->
+            <div class="input-section">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
+                <div class="flex gap-2">
+                  <label for="fileInput" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    导入文件
+                  </label>
+                  <input type="file" id="fileInput" accept=".txt,.json,.xml,.yaml,.yml,.sql" class="hidden">
+                  <button id="clearInputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    清空
+                  </button>
+                </div>
+              </div>
+              <div class="mb-4">
+                <div class="flex gap-2 mb-4">
+                  <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary flex-1 cursor-pointer">
+                    <option value="auto">自动识别</option>
+                    <option value="json">JSON</option>
+                    <option value="xml">XML</option>
+                    <option value="yaml">YAML</option>
+                    <option value="sql">SQL</option>
+                  </select>
+                  <button id="validateBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    校验语法
+                  </button>
+                </div>
+                <div id="validationResult" class="text-sm mb-2 hidden"></div>
+              </div>
+              <textarea 
+                id="textInput" 
+                class="w-full min-h-[400px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
+                placeholder="请输入/粘贴需要格式化的文本..."
+              ></textarea>
+              <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary">
+                <span id="charCount">字符数: 0</span>
+                <span id="fileSize">大小: 0 KB</span>
+              </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-theme-primary">文本预览</h2>
+                <div class="flex gap-2">
+                  <div class="flex gap-1">
+                    <button id="decreaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <span id="fontSizeDisplay" class="btn-theme px-2 py-1 rounded text-xs">14px</span>
+                    <button id="increaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <button id="toggleWordWrapBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                    </svg>
+                    换行
+                  </button>
+                </div>
+              </div>
+              <div class="flex gap-2 mb-4">
+                <button id="copyOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                  复制
+                </button>
+                <button id="downloadOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  下载
+                </button>
+                <button id="clearOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  清空
+                </button>
+              </div>
+              <div 
+                id="textOutput" 
+                class="w-full min-h-[400px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono whitespace-pre-wrap"
+                style="font-size: 14px; overflow: auto;"
+              >
+                格式化后内容将展示在这里...
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuration Panel -->
+          <div class="config-section mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold text-theme-primary">格式化配置</h2>
+              <button id="toggleConfigBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                折叠
+              </button>
+            </div>
+            <div id="configContent" class="bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <!-- JSON Config -->
+              <div id="jsonConfig" class="config-panel">
+                <h3 class="text-lg font-semibold text-theme-primary mb-3">JSON配置</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进方式</label>
+                    <select id="jsonIndentType" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="space">空格</option>
+                      <option value="tab">制表符</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进数量</label>
+                    <select id="jsonIndentSize" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="2">2空格</option>
+                      <option value="4" selected>4空格</option>
+                      <option value="8">8空格</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">排序key</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="jsonSortKeys" class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留注释</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="jsonPreserveComments" checked class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- XML Config -->
+              <div id="xmlConfig" class="config-panel hidden">
+                <h3 class="text-lg font-semibold text-theme-primary mb-3">XML配置</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进方式</label>
+                    <select id="xmlIndentType" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="space">空格</option>
+                      <option value="tab">制表符</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进数量</label>
+                    <select id="xmlIndentSize" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="2">2空格</option>
+                      <option value="4" selected>4空格</option>
+                      <option value="8">8空格</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">格式化属性</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="xmlFormatAttributes" checked class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留注释</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="xmlPreserveComments" checked class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- YAML Config -->
+              <div id="yamlConfig" class="config-panel hidden">
+                <h3 class="text-lg font-semibold text-theme-primary mb-3">YAML配置</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进数量</label>
+                    <select id="yamlIndentSize" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="2" selected>2空格</option>
+                      <option value="4">4空格</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留注释</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="yamlPreserveComments" checked class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SQL Config -->
+              <div id="sqlConfig" class="config-panel hidden">
+                <h3 class="text-lg font-semibold text-theme-primary mb-3">SQL配置</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">缩进数量</label>
+                    <select id="sqlIndentSize" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="2">2空格</option>
+                      <option value="4" selected>4空格</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">关键字大小写</label>
+                    <select id="sqlKeywordCase" class="w-full bg-div-theme border border-theme-primary rounded px-3 py-2 text-theme-primary cursor-pointer">
+                      <option value="preserve" selected>保持原样</option>
+                      <option value="upper">大写</option>
+                      <option value="lower">小写</option>
+                    </select>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留注释</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="sqlPreserveComments" checked class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Compression Config -->
+              <div class="mt-6 pt-6 border-t border-theme-secondary">
+                <h3 class="text-lg font-semibold text-theme-primary mb-3">压缩配置</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留空格</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="compressPreserveSpaces" class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                  <div class="option">
+                    <label class="block text-sm font-medium text-theme-primary mb-1">保留注释</label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="compressPreserveComments" class="mr-2">
+                      <span class="text-sm text-theme-secondary">是</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-section">
+            <div class="flex flex-wrap gap-4 justify-center">
+              <button id="formatBtn" class="btn-theme px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 min-w-[160px]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                格式化文本
+              </button>
+              <button id="compressBtn" class="btn-theme px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 min-w-[160px]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8-4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                </svg>
+                压缩文本
+              </button>
+              <button id="resetConfigBtn" class="btn-theme px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 min-w-[160px]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                重置配置
+              </button>
+            </div>
+          </div>
+
+          <!-- History Section -->
+          <div class="history-section mt-8">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold text-theme-primary">历史记录</h2>
+              <button id="toggleHistoryBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                折叠
+              </button>
+            </div>
+            <div id="historyContent" class="bg-theme-secondary rounded-lg p-6 border border-theme-secondary">
+              <div id="historyList" class="space-y-3">
+                <!-- History items will be added here -->
+                <div class="text-center text-theme-secondary py-4">
+                  暂无历史记录
+                </div>
+              </div>
+              <div class="mt-4 flex justify-end">
+                <button id="clearHistoryBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 hidden">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  清空历史
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMessage">操作成功！</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const textInput = document.getElementById('textInput');
+      const textOutput = document.getElementById('textOutput');
+      const formatSelect = document.getElementById('formatSelect');
+      const validateBtn = document.getElementById('validateBtn');
+      const validationResult = document.getElementById('validationResult');
+      const formatBtn = document.getElementById('formatBtn');
+      const compressBtn = document.getElementById('compressBtn');
+      const copyOutputBtn = document.getElementById('copyOutputBtn');
+      const downloadOutputBtn = document.getElementById('downloadOutputBtn');
+      const clearInputBtn = document.getElementById('clearInputBtn');
+      const clearOutputBtn = document.getElementById('clearOutputBtn');
+      const resetConfigBtn = document.getElementById('resetConfigBtn');
+      const fileInput = document.getElementById('fileInput');
+      const charCount = document.getElementById('charCount');
+      const fileSize = document.getElementById('fileSize');
+      const toggleConfigBtn = document.getElementById('toggleConfigBtn');
+      const configContent = document.getElementById('configContent');
+      const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+      const historyContent = document.getElementById('historyContent');
+      const historyList = document.getElementById('historyList');
+      const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+      const decreaseFontBtn = document.getElementById('decreaseFontBtn');
+      const increaseFontBtn = document.getElementById('increaseFontBtn');
+      const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+      const toggleWordWrapBtn = document.getElementById('toggleWordWrapBtn');
+      const toastNotification = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      // Config Panels
+      const jsonConfig = document.getElementById('jsonConfig');
+      const xmlConfig = document.getElementById('xmlConfig');
+      const yamlConfig = document.getElementById('yamlConfig');
+      const sqlConfig = document.getElementById('sqlConfig');
+      
+      // Config Elements
+      const jsonIndentType = document.getElementById('jsonIndentType');
+      const jsonIndentSize = document.getElementById('jsonIndentSize');
+      const jsonSortKeys = document.getElementById('jsonSortKeys');
+      const jsonPreserveComments = document.getElementById('jsonPreserveComments');
+      const xmlIndentType = document.getElementById('xmlIndentType');
+      const xmlIndentSize = document.getElementById('xmlIndentSize');
+      const xmlFormatAttributes = document.getElementById('xmlFormatAttributes');
+      const xmlPreserveComments = document.getElementById('xmlPreserveComments');
+      const yamlIndentSize = document.getElementById('yamlIndentSize');
+      const yamlPreserveComments = document.getElementById('yamlPreserveComments');
+      const sqlIndentSize = document.getElementById('sqlIndentSize');
+      const sqlKeywordCase = document.getElementById('sqlKeywordCase');
+      const sqlPreserveComments = document.getElementById('sqlPreserveComments');
+      const compressPreserveSpaces = document.getElementById('compressPreserveSpaces');
+      const compressPreserveComments = document.getElementById('compressPreserveComments');
+
+      // State
+      let currentFormat = 'auto';
+      let currentFontSize = 14;
+      let configVisible = true;
+      let historyVisible = true;
+      let wordWrapEnabled = true;
+      let history = JSON.parse(localStorage.getItem('textFormatterHistory') || '[]');
+
+      // Show toast notification
+      function showToast(message, isError = false) {
+        toastMessage.textContent = message;
+        toastNotification.className = 'fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-0 opacity-100 transition-all duration-300 z-50 flex items-center gap-2';
+        toastNotification.classList.add(isError ? 'bg-red-500' : 'bg-blue-500');
+        toastNotification.classList.add('text-white');
+
+        setTimeout(() => {
+          toastNotification.classList.remove('translate-x-0', 'opacity-100');
+          toastNotification.classList.add('translate-x-full', 'opacity-0');
+        }, 3000);
+      }
+
+      // Update character count and file size
+      function updateStats() {
+        const text = textInput.value;
+        const charLength = text.length;
+        const byteLength = new Blob([text]).size;
+        const kbSize = (byteLength / 1024).toFixed(2);
+
+        charCount.textContent = `字符数: ${charLength}`;
+        fileSize.textContent = `大小: ${kbSize} KB`;
+      }
+
+      // Detect text format
+      function detectFormat(text) {
+        text = text.trim();
+        
+        if (text.startsWith('{') && text.endsWith('}')) {
+          return 'json';
+        } else if (text.startsWith('[') && text.endsWith(']')) {
+          return 'json';
+        } else if (text.includes('<') && text.includes('>')) {
+          return 'xml';
+        } else if (text.includes(':') && (text.includes('- ') || text.includes('  '))) {
+          return 'yaml';
+        } else if (text.toUpperCase().includes('SELECT') || text.toUpperCase().includes('INSERT') || text.toUpperCase().includes('UPDATE') || text.toUpperCase().includes('DELETE')) {
+          return 'sql';
+        } else {
+          return 'json'; // Default to JSON
+        }
+      }
+
+      // Validate JSON
+      function validateJSON(text) {
+        try {
+          JSON.parse(text);
+          return { valid: true, error: null };
+        } catch (error) {
+          return { valid: false, error: error.message };
+        }
+      }
+
+      // Validate XML
+      function validateXML(text) {
+        try {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(text, 'application/xml');
+          const errors = xmlDoc.getElementsByTagName('parsererror');
+          if (errors.length > 0) {
+            return { valid: false, error: 'XML格式错误' };
+          }
+          return { valid: true, error: null };
+        } catch (error) {
+          return { valid: false, error: error.message };
+        }
+      }
+
+      // Validate YAML
+      function validateYAML(text) {
+        // Simple YAML validation
+        try {
+          // Basic YAML syntax check
+          const lines = text.split('\n');
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line && !line.startsWith('#') && !line.includes(':')) {
+              return { valid: false, error: `YAML格式错误，第${i + 1}行缺少冒号` };
+            }
+          }
+          return { valid: true, error: null };
+        } catch (error) {
+          return { valid: false, error: error.message };
+        }
+      }
+
+      // Validate SQL
+      function validateSQL(text) {
+        // Simple SQL validation
+        try {
+          // Basic SQL syntax check
+          const upperText = text.toUpperCase();
+          if (upperText.includes('SELECT') || upperText.includes('INSERT') || upperText.includes('UPDATE') || upperText.includes('DELETE') || upperText.includes('CREATE') || upperText.includes('DROP')) {
+            return { valid: true, error: null };
+          }
+          return { valid: false, error: 'SQL格式错误' };
+        } catch (error) {
+          return { valid: false, error: error.message };
+        }
+      }
+
+      // Validate text based on selected format
+      function validateText() {
+        const text = textInput.value.trim();
+        if (!text) {
+          validationResult.textContent = '请输入文本后再进行校验';
+          validationResult.className = 'text-sm mb-2 text-yellow-500';
+          validationResult.classList.remove('hidden');
+          return false;
+        }
+
+        let format = formatSelect.value;
+        if (format === 'auto') {
+          format = detectFormat(text);
+        }
+
+        let validation;
+        switch (format) {
+          case 'json':
+            validation = validateJSON(text);
+            break;
+          case 'xml':
+            validation = validateXML(text);
+            break;
+          case 'yaml':
+            validation = validateYAML(text);
+            break;
+          case 'sql':
+            validation = validateSQL(text);
+            break;
+          default:
+            validation = { valid: false, error: '不支持的格式' };
+        }
+
+        if (validation.valid) {
+          validationResult.textContent = '语法校验通过 ✔';
+          validationResult.className = 'text-sm mb-2 text-green-500';
+          textInput.classList.remove('border-red-500');
+          textInput.classList.add('border-green-500');
+        } else {
+          validationResult.textContent = `语法校验失败: ${validation.error}`;
+          validationResult.className = 'text-sm mb-2 text-red-500';
+          textInput.classList.remove('border-green-500');
+          textInput.classList.add('border-red-500');
+        }
+        validationResult.classList.remove('hidden');
+        return validation.valid;
+      }
+
+      // Format JSON
+      function formatJSON(text) {
+        try {
+          const parsed = JSON.parse(text);
+          const indentType = jsonIndentType.value === 'space' ? ' ' : '\t';
+          const indentSize = parseInt(jsonIndentSize.value);
+          const indent = indentType.repeat(indentSize);
+          
+          if (jsonSortKeys.checked) {
+            const sorted = sortObjectKeys(parsed);
+            return JSON.stringify(sorted, null, indent);
+          } else {
+            return JSON.stringify(parsed, null, indent);
+          }
+        } catch (error) {
+          throw new Error('JSON格式化失败: ' + error.message);
+        }
+      }
+
+      // Sort object keys
+      function sortObjectKeys(obj) {
+        if (typeof obj !== 'object' || obj === null) {
+          return obj;
+        }
+        if (Array.isArray(obj)) {
+          return obj.map(sortObjectKeys);
+        }
+        const sorted = {};
+        Object.keys(obj).sort().forEach(key => {
+          sorted[key] = sortObjectKeys(obj[key]);
+        });
+        return sorted;
+      }
+
+      // Format XML
+      function formatXML(text) {
+        try {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(text, 'application/xml');
+          const errors = xmlDoc.getElementsByTagName('parsererror');
+          if (errors.length > 0) {
+            throw new Error('XML格式错误');
+          }
+          
+          const indentType = xmlIndentType.value === 'space' ? ' ' : '\t';
+          const indentSize = parseInt(xmlIndentSize.value);
+          const indent = indentType.repeat(indentSize);
+          
+          return formatXMLNode(xmlDoc.documentElement, 0, indent);
+        } catch (error) {
+          throw new Error('XML格式化失败: ' + error.message);
+        }
+      }
+
+      // Format XML node
+      function formatXMLNode(node, level, indent) {
+        const indentStr = indent.repeat(level);
+        let result = '';
+        
+        if (node.nodeType === 1) { // Element node
+          result += `${indentStr}<${node.nodeName}`;
+          
+          // Add attributes
+          if (node.attributes.length > 0) {
+            for (let i = 0; i < node.attributes.length; i++) {
+              const attr = node.attributes[i];
+              result += ` ${attr.nodeName}="${attr.nodeValue}"`;
+            }
+          }
+          
+          if (node.hasChildNodes()) {
+            result += '>\n';
+            
+            for (let i = 0; i < node.childNodes.length; i++) {
+              result += formatXMLNode(node.childNodes[i], level + 1, indent);
+            }
+            
+            result += `${indentStr}</${node.nodeName}>\n`;
+          } else {
+            result += '/>\n';
+          }
+        } else if (node.nodeType === 3) { // Text node
+          const text = node.nodeValue.trim();
+          if (text) {
+            result += `${indentStr}${text}\n`;
+          }
+        } else if (node.nodeType === 8) { // Comment node
+          result += `${indentStr}<!--${node.nodeValue}-->\n`;
+        }
+        
+        return result;
+      }
+
+      // Format YAML
+      function formatYAML(text) {
+        try {
+          // Simple YAML formatting
+          const lines = text.split('\n');
+          const indentSize = parseInt(yamlIndentSize.value);
+          let formatted = '';
+          let currentIndent = 0;
+          
+          for (let line of lines) {
+            line = line.trim();
+            if (!line || line.startsWith('#')) {
+              formatted += line + '\n';
+              continue;
+            }
+            
+            if (line.endsWith(':')) {
+              formatted += ' '.repeat(currentIndent) + line + '\n';
+              currentIndent += indentSize;
+            } else if (line.startsWith('- ')) {
+              formatted += ' '.repeat(currentIndent) + line + '\n';
+            } else {
+              formatted += ' '.repeat(currentIndent) + line + '\n';
+              if (!line.endsWith(':')) {
+                currentIndent = Math.max(0, currentIndent - indentSize);
+              }
+            }
+          }
+          
+          return formatted;
+        } catch (error) {
+          throw new Error('YAML格式化失败: ' + error.message);
+        }
+      }
+
+      // Format SQL
+      function formatSQL(text) {
+        try {
+          let formatted = text;
+          
+          // Handle keyword case
+          const keywordCase = sqlKeywordCase.value;
+          if (keywordCase === 'upper') {
+            formatted = formatted.replace(/\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|GROUP|BY|ORDER|LIMIT|OFFSET|AS|ON|AND|OR|NOT|IN|LIKE|IS|NULL)\b/gi, match => match.toUpperCase());
+          } else if (keywordCase === 'lower') {
+            formatted = formatted.replace(/\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|GROUP|BY|ORDER|LIMIT|OFFSET|AS|ON|AND|OR|NOT|IN|LIKE|IS|NULL)\b/gi, match => match.toLowerCase());
+          }
+          
+          // Add newlines after keywords
+          formatted = formatted.replace(/(SELECT|INSERT|UPDATE|DELETE)\s+/gi, '\n$1 ');
+          formatted = formatted.replace(/(FROM|WHERE|JOIN|GROUP BY|ORDER BY|LIMIT|OFFSET)\s+/gi, '\n  $1 ');
+          formatted = formatted.replace(/(AND|OR|NOT)\s+/gi, '\n    $1 ');
+          
+          // Add indentation
+          const indentSize = parseInt(sqlIndentSize.value);
+          const lines = formatted.split('\n');
+          let indented = '';
+          let indentLevel = 0;
+          
+          for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            
+            if (line.toUpperCase().includes('SELECT') || line.toUpperCase().includes('INSERT') || line.toUpperCase().includes('UPDATE') || line.toUpperCase().includes('DELETE')) {
+              indentLevel = 0;
+            } else if (line.toUpperCase().includes('FROM') || line.toUpperCase().includes('WHERE') || line.toUpperCase().includes('JOIN')) {
+              indentLevel = 1;
+            } else if (line.toUpperCase().includes('AND') || line.toUpperCase().includes('OR') || line.toUpperCase().includes('NOT')) {
+              indentLevel = 2;
+            }
+            
+            indented += ' '.repeat(indentLevel * indentSize) + line + '\n';
+          }
+          
+          return indented;
+        } catch (error) {
+          throw new Error('SQL格式化失败: ' + error.message);
+        }
+      }
+
+      // Format text based on selected format
+      function formatText() {
+        const text = textInput.value.trim();
+        if (!text) {
+          showToast('请输入需要格式化的文本', true);
+          return;
+        }
+
+        if (!validateText()) {
+          showToast('文本语法错误，请先修复', true);
+          return;
+        }
+
+        let format = formatSelect.value;
+        if (format === 'auto') {
+          format = detectFormat(text);
+        }
+
+        try {
+          let formatted;
+          switch (format) {
+            case 'json':
+              formatted = formatJSON(text);
+              break;
+            case 'xml':
+              formatted = formatXML(text);
+              break;
+            case 'yaml':
+              formatted = formatYAML(text);
+              break;
+            case 'sql':
+              formatted = formatSQL(text);
+              break;
+            default:
+              throw new Error('不支持的格式');
+          }
+
+          textOutput.textContent = formatted;
+          showToast('格式化成功 ✔');
+          saveToHistory(text, formatted, format, 'format');
+        } catch (error) {
+          showToast(error.message, true);
+        }
+      }
+
+      // Compress text
+      function compressText() {
+        const text = textInput.value.trim();
+        if (!text) {
+          showToast('请输入需要压缩的文本', true);
+          return;
+        }
+
+        if (!validateText()) {
+          showToast('文本语法错误，请先修复', true);
+          return;
+        }
+
+        let format = formatSelect.value;
+        if (format === 'auto') {
+          format = detectFormat(text);
+        }
+
+        try {
+          let compressed;
+          switch (format) {
+            case 'json':
+              compressed = JSON.stringify(JSON.parse(text));
+              break;
+            case 'xml':
+              compressed = text.replace(/\s+/g, ' ').trim();
+              break;
+            case 'yaml':
+              compressed = text.replace(/\s+/g, ' ').trim();
+              break;
+            case 'sql':
+              compressed = text.replace(/\s+/g, ' ').trim();
+              break;
+            default:
+              throw new Error('不支持的格式');
+          }
+
+          textOutput.textContent = compressed;
+          showToast('压缩成功 ✔');
+          saveToHistory(text, compressed, format, 'compress');
+        } catch (error) {
+          showToast(error.message, true);
+        }
+      }
+
+      // Copy output to clipboard
+      function copyOutput() {
+        const output = textOutput.textContent;
+        if (!output || output === '格式化后内容将展示在这里...') {
+          showToast('没有可复制的内容', true);
+          return;
+        }
+
+        navigator.clipboard.writeText(output)
+          .then(() => {
+            showToast('复制成功');
+          })
+          .catch(() => {
+            showToast('复制失败，请手动复制', true);
+          });
+      }
+
+      // Download output as file
+      function downloadOutput() {
+        const output = textOutput.textContent;
+        if (!output || output === '格式化后内容将展示在这里...') {
+          showToast('没有可下载的内容', true);
+          return;
+        }
+
+        let format = formatSelect.value;
+        if (format === 'auto') {
+          format = detectFormat(textInput.value);
+        }
+
+        const extensions = {
+          json: 'json',
+          xml: 'xml',
+          yaml: 'yaml',
+          sql: 'sql'
+        };
+
+        const extension = extensions[format] || 'txt';
+        const fileName = `formatted-text-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.${extension}`;
+
+        const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(url);
+
+        showToast('下载成功');
+      }
+
+      // Save to history
+      function saveToHistory(input, output, format, action) {
+        const historyItem = {
+          id: Date.now(),
+          input: input.substring(0, 100) + (input.length > 100 ? '...' : ''),
+          output: output.substring(0, 100) + (output.length > 100 ? '...' : ''),
+          format: format,
+          action: action,
+          timestamp: new Date().toLocaleString()
+        };
+
+        history.unshift(historyItem);
+        if (history.length > 5) {
+          history = history.slice(0, 5);
+        }
+
+        localStorage.setItem('textFormatterHistory', JSON.stringify(history));
+        updateHistoryList();
+      }
+
+      // Update history list
+      function updateHistoryList() {
+        if (history.length === 0) {
+          historyList.innerHTML = '<div class="text-center text-theme-secondary py-4">暂无历史记录</div>';
+          clearHistoryBtn.classList.add('hidden');
+          return;
+        }
+
+        let historyHTML = '';
+        for (let item of history) {
+          historyHTML += `
+            <div class="history-item bg-div-theme rounded-lg p-4 border border-theme-secondary">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <span class="text-sm font-medium text-theme-primary">${item.format.toUpperCase()}</span>
+                  <span class="text-xs text-theme-secondary ml-2">${item.action === 'format' ? '格式化' : '压缩'}</span>
+                </div>
+                <span class="text-xs text-theme-secondary">${item.timestamp}</span>
+              </div>
+              <div class="text-sm text-theme-secondary mb-3">
+                <div class="truncate">输入: ${item.input}</div>
+                <div class="truncate">输出: ${item.output}</div>
+              </div>
+              <div class="flex gap-2">
+                <button class="load-history-btn btn-theme px-2 py-1 rounded text-xs transition-colors flex items-center gap-1" data-id="${item.id}">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  加载
+                </button>
+                <button class="delete-history-btn btn-theme px-2 py-1 rounded text-xs transition-colors flex items-center gap-1" data-id="${item.id}">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  删除
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        historyList.innerHTML = historyHTML;
+        clearHistoryBtn.classList.remove('hidden');
+
+        // Add event listeners to history buttons
+        document.querySelectorAll('.load-history-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const id = parseInt(this.dataset.id);
+            loadHistoryItem(id);
+          });
+        });
+
+        document.querySelectorAll('.delete-history-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const id = parseInt(this.dataset.id);
+            deleteHistoryItem(id);
+          });
+        });
+      }
+
+      // Load history item
+      function loadHistoryItem(id) {
+        const item = history.find(item => item.id === id);
+        if (item) {
+          textInput.value = item.input.replace('...', '');
+          textOutput.textContent = item.output.replace('...', '');
+          formatSelect.value = item.format;
+          updateStats();
+          showToast('历史记录加载成功');
+        }
+      }
+
+      // Delete history item
+      function deleteHistoryItem(id) {
+        history = history.filter(item => item.id !== id);
+        localStorage.setItem('textFormatterHistory', JSON.stringify(history));
+        updateHistoryList();
+        showToast('历史记录删除成功');
+      }
+
+      // Clear all history
+      function clearHistory() {
+        history = [];
+        localStorage.removeItem('textFormatterHistory');
+        updateHistoryList();
+        showToast('历史记录已清空');
+      }
+
+      // Reset configuration to default
+      function resetConfig() {
+        // JSON config
+        jsonIndentType.value = 'space';
+        jsonIndentSize.value = '4';
+        jsonSortKeys.checked = false;
+        jsonPreserveComments.checked = true;
+        
+        // XML config
+        xmlIndentType.value = 'space';
+        xmlIndentSize.value = '4';
+        xmlFormatAttributes.checked = true;
+        xmlPreserveComments.checked = true;
+        
+        // YAML config
+        yamlIndentSize.value = '2';
+        yamlPreserveComments.checked = true;
+        
+        // SQL config
+        sqlIndentSize.value = '4';
+        sqlKeywordCase.value = 'preserve';
+        sqlPreserveComments.checked = true;
+        
+        // Compression config
+        compressPreserveSpaces.checked = false;
+        compressPreserveComments.checked = false;
+        
+        showToast('配置已重置为默认值');
+      }
+
+      // Handle file input
+      function handleFileInput(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 100 * 1024 * 1024) { // 100MB limit
+          showToast('文件过大（最大支持100MB），请拆分后导入', true);
+          fileInput.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const content = e.target.result;
+          textInput.value = content;
+          updateStats();
+          
+          // Detect format from file extension
+          const fileName = file.name.toLowerCase();
+          if (fileName.endsWith('.json')) {
+            formatSelect.value = 'json';
+          } else if (fileName.endsWith('.xml')) {
+            formatSelect.value = 'xml';
+          } else if (fileName.endsWith('.yaml') || fileName.endsWith('.yml')) {
+            formatSelect.value = 'yaml';
+          } else if (fileName.endsWith('.sql')) {
+            formatSelect.value = 'sql';
+          }
+          
+          showToast('文件导入成功');
+        };
+        reader.onerror = function() {
+          showToast('文件读取失败，请重试', true);
+        };
+        reader.readAsText(file, 'utf-8');
+      }
+
+      // Toggle configuration panel
+      function toggleConfig() {
+        configVisible = !configVisible;
+        if (configVisible) {
+          configContent.classList.remove('hidden');
+          toggleConfigBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg> 折叠';
+        } else {
+          configContent.classList.add('hidden');
+          toggleConfigBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg> 展开';
+        }
+      }
+
+      // Toggle history panel
+      function toggleHistory() {
+        historyVisible = !historyVisible;
+        if (historyVisible) {
+          historyContent.classList.remove('hidden');
+          toggleHistoryBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg> 折叠';
+        } else {
+          historyContent.classList.add('hidden');
+          toggleHistoryBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg> 展开';
+        }
+      }
+
+      // Adjust font size
+      function adjustFontSize(delta) {
+        currentFontSize = Math.max(12, Math.min(20, currentFontSize + delta));
+        textOutput.style.fontSize = currentFontSize + 'px';
+        fontSizeDisplay.textContent = currentFontSize + 'px';
+      }
+
+      // Toggle word wrap
+      function toggleWordWrap() {
+        wordWrapEnabled = !wordWrapEnabled;
+        if (wordWrapEnabled) {
+          textOutput.style.whiteSpace = 'pre-wrap';
+          toggleWordWrapBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg> 换行';
+        } else {
+          textOutput.style.whiteSpace = 'pre';
+          toggleWordWrapBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 11l-4 4m0 0l4 4m-4-8h14"></path></svg> 不换行';
+        }
+      }
+
+      // Switch config panel based on selected format
+      function switchConfigPanel() {
+        const format = formatSelect.value;
+        
+        // Hide all config panels
+        jsonConfig.classList.add('hidden');
+        xmlConfig.classList.add('hidden');
+        yamlConfig.classList.add('hidden');
+        sqlConfig.classList.add('hidden');
+        
+        // Show selected config panel
+        switch (format) {
+          case 'json':
+            jsonConfig.classList.remove('hidden');
+            break;
+          case 'xml':
+            xmlConfig.classList.remove('hidden');
+            break;
+          case 'yaml':
+            yamlConfig.classList.remove('hidden');
+            break;
+          case 'sql':
+            sqlConfig.classList.remove('hidden');
+            break;
+          default:
+            jsonConfig.classList.remove('hidden');
+        }
+      }
+
+      // Add debounce function
+      function debounce(func, wait) {
+        let timeout;
+        return function() {
+          const context = this;
+          const args = arguments;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+      }
+
+      // Event listeners
+      textInput.addEventListener('input', debounce(() => {
+        updateStats();
+        if (formatSelect.value === 'auto') {
+          const format = detectFormat(textInput.value);
+          formatSelect.value = format;
+          switchConfigPanel();
+        }
+      }, 300));
+
+      formatSelect.addEventListener('change', switchConfigPanel);
+      validateBtn.addEventListener('click', validateText);
+      formatBtn.addEventListener('click', formatText);
+      compressBtn.addEventListener('click', compressText);
+      copyOutputBtn.addEventListener('click', copyOutput);
+      downloadOutputBtn.addEventListener('click', downloadOutput);
+      clearInputBtn.addEventListener('click', () => {
+        textInput.value = '';
+        updateStats();
+        textInput.classList.remove('border-red-500', 'border-green-500');
+        validationResult.classList.add('hidden');
+      });
+      clearOutputBtn.addEventListener('click', () => {
+        textOutput.textContent = '格式化后内容将展示在这里...';
+      });
+      resetConfigBtn.addEventListener('click', resetConfig);
+      fileInput.addEventListener('change', handleFileInput);
+      toggleConfigBtn.addEventListener('click', toggleConfig);
+      toggleHistoryBtn.addEventListener('click', toggleHistory);
+      clearHistoryBtn.addEventListener('click', clearHistory);
+      decreaseFontBtn.addEventListener('click', () => adjustFontSize(-1));
+      increaseFontBtn.addEventListener('click', () => adjustFontSize(1));
+      toggleWordWrapBtn.addEventListener('click', toggleWordWrap);
+
+      // Initialize
+      function init() {
+        updateStats();
+        updateHistoryList();
+        switchConfigPanel();
+      }
+
+      // Initialize the application
+      init();
+    });
+  </script>
+
+  <style>
+    /* Button hover effects */
+    button {
+      cursor: pointer;
+    }
+    
+    button:hover {
+      opacity: 0.9;
+    }
+    
+    /* History item hover effect */
+    .history-item:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Config panel transition */
+    .config-panel {
+      transition: all 0.3s ease;
+    }
+    
+    /* Input validation styles */
+    textarea.border-red-500 {
+      border-color: #ef4444 !important;
+    }
+    
+    textarea.border-green-500 {
+      border-color: #10b981 !important;
+    }
+  </style>
+</Layout>
