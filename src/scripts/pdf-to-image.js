@@ -208,7 +208,20 @@ function renderPage(pageNum) {
   currentPageEl.textContent = currentPage;
   
   pdfDoc.getPage(pageNum).then(function(page) {
-    const viewport = page.getViewport({ scale: zoom });
+    // 获取预览容器的最大可用宽度
+    const previewArea = document.querySelector('.preview-area');
+    const maxWidth = previewArea.clientWidth - 32; // 减去内边距
+    
+    // 计算初始视口
+    let viewport = page.getViewport({ scale: zoom });
+    
+    // 检查宽度是否超过最大限制
+    if (viewport.width > maxWidth) {
+      // 调整缩放比例以适应最大宽度
+      const adjustedZoom = (maxWidth / viewport.width) * zoom;
+      viewport = page.getViewport({ scale: adjustedZoom });
+    }
+    
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     canvas.height = viewport.height;
