@@ -24,10 +24,25 @@ order: -1
           <!-- Main Content Area -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Input Section -->
-            <div class="input-section flex flex-col">
+            <div class="input-section flex flex-col min-w-0">
               <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
                 <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
-                <div class="flex gap-2">
+              </div>
+              <div class="mb-4" style="height: 40px; min-height: 40px;">
+                <div class="flex gap-2 h-full flex-wrap">
+                  <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary cursor-pointer w-32">
+                    <option value="auto">自动识别</option>
+                    <option value="json">JSON</option>
+                    <option value="xml">XML</option>
+                    <option value="yaml">YAML</option>
+                    <option value="sql">SQL</option>
+                  </select>
+                  <button id="validateBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    校验语法
+                  </button>
                   <label for="fileInput" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -43,27 +58,10 @@ order: -1
                   </button>
                 </div>
               </div>
-              <div class="mb-4" style="height: 40px; min-height: 40px;">
-                <div class="flex gap-2 h-full">
-                  <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary flex-1 cursor-pointer">
-                    <option value="auto">自动识别</option>
-                    <option value="json">JSON</option>
-                    <option value="xml">XML</option>
-                    <option value="yaml">YAML</option>
-                    <option value="sql">SQL</option>
-                  </select>
-                  <button id="validateBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    校验语法
-                  </button>
-                </div>
-              </div>
               <div class="flex-1 flex flex-col" style="min-height: 400px;">
                 <textarea 
                   id="textInput" 
-                  class="flex-1 w-full p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono resize-none"
+                  class="w-full h-[600px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono resize-none overflow-x-auto"
                   placeholder="请输入/粘贴需要格式化的文本..."
                 ></textarea>
               </div>
@@ -74,7 +72,7 @@ order: -1
             </div>
 
             <!-- Output Section -->
-            <div class="output-section flex flex-col">
+            <div class="output-section flex flex-col min-w-0">
               <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
                 <h2 class="text-xl font-semibold text-theme-primary">文本预览</h2>
                 <div class="flex gap-2">
@@ -100,20 +98,38 @@ order: -1
                 </div>
               </div>
               <div class="mb-4" style="height: 40px; min-height: 40px;">
-                <div class="flex gap-2 h-full">
-                  <button id="copyOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                <div class="flex gap-1 h-full flex-wrap">
+                  <button id="formatBtnSmall" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    格式化
+                  </button>
+                  <button id="compressBtnSmall" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8-4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                    </svg>
+                    压缩
+                  </button>
+                  <button id="resetConfigBtnSmall" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    重置
+                  </button>
+                  <button id="copyOutputBtn" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                     </svg>
                     复制
                   </button>
-                  <button id="downloadOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                  <button id="downloadOutputBtn" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
                     下载
                   </button>
-                  <button id="clearOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                  <button id="clearOutputBtn" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
@@ -124,11 +140,9 @@ order: -1
               <div class="flex-1 flex flex-col" style="min-height: 400px;">
                 <div 
                   id="textOutput" 
-                  class="flex-1 w-full p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono whitespace-pre-wrap overflow-auto"
+                  class="w-full h-[600px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme font-mono whitespace-pre-wrap overflow-auto text-gray-400"
                   style="font-size: 14px;"
-                >
-                  格式化后内容将展示在这里...
-                </div>
+                >格式化后内容将展示在这里...</div>
               </div>
               <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary opacity-0" style="height: 20px; min-height: 20px;">
                 <span>字符数: 0</span>
@@ -367,12 +381,15 @@ order: -1
       const formatSelect = document.getElementById('formatSelect');
       const validateBtn = document.getElementById('validateBtn');
       const formatBtn = document.getElementById('formatBtn');
+      const formatBtnSmall = document.getElementById('formatBtnSmall');
       const compressBtn = document.getElementById('compressBtn');
+      const compressBtnSmall = document.getElementById('compressBtnSmall');
       const copyOutputBtn = document.getElementById('copyOutputBtn');
       const downloadOutputBtn = document.getElementById('downloadOutputBtn');
       const clearInputBtn = document.getElementById('clearInputBtn');
       const clearOutputBtn = document.getElementById('clearOutputBtn');
       const resetConfigBtn = document.getElementById('resetConfigBtn');
+      const resetConfigBtnSmall = document.getElementById('resetConfigBtnSmall');
       const fileInput = document.getElementById('fileInput');
       const charCount = document.getElementById('charCount');
       const fileSize = document.getElementById('fileSize');
@@ -775,6 +792,8 @@ order: -1
           }
 
           textOutput.textContent = formatted;
+          textOutput.classList.remove('text-gray-400');
+          textOutput.classList.add('dark:text-theme-primary');
           showToast('格式化成功 ✔');
           saveToHistory(text, formatted, format, 'format');
         } catch (error) {
@@ -820,6 +839,8 @@ order: -1
           }
 
           textOutput.textContent = compressed;
+          textOutput.classList.remove('text-gray-400');
+          textOutput.classList.add('dark:text-theme-primary');
           showToast('压缩成功 ✔');
           saveToHistory(text, compressed, format, 'compress');
         } catch (error) {
@@ -964,6 +985,8 @@ order: -1
         if (item) {
           textInput.value = item.input.replace('...', '');
           textOutput.textContent = item.output.replace('...', '');
+          textOutput.classList.remove('text-gray-400');
+          textOutput.classList.add('dark:text-theme-primary');
           formatSelect.value = item.format;
           updateStats();
           showToast('历史记录加载成功');
@@ -1139,6 +1162,7 @@ order: -1
       // Event listeners
       textInput.addEventListener('input', debounce(() => {
         updateStats();
+        
         if (formatSelect.value === 'auto') {
           const format = detectFormat(textInput.value);
           formatSelect.value = format;
@@ -1149,7 +1173,9 @@ order: -1
       formatSelect.addEventListener('change', switchConfigPanel);
       validateBtn.addEventListener('click', validateText);
       formatBtn.addEventListener('click', formatText);
+      formatBtnSmall.addEventListener('click', formatText);
       compressBtn.addEventListener('click', compressText);
+      compressBtnSmall.addEventListener('click', compressText);
       copyOutputBtn.addEventListener('click', copyOutput);
       downloadOutputBtn.addEventListener('click', downloadOutput);
       clearInputBtn.addEventListener('click', () => {
@@ -1159,8 +1185,11 @@ order: -1
       });
       clearOutputBtn.addEventListener('click', () => {
         textOutput.textContent = '格式化后内容将展示在这里...';
+        textOutput.classList.add('text-gray-400');
+        textOutput.classList.remove('dark:text-theme-primary');
       });
       resetConfigBtn.addEventListener('click', resetConfig);
+      resetConfigBtnSmall.addEventListener('click', resetConfig);
       fileInput.addEventListener('change', handleFileInput);
       toggleConfigBtn.addEventListener('click', toggleConfig);
       toggleHistoryBtn.addEventListener('click', toggleHistory);
@@ -1168,6 +1197,40 @@ order: -1
       decreaseFontBtn.addEventListener('click', () => adjustFontSize(-1));
       increaseFontBtn.addEventListener('click', () => adjustFontSize(1));
       toggleWordWrapBtn.addEventListener('click', toggleWordWrap);
+
+      // Test layout function
+      window.testLayoutConstraints = function() {
+        const testCases = [
+          { name: '500 chars EN', content: 'a'.repeat(500) },
+          { name: '500 chars CN', content: '测'.repeat(500) },
+          { name: 'Mixed Content', content: 'a'.repeat(250) + '测'.repeat(250) }
+        ];
+
+        console.group('Layout Constraints Test');
+        testCases.forEach(test => {
+          console.log(`Testing: ${test.name}`);
+          textInput.value = test.content;
+          textInput.dispatchEvent(new Event('input')); // Trigger resize
+          
+          const inputWidth = textInput.offsetWidth;
+          const outputWidth = textOutput.offsetWidth;
+          const containerWidth = textInput.parentElement.offsetWidth;
+          
+          console.log(`Input Width: ${inputWidth}px, Container Width: ${containerWidth}px`);
+          if (inputWidth > containerWidth + 5) { // Allow small margin of error
+            console.error('FAIL: Input box wider than container!');
+          } else {
+            console.log('PASS: Input box width constrained.');
+          }
+          
+          // Check scrollbar presence for single line long text
+          if (textInput.scrollWidth > textInput.clientWidth) {
+             console.log('PASS: Input scrollbar present (if no-wrap) or content fits.');
+          }
+        });
+        console.groupEnd();
+        return "Test Complete. Check console for details.";
+      };
 
       // Initialize
       function init() {
