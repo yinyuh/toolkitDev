@@ -24,8 +24,8 @@ order: -1
           <!-- Main Content Area -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Input Section -->
-            <div class="input-section">
-              <div class="flex justify-between items-center mb-4">
+            <div class="input-section flex flex-col">
+              <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
                 <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
                 <div class="flex gap-2">
                   <label for="fileInput" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 cursor-pointer">
@@ -43,8 +43,8 @@ order: -1
                   </button>
                 </div>
               </div>
-              <div class="mb-4">
-                <div class="flex gap-2 mb-4">
+              <div class="mb-4" style="height: 40px; min-height: 40px;">
+                <div class="flex gap-2 h-full">
                   <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary flex-1 cursor-pointer">
                     <option value="auto">自动识别</option>
                     <option value="json">JSON</option>
@@ -59,22 +59,23 @@ order: -1
                     校验语法
                   </button>
                 </div>
-                <div id="validationResult" class="text-sm mb-2 hidden"></div>
               </div>
-              <textarea 
-                id="textInput" 
-                class="w-full min-h-[400px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono"
-                placeholder="请输入/粘贴需要格式化的文本..."
-              ></textarea>
-              <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary">
+              <div class="flex-1 flex flex-col" style="min-height: 400px;">
+                <textarea 
+                  id="textInput" 
+                  class="flex-1 w-full p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono resize-none"
+                  placeholder="请输入/粘贴需要格式化的文本..."
+                ></textarea>
+              </div>
+              <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary" style="height: 20px; min-height: 20px;">
                 <span id="charCount">字符数: 0</span>
                 <span id="fileSize">大小: 0 KB</span>
               </div>
             </div>
 
             <!-- Output Section -->
-            <div class="output-section">
-              <div class="flex justify-between items-center mb-4">
+            <div class="output-section flex flex-col">
+              <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
                 <h2 class="text-xl font-semibold text-theme-primary">文本预览</h2>
                 <div class="flex gap-2">
                   <div class="flex gap-1">
@@ -98,32 +99,40 @@ order: -1
                   </button>
                 </div>
               </div>
-              <div class="flex gap-2 mb-4">
-                <button id="copyOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                  </svg>
-                  复制
-                </button>
-                <button id="downloadOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                  下载
-                </button>
-                <button id="clearOutputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
-                  清空
-                </button>
+              <div class="mb-4" style="height: 40px; min-height: 40px;">
+                <div class="flex gap-2 h-full">
+                  <button id="copyOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    复制
+                  </button>
+                  <button id="downloadOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    下载
+                  </button>
+                  <button id="clearOutputBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    清空
+                  </button>
+                </div>
               </div>
-              <div 
-                id="textOutput" 
-                class="w-full min-h-[400px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono whitespace-pre-wrap"
-                style="font-size: 14px; overflow: auto;"
-              >
-                格式化后内容将展示在这里...
+              <div class="flex-1 flex flex-col" style="min-height: 400px;">
+                <div 
+                  id="textOutput" 
+                  class="flex-1 w-full p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono whitespace-pre-wrap overflow-auto"
+                  style="font-size: 14px;"
+                >
+                  格式化后内容将展示在这里...
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary opacity-0" style="height: 20px; min-height: 20px;">
+                <span>字符数: 0</span>
+                <span>大小: 0 KB</span>
               </div>
             </div>
           </div>
@@ -357,7 +366,6 @@ order: -1
       const textOutput = document.getElementById('textOutput');
       const formatSelect = document.getElementById('formatSelect');
       const validateBtn = document.getElementById('validateBtn');
-      const validationResult = document.getElementById('validationResult');
       const formatBtn = document.getElementById('formatBtn');
       const compressBtn = document.getElementById('compressBtn');
       const copyOutputBtn = document.getElementById('copyOutputBtn');
@@ -517,9 +525,7 @@ order: -1
       function validateText() {
         const text = textInput.value.trim();
         if (!text) {
-          validationResult.textContent = '请输入文本后再进行校验';
-          validationResult.className = 'text-sm mb-2 text-yellow-500';
-          validationResult.classList.remove('hidden');
+          showToast('请输入文本后再进行校验', true);
           return false;
         }
 
@@ -547,17 +553,14 @@ order: -1
         }
 
         if (validation.valid) {
-          validationResult.textContent = '语法校验通过 ✔';
-          validationResult.className = 'text-sm mb-2 text-green-500';
+          showToast('语法校验通过 ✔');
           textInput.classList.remove('border-red-500');
           textInput.classList.add('border-green-500');
         } else {
-          validationResult.textContent = `语法校验失败: ${validation.error}`;
-          validationResult.className = 'text-sm mb-2 text-red-500';
+          showToast(`语法校验失败: ${validation.error}`, true);
           textInput.classList.remove('border-green-500');
           textInput.classList.add('border-red-500');
         }
-        validationResult.classList.remove('hidden');
         return validation.valid;
       }
 
@@ -1153,7 +1156,6 @@ order: -1
         textInput.value = '';
         updateStats();
         textInput.classList.remove('border-red-500', 'border-green-500');
-        validationResult.classList.add('hidden');
       });
       clearOutputBtn.addEventListener('click', () => {
         textOutput.textContent = '格式化后内容将展示在这里...';
