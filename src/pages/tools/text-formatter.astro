@@ -497,7 +497,11 @@ order: -1
           const xmlDoc = parser.parseFromString(text, 'application/xml');
           const errors = xmlDoc.getElementsByTagName('parsererror');
           if (errors.length > 0) {
-            return { valid: false, error: 'XML格式错误' };
+            // Try to extract detailed error message
+            const errorText = errors[0].textContent;
+            // Get first line of error to avoid too much text
+            const firstLineError = errorText ? errorText.split('\n')[0] : 'XML格式错误';
+            return { valid: false, error: firstLineError };
           }
           return { valid: true, error: null };
         } catch (error) {
@@ -507,14 +511,39 @@ order: -1
 
       // Validate YAML
       function validateYAML(text) {
-        // Simple YAML validation
+        // Improved YAML validation (Client-side lightweight)
         try {
-          // Basic YAML syntax check
           const lines = text.split('\n');
+          
           for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (line && !line.startsWith('#') && !line.includes(':')) {
-              return { valid: false, error: `YAML格式错误，第${i + 1}行缺少冒号` };
+            const line = lines[i];
+            const trimmed = line.trim();
+            
+            // Skip empty lines and comments
+            if (!trimmed || trimmed.startsWith('#')) continue;
+
+            // Check for list item or key-value pair
+            const isListItem = trimmed.startsWith('-');
+            const hasColon = trimmed.includes(':');
+            
+            // Basic structure check
+            if (!isListItem && !hasColon) {
+                 // Allow multi-line strings continuation (indented)
+                 if (!line.startsWith(' ')) {
+                     return { valid: false, error: `YAML格式错误，第${i + 1}行：顶级元素缺少冒号或列表符号` };
+                 }
+            }
+            
+            // Check space after colon
+            if (hasColon) {
+                const parts = line.split(':');
+                // If there is content after colon (not just newline), it must start with space
+                if (parts.length > 1) {
+                    const valuePart = parts.slice(1).join(':');
+                    if (valuePart.length > 0 && !valuePart.startsWith(' ') && !valuePart.startsWith('\r')) {
+                         return { valid: false, error: `YAML格式错误，第${i + 1}行：冒号后必须有空格` };
+                    }
+                }
             }
           }
           return { valid: true, error: null };
@@ -525,14 +554,37 @@ order: -1
 
       // Validate SQL
       function validateSQL(text) {
-        // Simple SQL validation
+        // Improved SQL validation
         try {
-          // Basic SQL syntax check
           const upperText = text.toUpperCase();
-          if (upperText.includes('SELECT') || upperText.includes('INSERT') || upperText.includes('UPDATE') || upperText.includes('DELETE') || upperText.includes('CREATE') || upperText.includes('DROP')) {
-            return { valid: true, error: null };
+          
+          // Check for basic keywords
+          const keywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE'];
+          const hasKeyword = keywords.some(k => upperText.includes(k));
+          
+          if (!hasKeyword) {
+              return { valid: false, error: '未检测到有效的 SQL 关键字 (如 SELECT, INSERT 等)' };
           }
-          return { valid: false, error: 'SQL格式错误' };
+
+          // Check parenthesis matching
+          let openParens = 0;
+          for (let char of text) {
+              if (char === '(') openParens++;
+              if (char === ')') openParens--;
+              if (openParens < 0) return { valid: false, error: 'SQL格式错误：括号不匹配（多余的右括号）' };
+          }
+          if (openParens > 0) return { valid: false, error: 'SQL格式错误：括号不匹配（缺少右括号）' };
+
+          // Check single quote matching (simple check)
+          let singleQuotes = 0;
+          for (let i = 0; i < text.length; i++) {
+              if (text[i] === "'" && (i === 0 || text[i-1] !== '\\')) { // Ignore escaped quotes
+                  singleQuotes++;
+              }
+          }
+          if (singleQuotes % 2 !== 0) return { valid: false, error: 'SQL格式错误：单引号不匹配' };
+
+          return { valid: true, error: null };
         } catch (error) {
           return { valid: false, error: error.message };
         }
@@ -712,43 +764,96 @@ order: -1
       // Format SQL
       function formatSQL(text) {
         try {
-          let formatted = text;
+          // 1. Protection (Comments and Strings)
+          const placeholders = [];
           
-          // Handle keyword case
+          // Protect strings (' and ") and comments (-- and /* */)
+          // Regex priority: strings first, then comments
+          let protectedText = text.replace(/('|")(\\\1|.)*?\1|(--.*)|(\/\*[\s\S]*?\*\/)/g, (match) => {
+              placeholders.push(match);
+              return `__SQL_PLACEHOLDER_${placeholders.length - 1}__`;
+          });
+
+          // 2. Tokenization: Add spaces around operators and punctuation
+          // This ensures that "SELECT*FROM" becomes "SELECT * FROM"
+          // We exclude operators that might be part of placeholders, but since we replaced them, it's safe.
+          protectedText = protectedText.replace(/([(),;=<>+\-*/%])/g, ' $1 ');
+
+          // 3. Normalize whitespace
+          // Collapse all whitespace to single space
+          protectedText = protectedText.replace(/\s+/g, ' ').trim();
+
+          // 4. Keyword Case Handling
           const keywordCase = sqlKeywordCase.value;
-          if (keywordCase === 'upper') {
-            formatted = formatted.replace(/\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|GROUP|BY|ORDER|LIMIT|OFFSET|AS|ON|AND|OR|NOT|IN|LIKE|IS|NULL)\b/gi, match => match.toUpperCase());
-          } else if (keywordCase === 'lower') {
-            formatted = formatted.replace(/\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|GROUP|BY|ORDER|LIMIT|OFFSET|AS|ON|AND|OR|NOT|IN|LIKE|IS|NULL)\b/gi, match => match.toLowerCase());
-          }
+          const keywords = [
+              'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'FROM', 'WHERE', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 
+              'GROUP BY', 'ORDER BY', 'LIMIT', 'OFFSET', 'AS', 'ON', 'AND', 'OR', 'NOT', 'IN', 'LIKE', 'IS', 'NULL',
+              'VALUES', 'SET', 'HAVING', 'UNION', 'ALL', 'DISTINCT', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'CREATE', 
+              'TABLE', 'DROP', 'ALTER', 'INDEX', 'VIEW', 'TRIGGER', 'PROCEDURE', 'FUNCTION', 'DATABASE', 'DESC', 'ASC',
+              'PRIMARY KEY', 'FOREIGN KEY', 'DEFAULT', 'CONSTRAINT', 'CHECK', 'UNIQUE'
+          ];
           
-          // Add newlines after keywords
-          formatted = formatted.replace(/(SELECT|INSERT|UPDATE|DELETE)\s+/gi, '\n$1 ');
-          formatted = formatted.replace(/(FROM|WHERE|JOIN|GROUP BY|ORDER BY|LIMIT|OFFSET)\s+/gi, '\n  $1 ');
-          formatted = formatted.replace(/(AND|OR|NOT)\s+/gi, '\n    $1 ');
-          
-          // Add indentation
+          // Sort keywords by length desc
+          keywords.sort((a, b) => b.length - a.length);
+
+          keywords.forEach(keyword => {
+              // Escape space for regex
+              const escapedKeyword = keyword.replace(' ', '\\s+');
+              const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'gi');
+              protectedText = protectedText.replace(regex, (match) => {
+                  return keywordCase === 'lower' ? match.toLowerCase() : match.toUpperCase();
+              });
+          });
+
+          // 5. Formatting Logic (Adding newlines)
+          let formatted = protectedText;
           const indentSize = parseInt(sqlIndentSize.value);
-          const lines = formatted.split('\n');
-          let indented = '';
-          let indentLevel = 0;
+          const indentStr = ' '.repeat(indentSize);
+
+          // Newline for main clauses
+          const mainClauses = [
+              'SELECT', 'FROM', 'WHERE', 'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 
+              'UNION', 'VALUES', 'SET', 'INSERT INTO', 'UPDATE', 'DELETE FROM', 'CREATE TABLE', 'DROP TABLE',
+              'ALTER TABLE'
+          ];
           
-          for (let line of lines) {
-            line = line.trim();
-            if (!line) continue;
-            
-            if (line.toUpperCase().includes('SELECT') || line.toUpperCase().includes('INSERT') || line.toUpperCase().includes('UPDATE') || line.toUpperCase().includes('DELETE')) {
-              indentLevel = 0;
-            } else if (line.toUpperCase().includes('FROM') || line.toUpperCase().includes('WHERE') || line.toUpperCase().includes('JOIN')) {
-              indentLevel = 1;
-            } else if (line.toUpperCase().includes('AND') || line.toUpperCase().includes('OR') || line.toUpperCase().includes('NOT')) {
-              indentLevel = 2;
-            }
-            
-            indented += ' '.repeat(indentLevel * indentSize) + line + '\n';
-          }
+          mainClauses.forEach(clause => {
+              const escapedClause = clause.replace(' ', '\\s+');
+              const regex = new RegExp(`\\b(${escapedClause})\\b`, 'gi');
+              formatted = formatted.replace(regex, '\n$1');
+          });
+
+          // Newline + Indent for Joins
+          const joinClauses = ['JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'OUTER JOIN', 'FULL JOIN', 'CROSS JOIN'];
+          joinClauses.forEach(clause => {
+               const escapedClause = clause.replace(' ', '\\s+');
+               const regex = new RegExp(`\\b(${escapedClause})\\b`, 'gi');
+               formatted = formatted.replace(regex, `\n${indentStr}$1`);
+          });
+
+          // Newline + Indent for Logical Operators
+          formatted = formatted.replace(/\b(AND|OR)\b/gi, `\n${indentStr}$1`);
+
+          // Newline + Indent for Commas (e.g. column lists)
+          formatted = formatted.replace(/\s*,\s*/g, `,\n${indentStr}`);
+
+          // Clean up spaces around parenthesis
+          formatted = formatted.replace(/\s*\(\s*/g, ' (');
+          formatted = formatted.replace(/\s*\)\s*/g, ') ');
+
+          // Semicolons
+          formatted = formatted.replace(/\s*;\s*/g, ';\n\n');
+
+          // 6. Restore Placeholders
+          formatted = formatted.replace(/__SQL_PLACEHOLDER_(\d+)__/g, (match, index) => {
+              return placeholders[parseInt(index)];
+          });
+
+          // 7. Final Cleanup
+          formatted = formatted.replace(/^\n+/, '').trim(); // Remove leading newlines
+          formatted = formatted.replace(/ \n/g, '\n'); // Remove trailing space before newline
           
-          return indented;
+          return formatted;
         } catch (error) {
           throw new Error('SQL格式化失败: ' + error.message);
         }
@@ -832,7 +937,30 @@ order: -1
               compressed = text.replace(/\s+/g, ' ').trim();
               break;
             case 'sql':
-              compressed = text.replace(/\s+/g, ' ').trim();
+              // SQL Compression Strategy:
+              // 1. Preserve comments by temporarily replacing them
+              const comments = [];
+              let protectedText = text.replace(/(--.*)|(\/\*[\s\S]*?\*\/)/g, (match) => {
+                  comments.push(match);
+                  return `__SQL_COMMENT_${comments.length - 1}__`;
+              });
+              
+              // 2. Compress whitespace in the SQL code
+              protectedText = protectedText.replace(/\s+/g, ' ').trim();
+              
+              // 3. Restore comments, ensuring line comments get a newline after them
+              compressed = protectedText.replace(/__SQL_COMMENT_(\d+)__/g, (match, index) => {
+                  const comment = comments[parseInt(index)];
+                  // If it's a line comment (--), it needs a newline to not comment out the rest of the code
+                  if (comment.startsWith('--')) {
+                      return `\n${comment}\n`;
+                  }
+                  // Block comments don't strictly need newlines, but safer to add spaces
+                  return ` ${comment} `;
+              });
+              
+              // 4. Final trim
+              compressed = compressed.trim();
               break;
             default:
               throw new Error('不支持的格式');
@@ -901,10 +1029,22 @@ order: -1
 
       // Save to history
       function saveToHistory(input, output, format, action) {
+        // Simple escape for HTML
+        const escapeHtml = (text) => {
+          return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        };
+
         const historyItem = {
           id: Date.now(),
-          input: input.substring(0, 100) + (input.length > 100 ? '...' : ''),
-          output: output.substring(0, 100) + (output.length > 100 ? '...' : ''),
+          input: escapeHtml(input.substring(0, 100) + (input.length > 100 ? '...' : '')),
+          output: escapeHtml(output.substring(0, 100) + (output.length > 100 ? '...' : '')),
+          rawInput: input, // Store full raw content for loading
+          rawOutput: output,
           format: format,
           action: action,
           timestamp: new Date().toLocaleString()
@@ -915,6 +1055,16 @@ order: -1
           history = history.slice(0, 5);
         }
 
+        // Store with limited size for localStorage, but keep full content in memory if possible
+        // Actually for localStorage we might want to truncate raw content if too large to avoid quota limits
+        // For this demo we'll just store as is, but be mindful.
+        
+        // Optimize storage: don't store huge strings in localStorage history if not needed
+        // We only need full content for "Load" button. 
+        // Let's truncate raw content in localStorage to avoid issues, 
+        // OR better: keep it but realize it might fill up storage.
+        // Given it's a simple tool, let's keep it but maybe limit length.
+        
         localStorage.setItem('textFormatterHistory', JSON.stringify(history));
         updateHistoryList();
       }
@@ -983,12 +1133,20 @@ order: -1
       function loadHistoryItem(id) {
         const item = history.find(item => item.id === id);
         if (item) {
-          textInput.value = item.input.replace('...', '');
-          textOutput.textContent = item.output.replace('...', '');
+          // Prefer raw content if available, otherwise fallback to potentially truncated/escaped content
+          const inputContent = item.rawInput || item.input.replace('...', '');
+          const outputContent = item.rawOutput || item.output.replace('...', '');
+          
+          textInput.value = inputContent;
+          textOutput.textContent = outputContent;
           textOutput.classList.remove('text-gray-400');
           textOutput.classList.add('dark:text-theme-primary');
           formatSelect.value = item.format;
+          
+          // Trigger updates
           updateStats();
+          switchConfigPanel();
+          
           showToast('历史记录加载成功');
         }
       }
@@ -1122,30 +1280,53 @@ order: -1
       // Switch config panel based on selected format
       function switchConfigPanel() {
         const format = formatSelect.value;
+        const isYaml = format === 'yaml';
         
-        // Hide all config panels
-        jsonConfig.classList.add('hidden');
-        xmlConfig.classList.add('hidden');
-        yamlConfig.classList.add('hidden');
-        sqlConfig.classList.add('hidden');
-        
-        // Show selected config panel
-        switch (format) {
-          case 'json':
-            jsonConfig.classList.remove('hidden');
-            break;
-          case 'xml':
-            xmlConfig.classList.remove('hidden');
-            break;
-          case 'yaml':
-            yamlConfig.classList.remove('hidden');
-            break;
-          case 'sql':
-            sqlConfig.classList.remove('hidden');
-            break;
-          default:
-            jsonConfig.classList.remove('hidden');
+        // Toggle Config Section visibility
+        const configSection = document.querySelector('.config-section');
+        if (configSection) {
+            if (isYaml) {
+                configSection.classList.add('hidden');
+            } else {
+                configSection.classList.remove('hidden');
+            }
         }
+        
+        // Hide all config panels if not YAML (if YAML, whole section is hidden)
+        if (!isYaml) {
+            jsonConfig.classList.add('hidden');
+            xmlConfig.classList.add('hidden');
+            yamlConfig.classList.add('hidden');
+            sqlConfig.classList.add('hidden');
+            
+            // Show selected config panel
+            switch (format) {
+              case 'json':
+                jsonConfig.classList.remove('hidden');
+                break;
+              case 'xml':
+                xmlConfig.classList.remove('hidden');
+                break;
+              case 'sql':
+                sqlConfig.classList.remove('hidden');
+                break;
+              default:
+                jsonConfig.classList.remove('hidden');
+            }
+        }
+        
+        // Toggle action buttons state for YAML
+        const buttonsToToggle = [formatBtn, formatBtnSmall, compressBtn, compressBtnSmall, resetConfigBtn, resetConfigBtnSmall];
+        
+        buttonsToToggle.forEach(btn => {
+            if (isYaml) {
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.disabled = false;
+            }
+        });
       }
 
       // Add debounce function
@@ -1166,9 +1347,21 @@ order: -1
         if (formatSelect.value === 'auto') {
           const format = detectFormat(textInput.value);
           formatSelect.value = format;
-          switchConfigPanel();
         }
-      }, 300));
+        
+        // Always trigger logic based on format
+        switchConfigPanel();
+        
+        const isValid = validateText();
+        
+        // For YAML, if valid, auto-display
+        if (formatSelect.value === 'yaml' && isValid) {
+             textOutput.textContent = textInput.value;
+             textOutput.classList.remove('text-gray-400');
+             textOutput.classList.add('dark:text-theme-primary');
+        }
+        
+      }, 500)); // Increased debounce for better experience
 
       formatSelect.addEventListener('change', switchConfigPanel);
       validateBtn.addEventListener('click', validateText);
