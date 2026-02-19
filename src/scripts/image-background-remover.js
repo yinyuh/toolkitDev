@@ -62,7 +62,7 @@ async function loadModel() {
     if (session || isModelLoading) return;
     
     isModelLoading = true;
-    statusText.textContent = "模型加载中...";
+    statusText.textContent = "检查模型缓存...";
     statusDot.className = "w-2 h-2 rounded-full bg-yellow-400 animate-pulse";
     
     try {
@@ -73,11 +73,77 @@ async function loadModel() {
         ort.env.wasm.numThreads = 1; 
         ort.env.wasm.proxy = false; // 禁用 worker proxy
 
-        // 使用 onnxruntime-web 加载模型
+        // 模型路径
         const modelUrl = '/models/rmbg-1.4/onnx/model.onnx';
+        let modelData = modelUrl;
+
+        // 尝试使用 Cache API 缓存模型
+        if ('caches' in window) {
+            const cacheName = 'rmbg-model-cache-v1';
+            try {
+                const cache = await caches.open(cacheName);
+                const cachedResponse = await cache.match(modelUrl);
+                
+                if (cachedResponse) {
+                    console.log("Loading model from cache...");
+                    statusText.textContent = "正在加载缓存模型...";
+                    modelData = await cachedResponse.arrayBuffer();
+                } else {
+                    console.log("Downloading model...");
+                    statusText.textContent = "下载模型中 (0%)...";
+                    
+                    // 带进度的下载
+                    const response = await fetch(modelUrl);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    
+                    const contentLength = response.headers.get('content-length');
+                    const total = parseInt(contentLength, 10);
+                    
+                    let loaded = 0;
+                    const chunks = [];
+                    const reader = response.body.getReader();
+
+                    while (true) {
+                        const {done, value} = await reader.read();
+                        if (done) break;
+                        
+                        chunks.push(value);
+                        loaded += value.byteLength;
+                        
+                        if (total) {
+                            const percent = Math.round((loaded / total) * 100);
+                            statusText.textContent = `下载模型中 (${percent}%)...`;
+                        }
+                    }
+                    
+                    // 合并 chunks
+                    const allChunks = new Uint8Array(loaded);
+                    let position = 0;
+                    for (let chunk of chunks) {
+                        allChunks.set(chunk, position);
+                        position += chunk.length;
+                    }
+                    
+                    modelData = allChunks.buffer;
+                    
+                    // 存入缓存
+                    const cacheResponse = new Response(modelData, {
+                        headers: { 'Content-Type': 'application/octet-stream' }
+                    });
+                    await cache.put(modelUrl, cacheResponse);
+                    console.log("Model cached successfully");
+                }
+            } catch (cacheError) {
+                console.warn("Cache failed, falling back to direct URL:", cacheError);
+                // Fallback to URL loading if cache fails
+                modelData = modelUrl;
+            }
+        }
         
+        statusText.textContent = "正在初始化引擎...";
+
         // 创建推理会话
-        session = await ort.InferenceSession.create(modelUrl, {
+        session = await ort.InferenceSession.create(modelData, {
             executionProviders: ['wasm'], // 使用 WASM 后端
             graphOptimizationLevel: 'all',
         });
