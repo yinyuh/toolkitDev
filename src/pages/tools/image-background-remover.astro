@@ -1,13 +1,13 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 title: "图片背景去除工具"
-description: "纯前端离线图片去背景工具，支持一键智能去背、手动精细调整，保护隐私不上传服务器。"
+description: "本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。"
 technologies: "RMBG-1.4, ONNX Runtime, Canvas"
 category: "tool"
 order: -2
 ---
 
-<Layout title="图片背景去除工具" description="纯前端离线图片去背景工具，支持一键智能去背、手动精细调整，保护隐私不上传服务器。">
+<Layout title="图片背景去除工具" description="本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。">
   <style>
     @reference "tailwindcss";
     /* 基础样式 */
@@ -66,7 +66,7 @@ order: -2
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">图片背景去除工具</h1>
         <p class="text-theme-secondary max-w-3xl mx-auto">
-          基于 RMBG v1.4 模型的纯前端离线图片去背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。支持一键自动去背和手动精细擦除。
+          本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。
         </p>
       </div>
 
@@ -78,7 +78,8 @@ order: -2
              <div class="flex items-center gap-4 flex-1">
                  <!-- Upload Button -->
                  <div class="relative">
-                     <button class="btn-theme px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:opacity-90 transition-opacity">
+                     <button class="btn-theme px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer">
+                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                          <span>选择文件</span>
                      </button>
                      <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
@@ -90,6 +91,19 @@ order: -2
                  </div>
              </div>
              
+             <!-- Processing Status (Initially hidden) -->
+             <div id="processingStatus" class="flex-1 flex items-center justify-center gap-3 hidden">
+                 <div class="flex flex-col items-center w-full max-w-xs">
+                     <div class="flex items-center gap-2 mb-1">
+                         <div class="loading-spinner w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                         <span class="text-sm font-medium text-blue-600" id="progressText">正在处理中...</span>
+                     </div>
+                     <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                         <div id="progressBar" class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                     </div>
+                 </div>
+             </div>
+             
              <div class="flex items-center gap-4">
                  <!-- Status -->
                  <div id="modelStatus" class="text-sm text-theme-secondary flex items-center gap-2 hidden md:flex">
@@ -98,12 +112,21 @@ order: -2
                  </div>
 
                  <!-- Action Buttons -->
-                 <button id="removeBgBtn" class="btn-theme px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                 <button id="removeBgBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" disabled>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                     <span>一键去背景</span>
                  </button>
                  
-                 <button id="downloadBtn" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition-colors" disabled>
-                    <span>下载</span>
+                 <!-- Reset Button -->
+                 <button id="resetBtn" class="bg-gray-500 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" disabled>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.001 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>重置</span>
+                 </button>
+
+                 <!-- Download Button -->
+                 <button id="downloadBtn" class="bg-green-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" disabled>
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                     <span>下载</span>
                  </button>
                  <select id="exportFormat" class="hidden">
                     <option value="png">PNG</option>
@@ -113,23 +136,23 @@ order: -2
 
         <!-- Canvas Workspace -->
         <div class="bg-div-theme rounded-xl shadow-lg border border-div-theme overflow-hidden flex flex-col h-[600px]">
-                <!-- Header with Zoom Controls -->
-                <div class="p-3 border-b border-div-theme flex justify-between items-center bg-theme-secondary">
-                    <div class="font-medium text-theme-primary">生成的透明背景图片将在下方显示</div>
-                    <div class="flex items-center gap-2">
-                        <button id="fitScreenBtn" class="p-1.5 hover:bg-gray-200 rounded text-gray-600" title="适应屏幕">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-                        </button>
+                <!-- Header -->
+                <div class="p-3 border-b border-div-theme flex bg-theme-secondary">
+                    <div class="flex-1 flex justify-center items-center">
+                        <span class="font-medium text-theme-primary">原图</span>
+                    </div>
+                    <div class="flex-1 flex justify-center items-center border-l border-div-theme">
+                        <span class="font-medium text-theme-primary">抠图结果</span>
                     </div>
                 </div>
 
                 <!-- Canvas Area -->
-                <div class="relative flex-1 bg-gray-50 overflow-hidden flex flex-col md:flex-row" id="canvasContainer" id="dropZone">
+                <div class="relative flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden flex flex-col md:flex-row h-full" id="canvasContainer">
                     <!-- Left: Original Image -->
-                    <div class="flex-1 flex flex-col border-r border-gray-200 relative group bg-white/50">
-                        <div class="flex-1 overflow-hidden relative flex items-center justify-center p-4" id="originalWrapper">
-                            <canvas id="originalCanvas" class="block shadow-sm"></canvas>
-                            <div id="originalEmptyState" class="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none border-2 border-dashed border-gray-300 m-4 rounded-lg">
+                    <div class="flex-1 flex flex-col border-r border-div-theme relative group bg-theme-primary h-full">
+                        <div class="flex-1 overflow-hidden relative flex items-center justify-center" id="originalWrapper">
+                            <canvas id="originalCanvas" class="block w-full h-full object-contain"></canvas>
+                            <div id="originalEmptyState" class="absolute inset-0 flex items-center justify-center text-theme-secondary pointer-events-none border-2 border-dashed border-div-theme m-4 rounded-lg">
                                 <div class="text-center">
                                     <p class="mb-2 text-3xl">📷</p>
                                     <p>未选择任何文件</p>
@@ -139,19 +162,23 @@ order: -2
                     </div>
 
                     <!-- Right: Result Image -->
-                    <div class="flex-1 flex flex-col relative group bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==')]">
-                         <div class="flex-1 overflow-hidden relative flex items-center justify-center p-4" id="canvasWrapper">
-                            <div class="relative shadow-lg">
-                                <canvas id="mainCanvas" class="block"></canvas>
+                    <div class="flex-1 flex flex-col relative group h-full bg-theme-primary">
+                         <!-- Transparent background pattern -->
+                         <!-- Only show pattern in light mode, or use a darker pattern for dark mode -->
+                         <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==')] opacity-10 pointer-events-none"></div>
+                         
+                         <div class="flex-1 overflow-hidden relative flex items-center justify-center z-10" id="canvasWrapper">
+                            <div class="relative w-full h-full flex items-center justify-center">
+                                <canvas id="mainCanvas" class="block w-full h-full object-contain"></canvas>
                                 <!-- Overlay for loading -->
-                                <div id="loadingOverlay" class="absolute inset-0 bg-white/80 z-50 flex flex-col items-center justify-center hidden">
+                                <div id="loadingOverlay" class="absolute inset-0 bg-theme-primary/80 z-50 flex flex-col items-center justify-center hidden">
                                     <div class="loading-spinner mb-4"></div>
-                                    <p class="text-gray-600 font-medium" id="loadingText">处理中...</p>
+                                    <p class="text-theme-primary font-medium" id="loadingText">处理中...</p>
                                 </div>
                             </div>
                             <!-- Result Empty State (Hidden by default, shown when no result) -->
-                            <div id="resultEmptyState" class="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none">
-                                <!-- Empty -->
+                            <div id="resultEmptyState" class="absolute inset-0 flex items-center justify-center text-theme-secondary pointer-events-none">
+                                <!-- <p>抠图结果在下方显示</p> -->
                             </div>
                         </div>
                     </div>

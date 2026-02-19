@@ -11,8 +11,9 @@ const removeBgBtn = document.getElementById('removeBgBtn');
 const modelStatus = document.getElementById('modelStatus');
 const statusDot = document.getElementById('statusDot');
 const statusText = document.getElementById('statusText');
+const processingStatus = document.getElementById('processingStatus');
 const progressBar = document.getElementById('progressBar');
-const progressFill = document.querySelector('#progressBar div');
+const progressText = document.getElementById('progressText');
 const canvasWrapper = document.getElementById('canvasWrapper');
 const originalWrapper = document.getElementById('originalWrapper');
 const mainCanvas = document.getElementById('mainCanvas');
@@ -22,8 +23,9 @@ const resultEmptyState = document.getElementById('resultEmptyState');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const loadingText = document.getElementById('loadingText');
 const downloadBtn = document.getElementById('downloadBtn');
-const undoBtn = document.getElementById('undoBtn');
-const redoBtn = document.getElementById('redoBtn');
+const resetBtn = document.getElementById('resetBtn');
+const undoBtn = null;
+const redoBtn = null;
 
 const imageInfo = document.getElementById('imageInfo');
 const processTime = document.getElementById('processTime');
@@ -80,7 +82,7 @@ async function loadModel() {
             graphOptimizationLevel: 'all',
         });
         
-        statusText.textContent = "本地模型已就绪 (RMBG v1.4)";
+        statusText.textContent = "本地AI模型已就绪";
         statusDot.className = "w-2 h-2 rounded-full bg-green-500";
         if (originalImage) removeBgBtn.disabled = false;
     } catch (error) {
@@ -124,14 +126,47 @@ function setupEventListeners() {
     // Zoom - Disabled
     // document.getElementById('zoomInBtn').addEventListener('click', () => setZoom(currentScale * 1.2));
     // document.getElementById('zoomOutBtn').addEventListener('click', () => setZoom(currentScale / 1.2));
-    // document.getElementById('fitScreenBtn').addEventListener('click', fitToScreen);
+    // if (document.getElementById('fitScreenBtn')) {
+    //     document.getElementById('fitScreenBtn').addEventListener('click', fitToScreen);
+    // }
 
     // Download
     downloadBtn.addEventListener('click', downloadResult);
+    
+    // Reset
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            // 清空状态
+            originalImage = null;
+            maskCanvas = null;
+            
+            // 恢复 UI
+            originalEmptyState.classList.remove('hidden');
+            originalCanvas.classList.add('hidden');
+            
+            resultEmptyState.classList.remove('hidden');
+            mainCanvas.classList.add('hidden');
+            
+            removeBgBtn.disabled = true;
+            downloadBtn.disabled = true;
+            resetBtn.disabled = true;
+            
+            fileInput.value = ''; // 清空文件选择
+            if (fileInfoText) fileInfoText.textContent = '未选择任何文件';
+            imageInfo.textContent = '';
+            processTime.textContent = '';
+            
+            // 清空画布
+            const ctxOrig = originalCanvas.getContext('2d');
+            ctxOrig.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
+            const ctxMain = mainCanvas.getContext('2d');
+            ctxMain.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+        });
+    }
 
-    // History
-    if (undoBtn) undoBtn.addEventListener('click', undo);
-    if (redoBtn) redoBtn.addEventListener('click', redo);
+    // History (Not used anymore but keep for reference if needed)
+    // if (undoBtn) undoBtn.addEventListener('click', undo);
+    // if (redoBtn) redoBtn.addEventListener('click', redo);
 
     // Brush Size
     // brushSizeInput.addEventListener('input', (e) => {
@@ -199,7 +234,8 @@ function handleFile(file) {
             
             // Enable buttons
             if (session) removeBgBtn.disabled = false;
-            downloadBtn.disabled = false;
+            // downloadBtn.disabled = false; // 下载按钮只有在去背完成后才启用
+            if (resetBtn) resetBtn.disabled = false; // 上传图片后即可重置
             
             // Fit and Draw
             fitToScreen();
@@ -248,22 +284,58 @@ async function runBackgroundRemoval() {
     isProcessing = true;
     loadingOverlay.classList.remove('hidden');
     loadingText.textContent = "正在去除背景...";
+    
+    // Show processing status immediately
+    processingStatus.classList.remove('hidden');
+    progressBar.style.width = '0%';
+    
+    // Give UI a chance to update before blocking the main thread
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => setTimeout(resolve, 50)); // Small delay to ensure render
+    
     const startTime = performance.now();
 
     try {
         // 1. Preprocess
+        // progressText.textContent = '正在处理中...'; // Already set in HTML
+        progressBar.style.width = '10%';
+        
+        // Give UI a chance to update
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
         // RMBG-1.4 通常使用 1024x1024 作为输入
         const targetSize = 1024;
         const inputTensor = preprocessImage(originalImage, targetSize, targetSize);
         
+        progressBar.style.width = '30%';
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
         // 2. Run Model
+        // progressText.textContent = 'AI推理中...'; // 保持显示“正在处理中...”更简洁
         // 确保输入名正确。大多数 ONNX 模型使用 'input' 或 'pixel_values'
         // 我们可以尝试获取输入名
         const inputName = session.inputNames[0];
         const feeds = {};
         feeds[inputName] = inputTensor;
         
+        // 模拟进度条动画，因为 session.run 是阻塞的（除非在 worker 中，但这里是在主线程 WASM）
+        // 我们可以设置一个定时器稍微增加进度
+        const progressInterval = setInterval(() => {
+            const currentWidth = parseFloat(progressBar.style.width);
+            if (currentWidth < 80) {
+                progressBar.style.width = `${currentWidth + 1}%`;
+            }
+        }, 100);
+        
+        // Use setTimeout to allow UI to update before heavy computation
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
         const outputs = await session.run(feeds);
+        
+        clearInterval(progressInterval);
+        progressBar.style.width = '90%';
+        // progressText.textContent = '后处理...';
+        await new Promise(resolve => setTimeout(resolve, 10));
         
         // 3. Post-process
         // 尝试获取输出，有时 session.run 返回的结果键值可能不同
@@ -339,6 +411,9 @@ async function runBackgroundRemoval() {
         resultEmptyState.classList.add('hidden');
         mainCanvas.classList.remove('hidden');
         
+        // Enable download button
+        downloadBtn.disabled = false;
+        
         const endTime = performance.now();
         processTime.textContent = `耗时: ${((endTime - startTime) / 1000).toFixed(2)}s`;
         
@@ -348,6 +423,13 @@ async function runBackgroundRemoval() {
     } finally {
         isProcessing = false;
         loadingOverlay.classList.add('hidden');
+        
+        // Hide progress status
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+            processingStatus.classList.add('hidden');
+        }, 500);
+        
         drawCanvas();
     }
 }
@@ -379,28 +461,14 @@ function setupCanvasInteractions() {
 function drawCanvas() {
     if (!originalImage) return;
     
-    // Resize main canvas and original canvas to fit their containers
-    // Better: main canvas size = wrapper client size.
-    const rect = canvasWrapper.getBoundingClientRect();
-    if (mainCanvas.width !== rect.width || mainCanvas.height !== rect.height) {
-        mainCanvas.width = rect.width;
-        mainCanvas.height = rect.height;
-    }
-
-    const rectOrig = originalWrapper.getBoundingClientRect();
-    if (originalCanvas.width !== rectOrig.width || originalCanvas.height !== rectOrig.height) {
-        originalCanvas.width = rectOrig.width;
-        originalCanvas.height = rectOrig.height;
-    }
+    // 我们不需要再根据容器调整 Canvas 的 width/height 属性
+    // 因为这会改变分辨率。我们已经在 fitToScreen 中设置了正确的分辨率。
     
     // Draw Result Canvas
     const ctx = mainCanvas.getContext('2d');
     ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
     
-    ctx.save();
-    ctx.translate(panX, panY);
-    ctx.scale(currentScale, currentScale);
-    
+    // 直接绘制全图，不缩放不平移（由 CSS object-contain 处理显示）
     if (maskCanvas) {
          // Apply Mask
          // Draw Original
@@ -411,51 +479,40 @@ function drawCanvas() {
          // Reset
          ctx.globalCompositeOperation = 'source-over';
     } else {
-        // 如果没有 mask (还没处理)，结果区域显示什么？
-        // 根据截图，应该显示“生成的透明背景图片将在下方显示” (即空状态)
-        // 所以我们不画任何东西，并且保持 resultEmptyState 显示
-        // 但在 handleFile 中我们隐藏了 emptyState...
-        // 让我们调整逻辑：handleFile时不隐藏 resultEmptyState，只有在 runBackgroundRemoval 成功后才隐藏？
-        // 或者，初始时 mainCanvas 显示原图？不，用户说“生成前后的图片统一展示”，左边原图，右边结果。
-        // 如果还没生成，右边应该是空的。
-        
-        // 所以这里不画图。
+        // 如果没有 mask，不绘制，保持空白（由 CSS 隐藏）
     }
     
-    ctx.restore();
-
     // Draw Original Canvas (Left side)
     const ctxOrig = originalCanvas.getContext('2d');
     ctxOrig.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
-    
-    ctxOrig.save();
-    // Use same pan/scale for sync view
-    ctxOrig.translate(panX, panY);
-    ctxOrig.scale(currentScale, currentScale);
     ctxOrig.drawImage(originalImage, 0, 0);
-    ctxOrig.restore();
 }
 
 function fitToScreen() {
     if (!originalImage) return;
     const rect = canvasWrapper.getBoundingClientRect();
-    const padding = 20; // 稍微减小边距
-    const availW = rect.width - padding;
-    const availH = rect.height - padding;
     
-    const scaleW = availW / originalImage.width;
-    const scaleH = availH / originalImage.height;
+    // 我们不再需要手动缩放 Canvas，而是让 Canvas 元素充满容器，并使用 object-fit (CSS) 或 drawImage 缩放 (Canvas)
+    // 但为了保持分辨率，我们应该设置 Canvas 的 width/height 为图片实际尺寸
+    // 然后通过 CSS 样式让它适应屏幕
     
-    // 始终使用适应屏幕的比例，且不限制最大为1，因为如果图片很小，适应屏幕可能需要放大
-    // 但通常去背工具我们希望看到清晰的图，所以可以限制最大为1
-    currentScale = Math.min(scaleW, scaleH); 
+    // 设置 Canvas 分辨率
+    if (mainCanvas.width !== originalImage.width || mainCanvas.height !== originalImage.height) {
+        mainCanvas.width = originalImage.width;
+        mainCanvas.height = originalImage.height;
+    }
     
-    // Center
-    panX = (rect.width - originalImage.width * currentScale) / 2;
-    panY = (rect.height - originalImage.height * currentScale) / 2;
+    if (originalCanvas.width !== originalImage.width || originalCanvas.height !== originalImage.height) {
+        originalCanvas.width = originalImage.width;
+        originalCanvas.height = originalImage.height;
+    }
+    
+    // 重置变换参数
+    currentScale = 1;
+    panX = 0;
+    panY = 0;
     
     drawCanvas();
-    // updateZoomDisplay(); // 不需要更新显示了
 }
 
 function setZoom(newScale) {
@@ -534,8 +591,8 @@ function restoreHistory() {
 }
 
 function updateHistoryButtons() {
-    if (undoBtn) undoBtn.disabled = historyIndex <= 0;
-    if (redoBtn) redoBtn.disabled = historyIndex >= history.length - 1;
+    // if (undoBtn) undoBtn.disabled = historyIndex <= 0;
+    // if (redoBtn) redoBtn.disabled = historyIndex >= history.length - 1;
 }
 
 // Export
