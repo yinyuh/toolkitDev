@@ -1,0 +1,179 @@
+---
+import Layout from "../../layouts/Layout.astro";
+title: "图片背景去除工具"
+description: "纯前端离线图片去背景工具，支持一键智能去背、手动精细调整，保护隐私不上传服务器。"
+technologies: "RMBG-1.4, ONNX Runtime, Canvas"
+category: "tool"
+order: -2
+---
+
+<Layout title="图片背景去除工具" description="纯前端离线图片去背景工具，支持一键智能去背、手动精细调整，保护隐私不上传服务器。">
+  <style>
+    @reference "tailwindcss";
+    /* 基础样式 */
+    .canvas-container {
+        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                          linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                          linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                          linear-gradient(-45deg, transparent 75%, #ccc 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        background-color: #fff;
+    }
+
+    .tool-btn {
+        @apply p-2 rounded-lg transition-all duration-200 border border-transparent;
+    }
+    
+    .tool-btn.active {
+        @apply bg-blue-100 border-blue-500 text-blue-600;
+    }
+    
+    .tool-btn:not(.active):hover {
+        @apply bg-gray-100;
+    }
+
+    input[type="range"] {
+        @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        @apply w-4 h-4 bg-blue-500 rounded-full border-none appearance-none transition-transform duration-200;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+        @apply scale-125;
+    }
+
+    .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #3b82f6;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <!-- Tool Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">图片背景去除工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          基于 RMBG v1.4 模型的纯前端离线图片去背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。支持一键自动去背和手动精细擦除。
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="max-w-6xl mx-auto flex flex-col gap-6">
+        
+        <!-- Top Controls: Upload and Actions -->
+        <div class="bg-div-theme rounded-xl p-4 shadow-lg border border-div-theme flex flex-wrap items-center justify-between gap-4">
+             <div class="flex items-center gap-4 flex-1">
+                 <!-- Upload Button -->
+                 <div class="relative">
+                     <button class="btn-theme px-6 py-2 rounded-lg font-medium flex items-center gap-2 hover:opacity-90 transition-opacity">
+                         <span>选择文件</span>
+                     </button>
+                     <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                 </div>
+                 
+                 <!-- File Info -->
+                 <div class="text-sm text-theme-secondary" id="fileInfoText">
+                     未选择任何文件
+                 </div>
+             </div>
+             
+             <div class="flex items-center gap-4">
+                 <!-- Status -->
+                 <div id="modelStatus" class="text-sm text-theme-secondary flex items-center gap-2 hidden md:flex">
+                    <span class="w-2 h-2 rounded-full bg-gray-400" id="statusDot"></span>
+                    <span id="statusText">模型未加载</span>
+                 </div>
+
+                 <!-- Action Buttons -->
+                 <button id="removeBgBtn" class="btn-theme px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <span>一键去背景</span>
+                 </button>
+                 
+                 <button id="downloadBtn" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition-colors" disabled>
+                    <span>下载</span>
+                 </button>
+                 <select id="exportFormat" class="hidden">
+                    <option value="png">PNG</option>
+                 </select>
+             </div>
+        </div>
+
+        <!-- Canvas Workspace -->
+        <div class="bg-div-theme rounded-xl shadow-lg border border-div-theme overflow-hidden flex flex-col h-[600px]">
+                <!-- Header with Zoom Controls -->
+                <div class="p-3 border-b border-div-theme flex justify-between items-center bg-theme-secondary">
+                    <div class="font-medium text-theme-primary">生成的透明背景图片将在下方显示</div>
+                    <div class="flex items-center gap-2">
+                        <button id="fitScreenBtn" class="p-1.5 hover:bg-gray-200 rounded text-gray-600" title="适应屏幕">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas Area -->
+                <div class="relative flex-1 bg-gray-50 overflow-hidden flex flex-col md:flex-row" id="canvasContainer" id="dropZone">
+                    <!-- Left: Original Image -->
+                    <div class="flex-1 flex flex-col border-r border-gray-200 relative group bg-white/50">
+                        <div class="flex-1 overflow-hidden relative flex items-center justify-center p-4" id="originalWrapper">
+                            <canvas id="originalCanvas" class="block shadow-sm"></canvas>
+                            <div id="originalEmptyState" class="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none border-2 border-dashed border-gray-300 m-4 rounded-lg">
+                                <div class="text-center">
+                                    <p class="mb-2 text-3xl">📷</p>
+                                    <p>未选择任何文件</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Result Image -->
+                    <div class="flex-1 flex flex-col relative group bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==')]">
+                         <div class="flex-1 overflow-hidden relative flex items-center justify-center p-4" id="canvasWrapper">
+                            <div class="relative shadow-lg">
+                                <canvas id="mainCanvas" class="block"></canvas>
+                                <!-- Overlay for loading -->
+                                <div id="loadingOverlay" class="absolute inset-0 bg-white/80 z-50 flex flex-col items-center justify-center hidden">
+                                    <div class="loading-spinner mb-4"></div>
+                                    <p class="text-gray-600 font-medium" id="loadingText">处理中...</p>
+                                </div>
+                            </div>
+                            <!-- Result Empty State (Hidden by default, shown when no result) -->
+                            <div id="resultEmptyState" class="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none">
+                                <!-- Empty -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer Info -->
+                <div class="p-2 border-t border-div-theme text-xs text-theme-secondary flex justify-between bg-theme-secondary">
+                    <span id="imageInfo"></span>
+                    <span id="processTime"></span>
+                </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Load Transformers.js from CDN -->
+  <script is:inline type="module">
+    // Make it available globally so the script can access it if needed, 
+    // or just let the main script import it.
+    // For simplicity with Astro's bundling, we'll let the main script handle imports via URL.
+  </script>
+  
+  <script src="/src/scripts/image-background-remover.js"></script>
+</Layout>
