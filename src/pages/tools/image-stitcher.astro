@@ -57,14 +57,22 @@ order: -1
       <div class="max-w-6xl mx-auto">
         <div class="image-stitcher-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
           <!-- Upload Section -->
-          <div class="upload-section mb-8">
-            <h2 class="text-2xl font-semibold text-theme-primary mb-4">上传图片</h2>
-            <div class="upload-area border-2 border-dashed border-theme-secondary rounded-lg p-8 text-center mb-6 cursor-pointer hover:border-blue-500 transition-colors">
-              <div class="upload-icon text-4xl mb-4">📷</div>
-              <p class="text-theme-secondary mb-4">点击或拖拽图片到此处上传</p>
-              <p class="text-sm text-theme-secondary opacity-70">支持 JPG、PNG、WebP、GIF 格式</p>
+          <div class="upload-section mb-6">
+            <div class="upload-area border-2 border-dashed border-theme-secondary rounded-lg p-4 flex flex-col md:flex-row items-center justify-between gap-4 cursor-pointer hover:border-blue-500 transition-colors">
+              <div class="flex items-center gap-4">
+                 <div class="text-3xl">📷</div>
+                 <div class="text-left">
+                    <p class="text-theme-primary font-medium">点击或拖拽图片到此处上传</p>
+                    <p class="text-xs text-theme-secondary opacity-70">支持 JPG、PNG、WebP、GIF 格式</p>
+                 </div>
+              </div>
+              
               <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
-              <button id="browseBtn" class="btn-theme px-6 py-3 rounded transition-colors mt-4 cursor-pointer">浏览文件</button>
+              
+              <div class="flex gap-3">
+                <button id="browseBtn" class="btn-theme px-4 py-2 rounded transition-colors cursor-pointer text-sm font-medium">浏览文件</button>
+                <button id="topResetBtn" class="btn-theme px-4 py-2 rounded transition-colors cursor-pointer hover:bg-red-500 hover:text-white text-sm font-medium">重置</button>
+              </div>
             </div>
           </div>
 
@@ -176,6 +184,12 @@ order: -1
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
               </svg>
               重置
+            </button>
+            <button id="copyBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium opacity-50 pointer-events-none transition-all duration-200 flex items-center justify-center gap-2 min-w-[160px]">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+              </svg>
+              复制图片
             </button>
             <button id="downloadBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium opacity-50 pointer-events-none transition-all duration-200 flex items-center justify-center gap-2 min-w-[160px]">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

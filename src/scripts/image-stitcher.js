@@ -2,7 +2,7 @@
 let images = [];
 let selectedImageIndex = -1;
 let mergedImage = null;
-let sortOrder = 'time'; // 'time' 按时间排序, 'name-asc' 按名称正序, 'name-desc' 按名称倒序
+let sortOrder = 'name-asc'; // 'time' 按时间排序, 'name-asc' 按名称正序, 'name-desc' 按名称倒序
 
 // DOM 元素
 let fileInput;
@@ -21,6 +21,8 @@ let flipVertical;
 let previewArea;
 let stitchBtn;
 let resetBtn;
+let topResetBtn;
+let copyBtn;
 let downloadBtn;
 let openNewBtn;
 let sortBtn;
@@ -31,6 +33,7 @@ function init() {
   // 初始化DOM元素
   fileInput = document.getElementById('fileInput');
   browseBtn = document.getElementById('browseBtn');
+  topResetBtn = document.getElementById('topResetBtn');
   uploadArea = document.querySelector('.upload-area');
   imageList = document.getElementById('imageList');
   imageCount = document.getElementById('imageCount');
@@ -45,6 +48,7 @@ function init() {
   previewArea = document.getElementById('previewArea');
   stitchBtn = document.getElementById('stitchBtn');
   resetBtn = document.getElementById('resetBtn');
+  copyBtn = document.getElementById('copyBtn');
   downloadBtn = document.getElementById('downloadBtn');
   openNewBtn = document.getElementById('openNewBtn');
   sortBtn = document.getElementById('sortBtn');
@@ -109,6 +113,11 @@ function initEventListeners() {
   // 操作按钮
   stitchBtn.addEventListener('click', stitchImages);
   resetBtn.addEventListener('click', reset);
+  topResetBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    reset();
+  });
+  copyBtn.addEventListener('click', copyImageToClipboard);
   downloadBtn.addEventListener('click', downloadImage);
   openNewBtn.addEventListener('click', openImageInNewWindow);
   
@@ -150,8 +159,7 @@ function handleFiles(fileList) {
             name: file.name,
             timestamp: Date.now()
           });
-          updateImageList();
-          updatePreview();
+          sortImages();
         };
         img.src = e.target.result;
       };
@@ -455,6 +463,8 @@ function stitchImages() {
   downloadBtn.classList.add('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
   openNewBtn.classList.remove('opacity-50', 'pointer-events-none');
   openNewBtn.classList.add('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
+  copyBtn.classList.remove('opacity-50', 'pointer-events-none');
+  copyBtn.classList.add('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
 
   // 显示非阻塞式临时提示
   showNotification('图片拼接成功！');
@@ -508,6 +518,8 @@ function reset() {
   downloadBtn.classList.remove('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
   openNewBtn.classList.add('opacity-50', 'pointer-events-none');
   openNewBtn.classList.remove('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
+  copyBtn.classList.add('opacity-50', 'pointer-events-none');
+  copyBtn.classList.remove('cursor-pointer', 'hover:bg-opacity-90', 'hover:shadow-md', 'hover:scale-105');
   // 禁用编辑控件和按钮
   editControls.classList.add('opacity-50', 'pointer-events-none');
   const editButtons = editControls.querySelectorAll('button');
@@ -525,6 +537,59 @@ function downloadImage() {
     link.download = `stitched-image-${Date.now()}.${outputFormat.value}`;
     link.click();
   }
+}
+
+// 复制图片到剪贴板
+async function copyImageToClipboard() {
+  if (!mergedImage) return;
+
+  try {
+    // 获取图片数据
+    const response = await fetch(mergedImage);
+    const blob = await response.blob();
+
+    // 尝试写入剪贴板
+    try {
+      // 优先尝试直接写入 Blob
+      const item = new ClipboardItem({ [blob.type]: blob });
+      await navigator.clipboard.write([item]);
+      showNotification('图片已复制到剪贴板！');
+    } catch (err) {
+      // 如果直接写入失败（可能是因为格式不支持，如 image/jpeg），尝试转换为 PNG
+      if (blob.type !== 'image/png') {
+        const pngBlob = await convertToPng(mergedImage);
+        const item = new ClipboardItem({ 'image/png': pngBlob });
+        await navigator.clipboard.write([item]);
+        showNotification('图片已复制到剪贴板！');
+      } else {
+        throw err;
+      }
+    }
+  } catch (err) {
+    console.error('复制失败:', err);
+    if (err.name === 'NotAllowedError') {
+       showNotification('复制失败：请授予剪贴板权限');
+    } else {
+       showNotification('复制失败，请重试');
+    }
+  }
+}
+
+// 辅助函数：将图片转换为 PNG Blob
+function convertToPng(imgSrc) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(resolve, 'image/png');
+    };
+    img.onerror = reject;
+    img.src = imgSrc;
+  });
 }
 
 // 在新窗口打开图片
@@ -630,19 +695,12 @@ function openImageInNewWindow() {
 // 切换排序方式
 function toggleSort() {
   // 根据当前排序状态切换到下一种排序方式
-  switch(sortOrder) {
-    case 'time':
-      sortOrder = 'name-asc';
-      if (sortIcon) sortIcon.textContent = '↑';
-      break;
-    case 'name-asc':
-      sortOrder = 'name-desc';
-      if (sortIcon) sortIcon.textContent = '↓';
-      break;
-    case 'name-desc':
-      sortOrder = 'time';
-      if (sortIcon) sortIcon.textContent = '⌛';
-      break;
+  if (sortOrder === 'name-asc') {
+    sortOrder = 'name-desc';
+    if (sortIcon) sortIcon.textContent = '↓';
+  } else {
+    sortOrder = 'name-asc';
+    if (sortIcon) sortIcon.textContent = '↑';
   }
   // 执行排序
   sortImages();
@@ -651,17 +709,13 @@ function toggleSort() {
 // 排序图片
 function sortImages() {
   switch(sortOrder) {
-    case 'time':
-      // 按时间排序（先上传的在前）
-      images.sort((a, b) => a.timestamp - b.timestamp);
-      break;
     case 'name-asc':
       // 按名称正序排序
-      images.sort((a, b) => a.name.localeCompare(b.name));
+      images.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'}));
       break;
     case 'name-desc':
       // 按名称倒序排序
-      images.sort((a, b) => b.name.localeCompare(a.name));
+      images.sort((a, b) => b.name.localeCompare(a.name, undefined, {numeric: true, sensitivity: 'base'}));
       break;
   }
   // 更新图片列表
