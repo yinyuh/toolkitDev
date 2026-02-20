@@ -5,6 +5,13 @@ import Footer from "../components/commons/footer/footer.astro";
 import Breadcrumb from "../components/commons/breadcrumb/Breadcrumb.astro";
 import Analytics from '@vercel/analytics/astro'
 import  SpeedInsights  from "@vercel/speed-insights/astro"
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "工具人-ToolKitRen - 免费在线工具箱", description = "提供丰富的在线开发者工具，包括文本处理、图像处理、代码生成等功能。" } = Astro.props;
 ---
 
 <!doctype html>
@@ -14,7 +21,8 @@ import  SpeedInsights  from "@vercel/speed-insights/astro"
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>工具人-ToolKitRen</title>
+    <title>{title}</title>
+    <meta name="description" content={description} />
     
     <!-- Theme initialization script -->
     <script>

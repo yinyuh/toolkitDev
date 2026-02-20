@@ -85,11 +85,9 @@ async function loadModel() {
                 const cachedResponse = await cache.match(modelUrl);
                 
                 if (cachedResponse) {
-                    console.log("Loading model from cache...");
                     statusText.textContent = "正在加载缓存模型...";
                     modelData = await cachedResponse.arrayBuffer();
                 } else {
-                    console.log("Downloading model...");
                     statusText.textContent = "下载模型中 (0%)...";
                     
                     // 带进度的下载
@@ -131,10 +129,8 @@ async function loadModel() {
                         headers: { 'Content-Type': 'application/octet-stream' }
                     });
                     await cache.put(modelUrl, cacheResponse);
-                    console.log("Model cached successfully");
                 }
             } catch (cacheError) {
-                console.warn("Cache failed, falling back to direct URL:", cacheError);
                 // Fallback to URL loading if cache fails
                 modelData = modelUrl;
             }

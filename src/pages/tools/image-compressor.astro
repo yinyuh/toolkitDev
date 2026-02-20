@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ImageCompressor from '../../components/tools/ImageCompressor';
+
+title: "在线图片压缩工具"
+description: "免费在线批量压缩 JPG, PNG, WEBP 图片，支持画质对比和打包下载，纯本地处理，保护隐私。"
+technologies: "Browser-image-compression, React, TailwindCSS"
+category: "tool"
+order: 6
+---
+
+<Layout title="在线图片压缩工具" description="免费在线批量压缩 JPG, PNG, WEBP 图片，支持画质对比和打包下载，纯本地处理，保护隐私。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线图片压缩工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          无需上传服务器，直接在浏览器本地批量压缩图片。支持 JPG、PNG、WebP 格式，提供压缩前后画质对比。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <ImageCompressor client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

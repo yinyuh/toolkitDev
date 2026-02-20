@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import AudioConverter from '../../components/tools/AudioConverter';
+
+title: "在线音频格式转换器"
+description: "免费在线音频格式转换工具，支持 MP3, WAV, AAC, OGG, M4A 等格式互转，基于 WebAssembly 本地处理，保护隐私。"
+technologies: "FFmpeg WASM, React, TailwindCSS"
+category: "tool"
+order: 15
+---
+
+<Layout title="在线音频格式转换器" description="免费在线音频格式转换工具，支持 MP3, WAV, AAC, OGG, M4A 等格式互转，基于 WebAssembly 本地处理，保护隐私。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线音频格式转换器</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          无需安装软件，直接在浏览器中转换音频格式。支持 MP3、WAV、AAC、OGG 等主流格式互转，本地处理文件，安全快速。
+        </p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto">
+        <AudioConverter client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import FaviconGenerator from '../../components/tools/FaviconGenerator';
+
+title: "Favicon图标生成器"
+description: "一键生成网站Favicon图标，支持ICO和PNG格式，自动生成多尺寸图标包，提供HTML引用代码。"
+technologies: "Canvas, JSZip, FileSaver, React"
+category: "tool"
+order: 4
+---
+
+<Layout title="Favicon图标生成器" description="一键生成网站Favicon图标，支持ICO和PNG格式，自动生成多尺寸图标包，提供HTML引用代码。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">Favicon 图标生成器</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一键生成网站 Favicon 图标，支持 ICO 和 PNG 格式，自动生成多尺寸图标包，提供 HTML 引用代码。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <FaviconGenerator client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

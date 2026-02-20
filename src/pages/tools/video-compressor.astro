@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import VideoCompressor from '../../components/tools/VideoCompressor';
+
+title: "在线视频压缩工具"
+description: "免费在线视频压缩工具，使用 FFmpeg WASM 技术，支持 MP4, MOV, WebM 等格式，无需上传服务器，保护隐私。"
+technologies: "FFmpeg WASM, React, TailwindCSS"
+category: "tool"
+order: 9
+---
+
+<Layout title="在线视频压缩工具" description="免费在线视频压缩工具，使用 FFmpeg WASM 技术，支持 MP4, MOV, WebM 等格式，无需上传服务器，保护隐私。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线视频压缩工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          基于 WebAssembly 技术的浏览器端视频压缩工具。无需上传文件到服务器，在本地即可完成视频转码与压缩，安全、快速、私密。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <VideoCompressor client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

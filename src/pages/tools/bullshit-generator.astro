@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BullshitGenerator from '../../components/tools/BullshitGenerator';
+
+title: "狗屁不通文章生成器"
+description: "在线狗屁不通文章生成器，输入主题即可一键生成万字长文，废话连篇，仅供娱乐。"
+technologies: "React, TailwindCSS"
+category: "tool"
+order: 20
+---
+
+<Layout title="狗屁不通文章生成器" description="在线狗屁不通文章生成器，输入主题即可一键生成万字长文，废话连篇，仅供娱乐。">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+        狗屁不通文章生成器
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        输入一个主题，瞬间生成一篇看似有理实则废话连篇的文章。用于形式主义应付、凑字数或纯粹娱乐。
+      </p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+      <BullshitGenerator client:only="react" />
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">一键生成</h3>
+        <p class="text-gray-600 dark:text-gray-400">只需输入主题，毫秒级生成上千字的文章，无需等待。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">长度可控</h3>
+        <p class="text-gray-600 dark:text-gray-400">自由调节文章字数，从几百字到上万字，满足不同需求。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">便捷复制</h3>
+        <p class="text-gray-600 dark:text-gray-400">一键复制全文，支持 Markdown 格式或纯文本，方便粘贴使用。</p>
+      </div>
+    </div>
+  </div>
+</Layout>

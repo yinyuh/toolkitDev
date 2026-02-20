@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SvgOptimizer from '../../components/tools/SvgOptimizer';
+
+title: "在线 SVG 优化压缩工具"
+description: "免费在线 SVG 压缩优化工具，移除冗余代码、注释和元数据，大幅减小 SVG 文件体积，支持代码对比和实时预览。"
+technologies: "SVGO, React, TailwindCSS"
+category: "tool"
+order: 8
+---
+
+<Layout title="在线 SVG 优化压缩工具" description="免费在线 SVG 压缩优化工具，移除冗余代码、注释和元数据，大幅减小 SVG 文件体积，支持代码对比和实时预览。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线 SVG 优化压缩工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          使用 SVGO 引擎在浏览器本地深度优化 SVG 代码，移除冗余信息，最高可减少 80% 体积。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <SvgOptimizer client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

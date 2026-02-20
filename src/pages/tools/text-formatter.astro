@@ -1392,38 +1392,7 @@ order: -1
       toggleWordWrapBtn.addEventListener('click', toggleWordWrap);
 
       // Test layout function
-      window.testLayoutConstraints = function() {
-        const testCases = [
-          { name: '500 chars EN', content: 'a'.repeat(500) },
-          { name: '500 chars CN', content: '测'.repeat(500) },
-          { name: 'Mixed Content', content: 'a'.repeat(250) + '测'.repeat(250) }
-        ];
-
-        console.group('Layout Constraints Test');
-        testCases.forEach(test => {
-          console.log(`Testing: ${test.name}`);
-          textInput.value = test.content;
-          textInput.dispatchEvent(new Event('input')); // Trigger resize
-          
-          const inputWidth = textInput.offsetWidth;
-          const outputWidth = textOutput.offsetWidth;
-          const containerWidth = textInput.parentElement.offsetWidth;
-          
-          console.log(`Input Width: ${inputWidth}px, Container Width: ${containerWidth}px`);
-          if (inputWidth > containerWidth + 5) { // Allow small margin of error
-            console.error('FAIL: Input box wider than container!');
-          } else {
-            console.log('PASS: Input box width constrained.');
-          }
-          
-          // Check scrollbar presence for single line long text
-          if (textInput.scrollWidth > textInput.clientWidth) {
-             console.log('PASS: Input scrollbar present (if no-wrap) or content fits.');
-          }
-        });
-        console.groupEnd();
-        return "Test Complete. Check console for details.";
-      };
+      // window.testLayoutConstraints = function() { ... }
 
       // Initialize
       function init() {

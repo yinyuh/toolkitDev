@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import QRCodeGenerator from '../../components/tools/QRCodeGenerator';
+
+title: "在线二维码生成器"
+description: "免费在线二维码生成器，支持网址、WiFi、名片等多种类型，可自定义颜色、Logo 和尺寸，实时预览并下载。"
+technologies: "QRCode.react, React, TailwindCSS"
+category: "tool"
+order: 12
+---
+
+<Layout title="在线二维码生成器" description="免费在线二维码生成器，支持网址、WiFi、名片等多种类型，可自定义颜色、Logo 和尺寸，实时预览并下载。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线二维码生成器</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          快速生成个性化二维码。支持网址链接、WiFi 连接信息、电子名片等多种内容，可嵌入 Logo、调整颜色和纠错等级。
+        </p>
+      </div>
+      
+      <div class="max-w-5xl mx-auto">
+        <QRCodeGenerator client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

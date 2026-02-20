@@ -1,62 +1,94 @@
-# 🌌 个人作品集 – Lautaro
+# 🛠️ 工具人-ToolKitRen - 免费在线工具箱
 
----
-
-## 🚀 主要特性
-
-- ⚡️ 使用 **Astro** 和 **React** 构建
-- 🎨 **响应式设计**
-- 🧠 **项目动态过滤功能**
-- 💬 可自定义的模块：*关于我*、*项目*、*经验*、*联系*
-
----
-
-## 🧩 使用的技术
-
-- [Astro](https://astro.build/)  
-- [TailwindCSS](https://tailwindcss.com/)  
-- [TypeScript / JavaScript]  
-- [React (在选择性组件中)]  
-- [Vite](https://vitejs.dev/)  
-
----
-
-## 📂 项目结构
+> 一个基于 Astro + React 构建的现代化、高性能在线工具箱，提供 30+ 款开发者和设计师常用的实用工具。所有处理均在浏览器端完成，无需上传服务器，保护用户隐私。
 
 
+## ✨ 主要特性
 
-## 🚀 Project Structure
+- 🛡️ **隐私优先**：核心功能（如图片处理、PDF转换）纯前端实现，文件不上传服务器。
+- ⚡️ **极致性能**：基于 Astro 静态构建，配合 React 组件按需加载，首屏秒开。
+- 🎨 **现代化设计**：响应式布局，支持深色模式，提供流畅的交互体验。
+- 🧩 **丰富生态**：集成 Tesseract.js, FFmpeg.wasm, OpenCV.js 等强大的 WebAssembly 库。
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🧰 工具列表 (30+)
 
-```text
-/
-├── public/
-│ └── images/ # 静态资源
-├── src/
-│ ├── components/ # 可复用组件
-│ ├── layouts/ # 基础布局
-│ ├── pages/ # 主要页面 (index, proyectos 等)
-│ ├── scripts/ # 交互性JS (过滤, 动画)
-│ ├── styles/ # 全局或模块化CSS
-│ └── data/ # 数据 (项目, 经验)
-└── astro.config.mjs
+### 🖼️ 图像处理
+- **AI 文字识别 (OCR)**: 支持中英文混合识别，本地推理。
+- **AI 智能抠图**: 一键去除图片背景，支持边缘修饰。
+- **图片压缩**: 智能压缩 JPG/PNG/WebP，平衡画质与体积。
+- **SVG 优化**: 压缩 SVG 代码，移除冗余信息。
+- **像素画转换**: 将图片转换为复古像素风格。
+- **图片裁剪/拼接/水印**: 基础图片编辑功能全覆盖。
+- **Favicon 生成**: 一键生成全尺寸图标包。
+- **随机头像生成**: 基于 DiceBear API 生成个性化头像。
+- **二维码生成**: 自定义颜色、Logo 的二维码生成器。
+- **PDF 转图片**: 将 PDF 页面转换为高清图片。
+
+### 📝 文本与代码
+- **多格式文本格式化**: 支持 JSON, XML, YAML, SQL 校验与美化。
+- **文本差异对比 (Diff)**: 高亮显示两段文本的差异。
+- **HTML 转 Markdown**: 网页内容一键转 Markdown。
+- **密码生成器**: 生成高强度随机密码。
+- **狗屁不通文章生成**: 生成废话文学文章。
+- **文本特效**: 故障文字(Glitch)、彩虹文字、翅膀昵称、乱序文字。
+- **手写体生成**: 模拟真实手写笔迹。
+
+### 🎬 音视频工具
+- **视频格式转换**: 基于 FFmpeg.wasm，支持 MP4, WebM, MKV 等互转。
+- **视频压缩**: 调整码率与分辨率，减小视频体积。
+- **视频转 GIF**: 截取视频片段生成 GIF 动图。
+- **音频格式转换**: 支持 MP3, WAV, AAC, OGG 等格式。
+
+### 🧮 开发与数学
+- **Cron 表达式生成**: 可视化生成与解析 Cron 表达式。
+- **进制转换**: 二进制、八进制、十进制、十六进制互转。
+- **原码/反码/补码计算**: 计算机底层数值表示计算。
+- **Base64 编解码**: 文本/文件 Base64 转换。
+- **单位换算**: 长度、重量、温度等常用单位换算。
+- **体积计算器**: 常见几何体体积计算。
+- **图表生成**: 快速生成柱状图、折线图等。
+- **元素周期表**: 交互式化学元素查询。
+
+## 🛠️ 技术栈
+
+- **核心框架**: [Astro](https://astro.build/)
+- **UI 库**: [React](https://reactjs.org/), [TailwindCSS](https://tailwindcss.com/)
+- **图标库**: [Lucide React](https://lucide.dev/)
+- **关键依赖**:
+  - `tesseract.js`: OCR 识别
+  - `@ffmpeg/ffmpeg`: 音视频处理
+  - `onnxruntime-web`: AI 模型推理
+  - `svgo`: SVG 优化
+  - `chart.js`: 图表绘制
+  - `jszip`: 文件打包
+
+## 🚀 快速开始
+
+### 环境要求
+- Node.js 18+
+- npm 或 pnpm
+
+### 安装与运行
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/your-username/toolkitren.git
+cd toolkitren
+
+# 2. 安装依赖
+npm install
+
+# 3. 启动开发服务器
+npm run dev
+# 访问 http://localhost:4321
+
+# 4. 构建生产版本
+npm run build
+
+# 5. 本地预览构建结果
+npm run preview
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 📄 许可证
 
-## 🧞 命令
-
-所有命令均从项目根目录的终端运行：
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | 安装依赖                                           |
-| `npm run dev`             | 启动本地开发服务器，地址为 `localhost:4321`      |
-| `npm run build`           | 将生产站点构建到 `./dist/` 目录                     |
-| `npm run preview`         | 在部署前本地预览构建结果                           |
-| `npm run astro ...`       | 运行CLI命令，如 `astro add`, `astro check`         |
-| `npm run astro -- --help` | 获取Astro CLI使用帮助                              |
-
----
-![Portfolio](https://github.com/user-attachments/assets/8c01d06f-2d36-46c1-a3ff-a6f7bf73ab67)
+MIT License

@@ -40,7 +40,15 @@ const getRandomIcon = (projectName: string) => {
     <div class="flex items-center gap-3 mb-3">
       {/* 工具图标 */}
       <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-theme-secondary">
-        <img src={getRandomIcon(project.titulo)} alt={project.titulo} class="w-6 h-6" />
+        <img 
+          src={getRandomIcon(project.titulo)} 
+          alt={project.titulo} 
+          class="w-6 h-6" 
+          width="24" 
+          height="24" 
+          loading="lazy" 
+          decoding="async"
+        />
       </div>
       <h3 class="text-lg font-bold text-theme-primary group-hover:text-blue-400 transition-colors">{project.titulo}</h3>
     </div>

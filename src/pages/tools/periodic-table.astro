@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PeriodicTable from '../../components/tools/PeriodicTable';
+
+title: "在线元素周期表"
+description: "免费在线交互式元素周期表，提供118种化学元素的详细信息，包括原子序数、原子量、电子排布、物理性质等，支持分类筛选和搜索。"
+technologies: "React, TailwindCSS, JSON"
+category: "tool"
+order: 11
+---
+
+<Layout title="在线元素周期表" description="免费在线交互式元素周期表，提供118种化学元素的详细信息，包括原子序数、原子量、电子排布、物理性质等，支持分类筛选和搜索。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线元素周期表</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          交互式化学元素周期表，包含所有 118 种元素的详细属性。点击任意元素查看电子排布、熔沸点、密度等数据，支持按族分类高亮显示。
+        </p>
+      </div>
+      
+      <div class="max-w-[1400px] mx-auto">
+        <PeriodicTable client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

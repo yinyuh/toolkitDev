@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TextDiffTool from '../../components/tools/TextDiffTool';
+
+title: "文本差异对比工具"
+description: "在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护隐私。"
+technologies: "Diff算法, React, TailwindCSS"
+category: "tool"
+order: 1
+---
+
+<Layout title="文本差异对比工具" description="在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护隐私。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">文本差异对比工具</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护您的隐私。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <TextDiffTool client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

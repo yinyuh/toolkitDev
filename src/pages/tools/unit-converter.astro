@@ -1,0 +1,27 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import UnitConverter from '../../components/tools/UnitConverter';
+
+title: "在线全能单位换算器"
+description: "免费在线全能单位换算器，支持长度、重量、温度、面积、体积、速度、时间、数据存储等 12 类常用单位的实时换算。"
+technologies: "Convert-units, React, TailwindCSS"
+category: "tool"
+order: 10
+---
+
+<Layout title="在线全能单位换算器" description="免费在线全能单位换算器，支持长度、重量、温度、面积、体积、速度、时间、数据存储等 12 类常用单位的实时换算。">
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线全能单位换算器</h1>
+        <p class="text-theme-secondary max-w-3xl mx-auto">
+          一键实现常用单位之间的相互转换。输入一个数值，即刻查看所有相关单位的换算结果，支持长度、重量、温度等多种类型。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto">
+        <UnitConverter client:only="react" />
+      </div>
+    </div>
+  </section>
+</Layout>

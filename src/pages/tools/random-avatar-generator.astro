@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import AvatarGenerator from '../../components/tools/AvatarGenerator';
+
+title: "在线随机头像生成器"
+description: "免费在线随机头像生成器，支持多种风格（Avataaars, Bottts, Pixel Art 等），一键生成个性化头像，支持 SVG 和 PNG 下载。"
+technologies: "DiceBear, React, TailwindCSS"
+category: "tool"
+order: 18
+---
+
+<Layout title="在线随机头像生成器" description="免费在线随机头像生成器，支持多种风格（Avataaars, Bottts, Pixel Art 等），一键生成个性化头像，支持 SVG 和 PNG 下载。">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+        随机头像生成器
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        基于 DiceBear 的开源头像库，提供 15+ 种不同风格。输入任意字符作为种子，生成独一无二的个性化头像。
+      </p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+      <AvatarGenerator client:only="react" />
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">多风格支持</h3>
+        <p class="text-gray-600 dark:text-gray-400">内置 Avataaars, Bottts, Pixel Art 等 15+ 种精美头像风格。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">即时生成</h3>
+        <p class="text-gray-600 dark:text-gray-400">输入任意文本作为种子（Seed），立即生成对应的唯一头像。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">高清下载</h3>
+        <p class="text-gray-600 dark:text-gray-400">支持导出 SVG 矢量图和高清 PNG 图片，满足各种使用场景。</p>
+      </div>
+    </div>
+  </div>
+</Layout>

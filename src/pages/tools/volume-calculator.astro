@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import VolumeCalculator from '../../components/tools/VolumeCalculator';
+
+title: "在线体积计算器 (Volume Calculator)"
+description: "免费在线体积计算器，支持球体、圆柱体、圆锥体、立方体、长方体等常见几何图形，附带计算公式和图形演示。"
+technologies: "React, TailwindCSS"
+category: "tool"
+order: 27
+---
+
+<Layout title="在线体积计算器 (Volume Calculator)" description="免费在线体积计算器，支持球体、圆柱体、圆锥体、立方体、长方体等常见几何图形，附带计算公式和图形演示。">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+        体积计算器
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        选择几何图形，输入尺寸参数，立即获取体积计算结果。支持球体、圆柱、圆锥、立方体等多种形状，并提供详细计算公式。
+      </p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+      <VolumeCalculator client:only="react" />
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shapes"><path d="M8.3 10a.7.7 0 0 1-.626-1.079l1.45-2.2a.7.7 0 0 1 1.152 0l1.45 2.2A.7.7 0 0 1 11.1 10H8.3Z"/><path d="m14 16 3-3 3 3-3 3-3-3Z"/><circle cx="6" cy="18" r="3"/><path d="M12 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">图形丰富</h3>
+        <p class="text-gray-600 dark:text-gray-400">涵盖生活中常见的几何体：球、柱、锥、方，满足各类计算需求。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calculator"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">公式展示</h3>
+        <p class="text-gray-600 dark:text-gray-400">不仅给出结果，还清晰展示计算所用的数学公式，知其然知其所以然。</p>
+      </div>
+      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-view"><path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z"/><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2"/><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/></svg>
+        </div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">直观图示</h3>
+        <p class="text-gray-600 dark:text-gray-400">动态 SVG 图示标注参数位置，帮助您准确理解半径、高度等概念。</p>
+      </div>
+    </div>
+  </div>
+</Layout>
