@@ -22,15 +22,10 @@ const getRandomColor = () => {
 
 // 生成随机图标
 const getRandomIcon = (projectName: string) => {
-  const icons = [
-    'https://api.dicebear.com/7.x/shapes/svg?seed={seed}&backgroundColor=transparent&color={color}',
-    'https://api.dicebear.com/7.x/bottts/svg?seed={seed}&backgroundColor=transparent&color={color}',
-    'https://api.dicebear.com/7.x/avataaars/svg?seed={seed}&backgroundColor=transparent&color={color}',
-    'https://api.dicebear.com/7.x/personas/svg?seed={seed}&backgroundColor=transparent&color={color}'
-  ];
-  const icon = icons[Math.floor(Math.random() * icons.length)];
+  const styles = ['shapes', 'bottts', 'avataaars', 'personas'];
+  const style = styles[Math.floor(Math.random() * styles.length)];
   const color = getRandomColor();
-  return icon.replace('{seed}', projectName).replace('{color}', color.replace('#', ''));
+  return `/api/avatar?style=${style}&seed=${encodeURIComponent(projectName)}&color=${color.replace('#', '')}`;
 };
 ---
 
