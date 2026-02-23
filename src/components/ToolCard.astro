@@ -1,4 +1,7 @@
 ---
+import { createAvatar } from '@dicebear/core';
+import { shapes, bottts, avataaars, personas } from '@dicebear/collection';
+
 const { project } = Astro.props;
 
 // 分类标签中英文映射
@@ -20,13 +23,21 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-// 生成随机图标
-const getRandomIcon = (projectName: string) => {
-  const styles = ['shapes', 'bottts', 'avataaars', 'personas'];
-  const style = styles[Math.floor(Math.random() * styles.length)];
-  const color = getRandomColor();
-  return `/api/avatar?style=${style}&seed=${encodeURIComponent(projectName)}&color=${color.replace('#', '')}`;
+// 直接生成 SVG
+const generateAvatarSvg = (projectName: string) => {
+  const styles = [bottts, avataaars, personas];
+  const styleIndex = Math.floor(Math.random() * styles.length);
+  const selectedStyle = styles[styleIndex];
+
+  const avatar = createAvatar(selectedStyle, {
+    seed: projectName,
+    backgroundColor: 'transparent'
+  });
+
+  return avatar.toString();
 };
+
+const avatarSvg = generateAvatarSvg(project.titulo);
 ---
 
 {/* 工具卡片组件 */}
@@ -35,15 +46,7 @@ const getRandomIcon = (projectName: string) => {
     <div class="flex items-center gap-3 mb-3">
       {/* 工具图标 */}
       <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-theme-secondary">
-        <img 
-          src={getRandomIcon(project.titulo)} 
-          alt={project.titulo} 
-          class="w-6 h-6" 
-          width="24" 
-          height="24" 
-          loading="lazy" 
-          decoding="async"
-        />
+        <div set:html={avatarSvg} class="w-6 h-6" />
       </div>
       <h3 class="text-lg font-bold text-theme-primary group-hover:text-blue-400 transition-colors">{project.titulo}</h3>
     </div>
