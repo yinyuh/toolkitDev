@@ -11,6 +11,23 @@ import { proyectos } from "../data/projectData.js";
 import fs from 'fs';
 import path from 'path';
 
+// 分类标签中英文映射
+const categoryNameMap = {
+  fullstack: "全栈",
+  frontend: "前端",
+  backend: "后端",
+  tool: "工具",
+  image: "图片工具",
+  text: "文本工具",
+  video: "视频工具",
+  audio: "音频工具",
+  encoding: "编码转换",
+  generator: "生成器",
+  calculator: "计算器",
+  developer: "开发工具",
+  other: "其他"
+};
+
 // 自动扫描tools目录下的页面文件
 const toolsDirectory = path.join(process.cwd(), 'src', 'pages', 'tools');
 let toolPages = [];
@@ -81,7 +98,8 @@ const projectsWithOrder = allProjects.map((project, index) => ({
 
 // Filter projects to show only featured ones (you can customize this)
 const featuredProjects = projectsWithOrder.filter(project => 
-  project.categoria === 'fullstack' || project.categoria === 'frontend' || project.categoria === 'tool'
+  project.categoria === 'fullstack' || project.categoria === 'frontend' || project.categoria === 'backend' || 
+  ['image', 'text', 'video', 'audio', 'encoding', 'generator', 'calculator', 'developer', 'other', 'tool'].includes(project.categoria)
 ).sort((a, b) => a.order - b.order);
 
 // Get unique categories for filtering
@@ -105,11 +123,12 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         </button>
         {categories.map(category => (
           <button 
+            key={category}
             class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-theme-secondary text-theme-secondary border border-theme-border hover:bg-theme-primary transition-colors"
             data-filter={category}
-            aria-label={`显示${category}项目`}
+            aria-label={`显示${categoryNameMap[category] || category}项目`}
           >
-            {category === 'fullstack' ? '全栈' : category === 'frontend' ? '前端' : category === 'backend' ? '后端' : category.charAt(0).toUpperCase() + category.slice(1)}
+            {categoryNameMap[category] || category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
         ))}
       </div>
