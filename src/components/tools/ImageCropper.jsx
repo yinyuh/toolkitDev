@@ -9,6 +9,9 @@ const ImageCropper = () => {
   const fileInputRef = useRef(null);
   const [format, setFormat] = useState('image/png');
   const [quality, setQuality] = useState(0.9);
+  const [originalSize, setOriginalSize] = useState({ width: 0, height: 0 });
+  const [outputSize, setOutputSize] = useState({ width: 0, height: 0 });
+  const [lockAspectRatio, setLockAspectRatio] = useState(true);
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -20,17 +23,80 @@ const ImageCropper = () => {
     }
     if (files && files.length > 0) {
       const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-        setCroppedImage(null);
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        setImage(imageUrl);
+        // 直接设置 croppedImage 为原始图片，确保预览窗口显示
+        setCroppedImage(imageUrl);
+        
+        // 获取原始图片尺寸
+        const img = new Image();
+        img.onload = () => {
+          const width = img.width;
+          const height = img.height;
+          setOriginalSize({ width, height });
+          setOutputSize({ width, height });
+          // 自动生成初始预览
+          setTimeout(getCropData, 300);
+        };
+        img.src = imageUrl;
       };
       reader.readAsDataURL(files[0]);
     }
   };
 
+  const handleWidthChange = (e) => {
+    const newWidth = parseInt(e.target.value) || 0;
+    if (lockAspectRatio && outputSize.height > 0) {
+      const aspectRatio = outputSize.height / outputSize.width;
+      const newHeight = Math.round(newWidth * aspectRatio);
+      setOutputSize({ width: newWidth, height: newHeight });
+    } else {
+      setOutputSize({ ...outputSize, width: newWidth });
+    }
+    // 自动更新预览
+    setTimeout(getCropData, 300);
+  };
+
+  const handleHeightChange = (e) => {
+    const newHeight = parseInt(e.target.value) || 0;
+    if (lockAspectRatio && outputSize.width > 0) {
+      const aspectRatio = outputSize.width / outputSize.height;
+      const newWidth = Math.round(newHeight * aspectRatio);
+      setOutputSize({ width: newWidth, height: newHeight });
+    } else {
+      setOutputSize({ ...outputSize, height: newHeight });
+    }
+    // 自动更新预览
+    setTimeout(getCropData, 300);
+  };
+
   const getCropData = () => {
-    if (typeof cropperRef.current?.cropper !== 'undefined') {
-      setCroppedImage(cropperRef.current?.cropper.getCroppedCanvas().toDataURL(format, quality));
+    console.log('getCropData called');
+    console.log('cropperRef.current:', cropperRef.current);
+    console.log('croppedImage current value:', croppedImage);
+    
+    if (cropperRef.current && cropperRef.current.cropper) {
+      console.log('Cropper instance found, trying to generate preview');
+      try {
+        // 直接使用 canvas 生成预览，不区分格式
+        const canvas = cropperRef.current.cropper.getCroppedCanvas({
+          width: outputSize.width,
+          height: outputSize.height
+        });
+        const dataUrl = canvas.toDataURL('image/png');
+        console.log('Generated data URL:', dataUrl.substring(0, 50) + '...');
+        setCroppedImage(dataUrl);
+        console.log('setCroppedImage called, croppedImage should now be set');
+      } catch (error) {
+        console.error('Error in getCropData:', error);
+        // 即使出错也设置一个默认值，确保预览窗口显示
+        setCroppedImage(image);
+      }
+    } else {
+      console.error('Cropper instance not found');
+      // 如果没有 cropper 实例，直接使用原始图片
+      setCroppedImage(image);
     }
   };
 
@@ -87,27 +153,63 @@ const ImageCropper = () => {
         <div className="flex flex-col h-full">
             {/* Header / Toolbar */}
             <div className="bg-div-secondary border-b border-border-theme p-2 overflow-x-auto flex items-center gap-2">
-                <button onClick={() => setImage(null)} className="btn-secondary text-sm px-3 py-1.5 mr-2">重新上传</button>
+                <button onClick={() => setImage(null)} className="bg-accent hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer mr-2">重新上传</button>
                 
                 <div className="h-6 w-px bg-border-theme mx-1"></div>
                 
-                <button onClick={() => setAspectRatio(NaN)} className="btn-icon" title="自由比例">Free</button>
-                <button onClick={() => setAspectRatio(1)} className="btn-icon" title="1:1">1:1</button>
-                <button onClick={() => setAspectRatio(16/9)} className="btn-icon" title="16:9">16:9</button>
-                <button onClick={() => setAspectRatio(4/3)} className="btn-icon" title="4:3">4:3</button>
+                <button onClick={() => setAspectRatio(NaN)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="自由比例">Free</button>
+                <button onClick={() => setAspectRatio(1)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="1:1">1:1</button>
+                <button onClick={() => setAspectRatio(16/9)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="16:9">16:9</button>
+                <button onClick={() => setAspectRatio(4/3)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="4:3">4:3</button>
                 
                 <div className="h-6 w-px bg-border-theme mx-1"></div>
 
-                <button onClick={() => rotate(-90)} className="btn-icon" title="向左旋转">↺</button>
-                <button onClick={() => rotate(90)} className="btn-icon" title="向右旋转">↻</button>
-                <button onClick={scaleX} className="btn-icon" title="水平翻转">↔</button>
-                <button onClick={scaleY} className="btn-icon" title="垂直翻转">↕</button>
+                <button onClick={() => rotate(-90)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="向左旋转">↺</button>
+                <button onClick={() => rotate(90)} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="向右旋转">↻</button>
+                <button onClick={scaleX} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="水平翻转">↔</button>
+                <button onClick={scaleY} className="bg-div-theme hover:bg-theme-secondary text-text-primary px-2 py-1 rounded-md text-sm transition-colors cursor-pointer" title="垂直翻转">↕</button>
+
+                <div className="h-6 w-px bg-border-theme mx-1"></div>
+
+                {/* 原始尺寸显示 */}
+                <div className="text-sm text-text-secondary whitespace-nowrap">
+                    原始尺寸: {originalSize.width} × {originalSize.height}
+                </div>
+
+                <div className="h-6 w-px bg-border-theme mx-1"></div>
+
+                {/* 输出尺寸控制 */}
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-text-secondary">输出尺寸:</span>
+                    <input
+                        type="number"
+                        value={outputSize.width}
+                        onChange={handleWidthChange}
+                        className="w-20 px-2 py-1 border border-border-theme rounded-md bg-div-theme text-sm"
+                        min="1"
+                    />
+                    <span className="text-text-secondary">×</span>
+                    <input
+                        type="number"
+                        value={outputSize.height}
+                        onChange={handleHeightChange}
+                        className="w-20 px-2 py-1 border border-border-theme rounded-md bg-div-theme text-sm"
+                        min="1"
+                    />
+                    <button
+                        onClick={() => setLockAspectRatio(!lockAspectRatio)}
+                        className={`p-1 rounded-md transition-colors cursor-pointer ${
+                            lockAspectRatio 
+                                ? 'bg-accent text-white' 
+                                : 'bg-div-theme hover:bg-theme-secondary text-text-primary'
+                        }`}
+                        title={lockAspectRatio ? '解锁宽高比' : '锁定宽高比'}
+                    >
+                        🔒
+                    </button>
+                </div>
 
                 <div className="flex-1"></div>
-
-                <button onClick={getCropData} className="bg-accent hover:bg-accent-hover text-white px-4 py-1.5 rounded-md text-sm font-medium transition-colors">
-                    裁剪预览
-                </button>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
@@ -123,6 +225,14 @@ const ImageCropper = () => {
                         dragMode="move"
                         background={false}
                         autoCropArea={0.8}
+                        ready={() => {
+                          // 当 Cropper 初始化完成时生成预览
+                          setTimeout(getCropData, 100);
+                        }}
+                        cropend={() => {
+                          // 当裁剪结束时自动更新预览
+                          setTimeout(getCropData, 100);
+                        }}
                     />
                 </div>
 
@@ -148,7 +258,8 @@ const ImageCropper = () => {
                                 >
                                     <option value="image/png">PNG</option>
                                     <option value="image/jpeg">JPG</option>
-                                    <option value="image/webp">WEBP</option>
+                                    <option value="image/webp">WebP</option>
+                                    <option value="image/svg+xml">SVG</option>
                                 </select>
                             </div>
                             
@@ -170,7 +281,7 @@ const ImageCropper = () => {
 
                         <button 
                             onClick={downloadImage}
-                            className="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 mt-auto"
+                            className="w-full bg-accent hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 mt-auto cursor-pointer"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             下载图片

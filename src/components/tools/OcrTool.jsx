@@ -90,7 +90,26 @@ const OcrTool = () => {
     <div className="bg-div-theme rounded-xl shadow-lg border border-div-theme overflow-hidden flex flex-col min-h-[600px] h-[calc(100vh-200px)]" onPaste={handlePaste}>
       {/* Header */}
       <div className="p-4 border-b border-div-theme bg-theme-secondary flex justify-between items-center">
-        <h2 className="font-bold text-theme-primary">AI 文字识别 (OCR)</h2>
+        <div className="flex items-center gap-4">
+            <h2 className="font-bold text-theme-primary">AI 文字识别 (OCR)</h2>
+            <div className="flex gap-2">
+                <button 
+                    onClick={() => { setImage(null); setText(''); setStatus('idle'); setProgress(0); }}
+                    className="bg-div-theme hover:bg-theme-secondary text-theme-primary px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer"
+                    title="重置"
+                >
+                    重置
+                </button>
+                <button 
+                    onClick={startOcr}
+                    disabled={!image}
+                    className="bg-accent hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="重新识别"
+                >
+                    重新识别
+                </button>
+            </div>
+        </div>
         <div className="flex gap-2">
             <select 
                 value={language} 
@@ -172,7 +191,7 @@ const OcrTool = () => {
                 <button 
                     onClick={copyToClipboard}
                     disabled={!text}
-                    className="p-1.5 text-theme-secondary hover:text-accent hover:bg-accent/10 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-1.5 text-theme-secondary hover:text-accent hover:bg-accent/10 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="复制到剪贴板"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m2 4v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -180,7 +199,7 @@ const OcrTool = () => {
                 <button 
                     onClick={downloadText}
                     disabled={!text}
-                    className="p-1.5 text-theme-secondary hover:text-accent hover:bg-accent/10 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-1.5 text-theme-secondary hover:text-accent hover:bg-accent/10 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="下载TXT"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>

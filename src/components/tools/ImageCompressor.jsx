@@ -137,7 +137,7 @@ const ImageCompressor = () => {
         
         {/* Upload Area */}
         <div 
-            className="bg-div-theme border-2 border-dashed border-border-theme rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-div-hover dark:hover:bg-div-hover transition-colors shadow-sm"
+            className="bg-white dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
             onClick={() => fileInputRef.current.click()}
         >
             <input 
@@ -157,7 +157,7 @@ const ImageCompressor = () => {
 
         {/* List */}
         {files.length > 0 && (
-            <div className="bg-div-theme rounded-xl shadow-lg border border-border-theme overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div className="p-4 border-b border-border-theme bg-div-secondary flex justify-between items-center">
                     <h3 className="font-bold text-text-theme">压缩列表 ({files.length})</h3>
                     <div className="flex gap-2">
@@ -237,7 +237,7 @@ const ImageCompressor = () => {
 
       {/* Settings Sidebar */}
       <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
-        <div className="bg-div-theme rounded-xl shadow-lg border border-border-theme p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
             <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 压缩设置
@@ -249,14 +249,14 @@ const ImageCompressor = () => {
                         压缩质量: {Math.round(settings.initialQuality * 100)}%
                     </label>
                     <input 
-                        type="range" 
-                        min="0.1" 
-                        max="1" 
-                        step="0.05" 
-                        value={settings.initialQuality}
-                        onChange={(e) => setSettings({...settings, initialQuality: parseFloat(e.target.value)})}
-                        className="w-full h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer accent-accent"
-                    />
+                            type="range" 
+                            min="0.1" 
+                            max="1" 
+                            step="0.05" 
+                            value={settings.initialQuality}
+                            onChange={(e) => setSettings({...settings, initialQuality: parseFloat(e.target.value)})}
+                            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accent"
+                        />
                     <div className="flex justify-between text-xs text-text-secondary mt-1">
                         <span>低画质</span>
                         <span>高画质</span>
@@ -270,7 +270,7 @@ const ImageCompressor = () => {
                     <select 
                         value={settings.fileType}
                         onChange={(e) => setSettings({...settings, fileType: e.target.value})}
-                        className="w-full rounded-lg border-border-theme bg-div-secondary text-sm py-2"
+                        className="w-full rounded-lg border-border-theme bg-white dark:bg-gray-800 text-sm py-2 px-3"
                     >
                         <option value="original">保持原格式</option>
                         <option value="image/jpeg">JPEG (更小)</option>
@@ -284,11 +284,11 @@ const ImageCompressor = () => {
                         最大尺寸 (宽/高)
                     </label>
                     <input 
-                        type="number"
-                        value={settings.maxWidthOrHeight}
-                        onChange={(e) => setSettings({...settings, maxWidthOrHeight: parseInt(e.target.value)})}
-                        className="w-full rounded-lg border-border-theme bg-div-secondary text-sm py-2 px-3"
-                    />
+                            type="number"
+                            value={settings.maxWidthOrHeight}
+                            onChange={(e) => setSettings({...settings, maxWidthOrHeight: parseInt(e.target.value)})}
+                            className="w-full rounded-lg border-border-theme bg-white dark:bg-gray-800 text-sm py-2 px-3"
+                        />
                 </div>
 
                 <button 

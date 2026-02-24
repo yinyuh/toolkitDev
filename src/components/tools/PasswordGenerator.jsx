@@ -88,9 +88,12 @@ const PasswordGenerator = () => {
   const handleOptionChange = (key) => {
     setOptions(prev => {
       const newOptions = { ...prev, [key]: !prev[key] };
-      // Prevent unchecking all options
-      if (!Object.values(newOptions).some(v => v === true && key !== 'excludeSimilar')) {
-        return prev;
+      // Prevent unchecking all character options (excludeSimilar is a special case)
+      if (key !== 'excludeSimilar') {
+        const charOptions = ['uppercase', 'lowercase', 'numbers', 'symbols'];
+        if (!charOptions.some(option => newOptions[option])) {
+          return prev;
+        }
       }
       return newOptions;
     });
@@ -128,10 +131,10 @@ const PasswordGenerator = () => {
           </div>
           <button
             onClick={handleCopy}
-            className={`absolute top-1/2 -right-12 -translate-y-1/2 p-2 rounded-lg transition-colors ${
+            className={`absolute top-1/2 -right-12 -translate-y-1/2 p-2 rounded-lg transition-colors cursor-pointer ${
               copied 
                 ? 'text-green-500 bg-green-100 dark:bg-green-900/30' 
-                : 'text-theme-secondary hover:text-accent hover:bg-accent/10'
+                : 'text-theme-secondary bg-div-theme hover:text-accent hover:bg-accent/10'
             }`}
             title="复制密码"
           >
@@ -167,7 +170,7 @@ const PasswordGenerator = () => {
             max="64"
             value={length}
             onChange={(e) => setLength(parseInt(e.target.value))}
-            className="w-full h-2 bg-theme-secondary rounded-lg appearance-none cursor-pointer accent-accent"
+            className="w-full h-2 bg-theme-secondary rounded-lg cursor-pointer accent-accent"
           />
           <div className="flex justify-between text-xs text-theme-secondary mt-2">
             <span>4</span>
@@ -235,5 +238,30 @@ const PasswordGenerator = () => {
     </div>
   );
 };
+
+// Add global styles for range input
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      cursor: pointer;
+      border: none;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default PasswordGenerator;
