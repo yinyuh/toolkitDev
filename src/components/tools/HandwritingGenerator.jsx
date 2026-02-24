@@ -126,35 +126,35 @@ const HandwritingGenerator = () => {
           
           {/* Controls */}
           <div className="lg:col-span-4 space-y-6">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
+                <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                    <PenTool size={20} />
                    书写设置
                 </h3>
                 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入内容</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">输入内容</label>
                         <textarea 
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none min-h-[150px]"
+                            className="w-full px-3 py-2 rounded-lg border border-border-theme bg-div-secondary focus:ring-2 focus:ring-accent outline-none min-h-[150px]"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">字体风格</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">字体风格</label>
                         <div className="grid grid-cols-2 gap-2">
                             <button 
                                 onClick={() => setFont('Caveat')}
-                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Caveat' ? 'border-theme-primary bg-theme-primary/10 text-theme-primary' : 'border-gray-200 dark:border-gray-700'}`}
+                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Caveat' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
                                 style={{ fontFamily: 'Caveat' }}
                             >
                                 Caveat
                             </button>
                             <button 
                                 onClick={() => setFont('Patrick Hand')}
-                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Patrick Hand' ? 'border-theme-primary bg-theme-primary/10 text-theme-primary' : 'border-gray-200 dark:border-gray-700'}`}
+                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Patrick Hand' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
                                 style={{ fontFamily: 'Patrick Hand' }}
                             >
                                 Patrick Hand
@@ -163,14 +163,14 @@ const HandwritingGenerator = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">纸张背景</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">纸张背景</label>
                         <div className="flex gap-2">
                             {['lined', 'grid', 'white'].map(p => (
                                 <button
                                     key={p}
                                     onClick={() => setPaperType(p)}
                                     className={`flex-1 py-2 rounded-lg border text-sm capitalize ${
-                                        paperType === p ? 'border-theme-primary bg-theme-primary/10 text-theme-primary' : 'border-gray-200 dark:border-gray-700'
+                                        paperType === p ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'
                                     }`}
                                 >
                                     {p === 'lined' ? '横线' : p === 'grid' ? '方格' : '空白'}
@@ -181,17 +181,17 @@ const HandwritingGenerator = () => {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">字号 ({fontSize})</label>
-                            <input type="range" min="16" max="64" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-theme-primary" />
+                            <label className="block text-sm font-medium text-text-secondary mb-2">字号 ({fontSize})</label>
+                            <input type="range" min="16" max="64" value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full accent-accent" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">墨水颜色</label>
+                            <label className="block text-sm font-medium text-text-secondary mb-2">墨水颜色</label>
                             <div className="flex gap-2">
                                 {['#2d3748', '#1a365d', '#742a2a', '#22543d'].map(c => (
                                     <button
                                         key={c}
                                         onClick={() => setColor(c)}
-                                        className={`w-8 h-8 rounded-full border-2 transition-all ${color === c ? 'border-theme-primary scale-110' : 'border-transparent'}`}
+                                        className={`w-8 h-8 rounded-full border-2 transition-all ${color === c ? 'border-accent scale-110' : 'border-transparent'}`}
                                         style={{ backgroundColor: c }}
                                     />
                                 ))}
@@ -204,9 +204,9 @@ const HandwritingGenerator = () => {
                             type="checkbox" 
                             checked={variation} 
                             onChange={(e) => setVariation(e.target.checked)}
-                            className="w-4 h-4 text-theme-primary rounded focus:ring-theme-primary"
+                            className="w-4 h-4 text-accent rounded focus:ring-accent"
                         />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">添加手写扰动 (更真实)</span>
+                        <span className="text-sm font-medium text-text-secondary">添加手写扰动 (更真实)</span>
                     </label>
                 </div>
              </div>
@@ -214,7 +214,7 @@ const HandwritingGenerator = () => {
 
           {/* Preview */}
           <div className="lg:col-span-8">
-             <div className="bg-gray-100 dark:bg-gray-900 rounded-xl p-4 md:p-8 flex flex-col items-center gap-6 min-h-[600px]">
+             <div className="bg-div-secondary rounded-xl p-4 md:p-8 flex flex-col items-center gap-6 min-h-[600px]">
                 <div className="relative shadow-2xl rounded-sm overflow-hidden bg-white max-w-full">
                     <canvas 
                         ref={canvasRef} 
@@ -225,7 +225,7 @@ const HandwritingGenerator = () => {
                 
                 <button 
                     onClick={handleDownload}
-                    className="flex items-center gap-2 px-6 py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 transition-all shadow-lg shadow-theme-primary/20"
+                    className="flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover transition-all shadow-lg shadow-accent/20"
                 >
                     <Download size={20} />
                     下载图片

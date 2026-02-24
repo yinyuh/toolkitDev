@@ -153,11 +153,11 @@ const VideoToGif = () => {
             <p className="text-red-600 dark:text-red-300">{error}</p>
          </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
            {/* Upload Area */}
            {!videoFile ? (
               <div 
-                className="p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-theme-primary hover:bg-theme-primary/5 transition-all cursor-pointer m-6 rounded-xl"
+                className="p-12 text-center border-2 border-dashed border-border-theme hover:border-accent hover:bg-accent/5 transition-all cursor-pointer m-6 rounded-xl"
                 onClick={() => document.getElementById('video-upload').click()}
               >
                  <input 
@@ -167,24 +167,24 @@ const VideoToGif = () => {
                     className="hidden" 
                     onChange={handleFileUpload}
                  />
-                 <div className="w-16 h-16 bg-theme-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-theme-primary">
+                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4 text-accent">
                     <FileVideo size={32} />
                  </div>
-                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                 <h3 className="text-xl font-bold text-text-theme mb-2">
                     上传视频文件
                  </h3>
-                 <p className="text-gray-500 dark:text-gray-400">
+                 <p className="text-text-secondary">
                     支持 MP4, MOV, AVI, WEBM 等
                  </p>
               </div>
            ) : (
               <div className="p-6 md:p-8">
-                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
+                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-theme">
                     <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center text-theme-primary">
+                       <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center text-accent">
                           <FileVideo size={20} />
                        </div>
-                       <h3 className="font-bold text-gray-800 dark:text-gray-100 truncate max-w-[200px] md:max-w-md">
+                       <h3 className="font-bold text-text-theme truncate max-w-[200px] md:max-w-md">
                           {videoFile.name}
                        </h3>
                     </div>
@@ -200,10 +200,10 @@ const VideoToGif = () => {
                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     {/* Left: Video Preview */}
                     <div>
-                        <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-3 flex items-center gap-2">
+                        <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
                             <Play size={18} /> 预览与裁剪
                         </h4>
-                        <div className="rounded-lg overflow-hidden bg-black aspect-video flex items-center justify-center mb-4 border border-gray-200 dark:border-gray-700">
+                        <div className="rounded-lg overflow-hidden bg-div-secondary aspect-video flex items-center justify-center mb-4 border border-border-theme">
                             <video 
                                 ref={videoRef}
                                 src={videoUrl} 
@@ -214,7 +214,7 @@ const VideoToGif = () => {
                         </div>
                         <div className="flex gap-4 items-center">
                             <div className="flex-1">
-                                <label className="block text-xs text-gray-500 mb-1">开始时间 ({formatTime(startTime)})</label>
+                                <label className="block text-xs text-text-secondary mb-1">开始时间 ({formatTime(startTime)})</label>
                                 <input 
                                     type="range" 
                                     min="0" 
@@ -226,11 +226,11 @@ const VideoToGif = () => {
                                         setStartTime(Math.min(val, endTime - 0.5));
                                         if(videoRef.current) videoRef.current.currentTime = val;
                                     }}
-                                    className="w-full accent-theme-primary"
+                                    className="w-full accent-accent"
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-xs text-gray-500 mb-1">结束时间 ({formatTime(endTime)})</label>
+                                <label className="block text-xs text-text-secondary mb-1">结束时间 ({formatTime(endTime)})</label>
                                 <input 
                                     type="range" 
                                     min="0" 
@@ -242,24 +242,24 @@ const VideoToGif = () => {
                                         setEndTime(Math.max(val, startTime + 0.5));
                                         if(videoRef.current) videoRef.current.currentTime = val;
                                     }}
-                                    className="w-full accent-theme-primary"
+                                    className="w-full accent-accent"
                                 />
                             </div>
                         </div>
-                        <div className="text-center mt-2 text-sm font-mono text-theme-primary">
+                        <div className="text-center mt-2 text-sm font-mono text-accent">
                             GIF 时长: {formatTime(endTime - startTime)}
                         </div>
                     </div>
 
                     {/* Right: Settings */}
                     <div className="flex flex-col">
-                         <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-3 flex items-center gap-2">
+                         <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
                             <Settings size={18} /> 输出设置
                         </h4>
                         
-                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-5 space-y-5 flex-1">
+                        <div className="bg-div-secondary rounded-xl p-5 space-y-5 flex-1">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-text-secondary mb-2">
                                     宽度 (px)
                                 </label>
                                 <div className="flex flex-wrap gap-2">
@@ -269,8 +269,8 @@ const VideoToGif = () => {
                                             onClick={() => setWidth(w)}
                                             className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all ${
                                                 width === w
-                                                ? 'border-theme-primary bg-theme-primary/10 text-theme-primary'
-                                                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                                                ? 'border-accent bg-accent/10 text-accent'
+                                                : 'border-border-theme bg-div-theme text-text-secondary'
                                             }`}
                                         >
                                             {w}px
@@ -281,14 +281,14 @@ const VideoToGif = () => {
                                             type="number" 
                                             value={width}
                                             onChange={(e) => setWidth(parseInt(e.target.value) || 320)}
-                                            className="w-full px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:border-theme-primary outline-none"
+                                            className="w-full px-3 py-1.5 rounded-lg border border-border-theme bg-div-theme text-sm focus:border-accent outline-none"
                                         />
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-text-secondary mb-2">
                                     帧率 (FPS) - 越低体积越小
                                 </label>
                                 <div className="flex items-center gap-3">
@@ -299,9 +299,9 @@ const VideoToGif = () => {
                                         step="1" 
                                         value={fps}
                                         onChange={(e) => setFps(parseInt(e.target.value))}
-                                        className="flex-1 accent-theme-primary"
+                                        className="flex-1 accent-accent"
                                     />
-                                    <span className="w-12 text-right font-mono text-gray-600 dark:text-gray-300">{fps}</span>
+                                    <span className="w-12 text-right font-mono text-text-secondary">{fps}</span>
                                 </div>
                             </div>
 
@@ -309,7 +309,7 @@ const VideoToGif = () => {
                                 {status === 'ready' && (
                                     <button 
                                         onClick={convert}
-                                        className="w-full py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 shadow-lg shadow-theme-primary/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
+                                        className="w-full py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
                                     >
                                         开始生成 GIF
                                         <ArrowRight size={18} />
@@ -324,13 +324,13 @@ const VideoToGif = () => {
                  {status === 'converting' && (
                     <div className="py-6 animate-in fade-in zoom-in duration-300">
                        <div className="flex flex-col items-center mb-4">
-                          <Loader2 size={32} className="animate-spin text-theme-primary mb-2" />
-                          <div className="font-bold text-gray-800 dark:text-gray-200">正在生成 GIF...</div>
-                          <div className="text-xs text-gray-500">这可能需要几秒到几分钟</div>
+                          <Loader2 size={32} className="animate-spin text-accent mb-2" />
+                          <div className="font-bold text-text-theme">正在生成 GIF...</div>
+                          <div className="text-xs text-text-secondary">这可能需要几秒到几分钟</div>
                        </div>
-                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                       <div className="w-full bg-div-secondary rounded-full h-3 overflow-hidden">
                           <div 
-                             className="bg-theme-primary h-full rounded-full transition-all duration-300"
+                             className="bg-accent h-full rounded-full transition-all duration-300"
                              style={{ width: `${Math.max(5, progress)}%` }}
                           ></div>
                        </div>
@@ -343,15 +343,15 @@ const VideoToGif = () => {
                        <div className="flex flex-col md:flex-row gap-6 items-center">
                           <div className="relative group">
                               <img src={outputUrl} alt="Generated GIF" className="max-h-[300px] rounded-lg shadow-md bg-white/50" />
-                              <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">GIF</div>
+                              <div className="absolute top-2 right-2 bg-div-secondary text-text-theme text-xs px-2 py-1 rounded">GIF</div>
                           </div>
                           
                           <div className="flex-1 text-center md:text-left">
-                             <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 flex items-center justify-center md:justify-start gap-2">
+                             <h3 className="text-xl font-bold text-text-theme mb-2 flex items-center justify-center md:justify-start gap-2">
                                 <Check size={24} className="text-green-500" />
                                 生成成功!
                              </h3>
-                             <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
+                             <p className="text-text-secondary mb-6 text-sm">
                                 您的 GIF 已准备好下载。
                              </p>
                              
@@ -359,14 +359,14 @@ const VideoToGif = () => {
                                 <a 
                                    href={outputUrl}
                                    download={`output_${Date.now()}.gif`}
-                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-theme-primary text-white rounded-lg font-bold hover:bg-theme-primary/90 transition-all shadow-md"
+                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-accent text-white rounded-lg font-bold hover:bg-accent-hover transition-all shadow-md"
                                 >
                                    <Download size={18} />
                                    下载 GIF
                                 </a>
                                 <button 
                                    onClick={() => { setStatus('ready'); setOutputUrl(''); }}
-                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-div-theme border border-border-theme text-text-theme rounded-lg font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all"
                                 >
                                    继续调整
                                 </button>

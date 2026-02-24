@@ -105,57 +105,57 @@ const CronGenerator = () => {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
         <div className="space-y-2">
-          <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-div-hover dark:hover:bg-div-hover transition-colors">
             <input 
               type="radio" 
               checked={state.type === 'every'} 
               onChange={() => setState({ ...state, type: 'every' })}
-              className="w-5 h-5 text-theme-primary border-gray-300 focus:ring-theme-primary"
+              className="w-5 h-5 text-accent border-border-theme focus:ring-accent"
             />
-            <span className="text-gray-700 dark:text-gray-200">每{label}</span>
+            <span className="text-text-secondary">每{label}</span>
           </label>
 
           {type !== 'week' && (
-            <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-div-hover dark:hover:bg-div-hover transition-colors">
               <input 
                 type="radio" 
                 checked={state.type === 'step'} 
                 onChange={() => setState({ ...state, type: 'step' })}
-                className="w-5 h-5 text-theme-primary border-gray-300 focus:ring-theme-primary"
+                className="w-5 h-5 text-accent border-border-theme focus:ring-accent"
               />
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-gray-700 dark:text-gray-200">从第</span>
+                <span className="text-text-secondary">从第</span>
                 <input 
                   type="number" 
                   min={range[0]} 
                   max={range[1]} 
                   value={state.start}
                   onChange={(e) => setState({ ...state, type: 'step', start: parseInt(e.target.value) })}
-                  className="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-center bg-white dark:bg-gray-800"
+                  className="w-16 p-1 border border-border-theme rounded text-center bg-div-secondary"
                 />
-                <span className="text-gray-700 dark:text-gray-200">{label}开始，每隔</span>
+                <span className="text-text-secondary">{label}开始，每隔</span>
                 <input 
                   type="number" 
                   min="1" 
                   max={range[1]} 
                   value={state.step}
                   onChange={(e) => setState({ ...state, type: 'step', step: parseInt(e.target.value) })}
-                  className="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-center bg-white dark:bg-gray-800"
+                  className="w-16 p-1 border border-border-theme rounded text-center bg-div-secondary"
                 />
-                <span className="text-gray-700 dark:text-gray-200">{label}执行一次</span>
+                <span className="text-text-secondary">{label}执行一次</span>
               </div>
             </label>
           )}
 
-          <label className="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <label className="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-div-hover dark:hover:bg-div-hover transition-colors">
             <input 
               type="radio" 
               checked={state.type === 'specific'} 
               onChange={() => setState({ ...state, type: 'specific' })}
-              className="w-5 h-5 text-theme-primary border-gray-300 focus:ring-theme-primary mt-1"
+              className="w-5 h-5 text-accent border-border-theme focus:ring-accent mt-1"
             />
             <div className="flex-1">
-              <span className="text-gray-700 dark:text-gray-200 block mb-2">指定{label}</span>
+              <span className="text-text-secondary block mb-2">指定{label}</span>
               <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2">
                 {Array.from({ length: range[1] - range[0] + 1 }, (_, i) => i + range[0]).map(val => (
                   <button
@@ -163,8 +163,8 @@ const CronGenerator = () => {
                     onClick={(e) => { e.preventDefault(); toggleSpecific(val); }}
                     className={`px-2 py-1 text-xs rounded border transition-all ${
                       state.type === 'specific' && state.specific.includes(val)
-                        ? 'bg-theme-primary text-white border-theme-primary'
-                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-theme-primary text-gray-600 dark:text-gray-300'
+                        ? 'bg-accent text-white border-accent'
+                        : 'bg-div-secondary border-border-theme hover:border-accent text-text-secondary'
                     }`}
                   >
                     {val}
@@ -189,21 +189,21 @@ const CronGenerator = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
       {/* Result Display */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 mb-8 text-center relative overflow-hidden">
+      <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-8 mb-8 text-center relative overflow-hidden">
          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
          
          <div className="mb-4">
-            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">CRON 表达式</h2>
+            <h2 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">CRON 表达式</h2>
             <div className="flex items-center justify-center gap-4">
                <input 
                  type="text" 
                  value={expression} 
                  onChange={(e) => setExpression(e.target.value)}
-                 className="text-4xl md:text-5xl font-mono font-bold text-center bg-transparent border-b-2 border-gray-200 dark:border-gray-700 focus:border-theme-primary outline-none w-full max-w-2xl text-gray-800 dark:text-gray-100 py-2 transition-colors"
+                 className="text-4xl md:text-5xl font-mono font-bold text-center bg-transparent border-b-2 border-border-theme focus:border-accent outline-none w-full max-w-2xl text-text-theme py-2 transition-colors"
                />
                <button 
                  onClick={handleCopy}
-                 className="p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors text-gray-600 dark:text-gray-300"
+                 className="p-3 bg-div-secondary hover:bg-div-hover dark:hover:bg-div-hover rounded-xl transition-colors text-text-secondary"
                  title="复制"
                >
                  {copied ? <Check size={24} className="text-green-500" /> : <Copy size={24} />}
@@ -217,7 +217,7 @@ const CronGenerator = () => {
                {error}
             </div>
          ) : (
-            <div className="text-xl text-theme-primary font-medium min-h-[1.75rem]">
+            <div className="text-xl text-accent font-medium min-h-[1.75rem]">
                {isCalculating ? <Loader2 className="animate-spin inline-block" size={20}/> : humanReadable}
             </div>
          )}
@@ -225,16 +225,16 @@ const CronGenerator = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
          {/* Builder */}
-         <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div className="flex border-b border-gray-100 dark:border-gray-700 overflow-x-auto">
+         <div className="lg:col-span-2 bg-div-theme rounded-2xl shadow-sm border border-border-theme overflow-hidden">
+            <div className="flex border-b border-border-theme overflow-x-auto">
                {tabs.map(tab => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex-1 py-4 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
                        activeTab === tab.id 
-                         ? 'border-theme-primary text-theme-primary bg-theme-primary/5' 
-                         : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                         ? 'border-accent text-accent bg-accent/5' 
+                         : 'border-transparent text-text-secondary hover:text-text-theme'
                     }`}
                   >
                      {tab.label}
@@ -258,31 +258,31 @@ const CronGenerator = () => {
          </div>
 
          {/* Next Runs */}
-         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-            <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+         <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6">
+            <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                <Clock size={18} />
                接下来 5 次运行时间
             </h3>
             <div className="space-y-3">
                {isCalculating ? (
-                  <div className="text-center py-4 text-gray-400">
+                  <div className="text-center py-4 text-text-secondary">
                     <Loader2 className="animate-spin mx-auto mb-2" />
                     计算中...
                   </div>
                ) : (
                  <>
                    {nextRuns.map((date, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                         <div className="w-6 h-6 bg-theme-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-theme-primary">
+                      <div key={i} className="flex items-center gap-3 p-3 bg-div-secondary rounded-lg">
+                         <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center text-xs font-bold text-accent">
                             {i + 1}
                          </div>
-                         <div className="text-sm text-gray-700 dark:text-gray-300 font-mono">
+                         <div className="text-sm text-text-secondary font-mono">
                             {date.toLocaleString('zh-CN')}
                          </div>
                       </div>
                    ))}
                    {nextRuns.length === 0 && !error && (
-                      <div className="text-center text-gray-400 py-8">
+                      <div className="text-center text-text-secondary py-8">
                          等待计算...
                       </div>
                    )}

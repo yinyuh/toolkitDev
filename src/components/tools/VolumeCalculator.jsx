@@ -62,7 +62,7 @@ const VolumeCalculator = () => {
           
           {/* Shape Selection */}
           <div className="lg:col-span-3 space-y-2">
-             <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4">选择形状</h3>
+             <h3 className="font-bold text-text-theme mb-4">选择形状</h3>
              {shapes.map(s => {
                  const Icon = s.icon;
                  return (
@@ -71,8 +71,8 @@ const VolumeCalculator = () => {
                         onClick={() => setShape(s.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
                             shape === s.id 
-                            ? 'bg-theme-primary text-white shadow-md' 
-                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 border border-transparent'
+                            ? 'bg-accent text-white shadow-md' 
+                            : 'bg-div-theme text-text-theme hover:bg-div-hover border border-transparent'
                         }`}
                     >
                         <Icon size={20} />
@@ -84,11 +84,11 @@ const VolumeCalculator = () => {
 
           {/* Calculator Area */}
           <div className="lg:col-span-9">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 md:p-10 min-h-[500px] flex flex-col md:flex-row gap-10">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 md:p-10 min-h-[500px] flex flex-col md:flex-row gap-10">
                 
                 {/* Inputs & Visualization */}
                 <div className="flex-1 space-y-8">
-                    <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-4">
+                    <h3 className="text-2xl font-bold text-text-theme border-b border-border-theme pb-4">
                         {shapes.find(s => s.id === shape)?.name}
                     </h3>
 
@@ -96,52 +96,52 @@ const VolumeCalculator = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {(shape === 'sphere' || shape === 'cylinder' || shape === 'cone') && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">半径 (r)</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-2">半径 (r)</label>
                                 <input 
                                     type="number" 
                                     value={params.r}
                                     onChange={(e) => handleParamChange('r', e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-border-theme bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                                 />
                             </div>
                         )}
                         {(shape === 'cylinder' || shape === 'cone' || shape === 'cuboid') && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">高度 (h)</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-2">高度 (h)</label>
                                 <input 
                                     type="number" 
                                     value={params.h}
                                     onChange={(e) => handleParamChange('h', e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-border-theme bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                                 />
                             </div>
                         )}
                         {(shape === 'cube' || shape === 'cuboid') && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">长度 (l/a)</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-2">长度 (l/a)</label>
                                 <input 
                                     type="number" 
                                     value={params.l}
                                     onChange={(e) => handleParamChange('l', e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-border-theme bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                                 />
                             </div>
                         )}
                         {shape === 'cuboid' && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">宽度 (w)</label>
+                                <label className="block text-sm font-medium text-text-secondary mb-2">宽度 (w)</label>
                                 <input 
                                     type="number" 
                                     value={params.w}
                                     onChange={(e) => handleParamChange('w', e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-border-theme bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                                 />
                             </div>
                         )}
                     </div>
 
                     {/* SVG Visualization */}
-                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-8 flex items-center justify-center min-h-[200px] border border-dashed border-gray-200 dark:border-gray-700">
+                    <div className="bg-div-secondary rounded-xl p-8 flex items-center justify-center min-h-[200px] border border-dashed border-border-theme">
                         {shape === 'sphere' && (
                             <svg width="200" height="200" viewBox="0 0 200 200">
                                 <circle cx="100" cy="100" r="80" fill="#60a5fa" fillOpacity="0.2" stroke="#2563eb" strokeWidth="2" />
@@ -198,15 +198,15 @@ const VolumeCalculator = () => {
                 </div>
 
                 {/* Results */}
-                <div className="w-full md:w-1/3 bg-gray-50 dark:bg-gray-900/30 rounded-xl p-6 border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">计算结果 (体积)</div>
-                    <div className="text-4xl font-bold text-theme-primary break-all mb-6">
+                <div className="w-full md:w-1/3 bg-div-secondary rounded-xl p-6 border border-border-theme flex flex-col justify-center">
+                    <div className="text-sm text-text-secondary mb-2">计算结果 (体积)</div>
+                    <div className="text-4xl font-bold text-accent break-all mb-6">
                         {result.toFixed(2)}
-                        <span className="text-lg text-gray-400 ml-2 font-normal">unit³</span>
+                        <span className="text-lg text-text-secondary ml-2 font-normal">unit³</span>
                     </div>
 
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">计算公式</div>
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600 font-mono text-center">
+                    <div className="text-sm text-text-secondary mb-2">计算公式</div>
+                    <div className="bg-div-theme p-4 rounded-lg border border-border-theme font-mono text-center">
                         {/* Render simple math for now, MathJax is heavy */}
                         {shape === 'sphere' && 'V = 4/3 · π · r³'}
                         {shape === 'cylinder' && 'V = π · r² · h'}

@@ -121,23 +121,23 @@ const RainbowTextGenerator = () => {
        <div className="space-y-8">
           
           {/* Controls */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+          <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         输入文本
                     </label>
                     <textarea 
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all"
                         rows="3"
                         placeholder="输入要生成彩虹色的文字..."
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         颜色跨度 (Spectrum Span)
                     </label>
                     <div className="flex items-center gap-4">
@@ -148,25 +148,25 @@ const RainbowTextGenerator = () => {
                             step="0.1"
                             value={span}
                             onChange={(e) => setSpan(parseFloat(e.target.value))}
-                            className="flex-1 accent-theme-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                            className="flex-1 accent-accent h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
                         />
-                        <span className="w-12 text-right font-mono text-gray-600 dark:text-gray-300">{span}x</span>
+                        <span className="w-12 text-right font-mono text-text-secondary">{span}x</span>
                     </div>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         输出格式
                     </label>
-                    <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                    <div className="flex bg-div-secondary rounded-lg p-1">
                         {['html', 'bbcode', 'markdown'].map(f => (
                             <button
                                 key={f}
                                 onClick={() => setFormat(f)}
                                 className={`flex-1 py-1.5 px-3 rounded-md text-sm font-medium transition-all uppercase ${
                                     format === f 
-                                    ? 'bg-white dark:bg-gray-600 shadow-sm text-theme-primary' 
-                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                                    ? 'bg-div-theme shadow-sm text-accent' 
+                                    : 'text-text-secondary hover:text-text-theme'
                                 }`}
                             >
                                 {f}
@@ -180,29 +180,29 @@ const RainbowTextGenerator = () => {
           {/* Preview & Code */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {/* Preview Area */}
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col">
-                <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 flex flex-col">
+                <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                    <Palette size={20} />
                    实时预览
                 </h3>
-                <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 flex items-center justify-center min-h-[200px]">
+                <div className="flex-1 bg-div-secondary rounded-lg p-6 border border-border-theme flex items-center justify-center min-h-[200px]">
                     <div 
                         className="text-2xl md:text-3xl font-bold text-center break-words"
-                        dangerouslySetInnerHTML={{ __html: previewHtml || '<span class="text-gray-400 italic">预览区域</span>' }}
+                        dangerouslySetInnerHTML={{ __html: previewHtml || '<span class="text-text-secondary italic">预览区域</span>' }}
                     />
                 </div>
              </div>
 
              {/* Code Area */}
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                    <h3 className="font-bold text-text-theme flex items-center gap-2">
                        <Code size={20} />
                        代码输出
                     </h3>
                     <button 
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary/90 transition-all shadow-sm"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-all shadow-sm"
                     >
                         {copied ? <Check size={16} /> : <Copy size={16} />}
                         {copied ? '已复制' : '一键复制'}
@@ -212,7 +212,7 @@ const RainbowTextGenerator = () => {
                     <textarea 
                         readOnly
                         value={result}
-                        className="w-full h-full min-h-[200px] p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-mono text-gray-600 dark:text-gray-300 focus:outline-none resize-none"
+                        className="w-full h-full min-h-[200px] p-4 rounded-lg border border-border-theme bg-div-secondary text-xs font-mono text-text-secondary focus:outline-none resize-none"
                     />
                 </div>
              </div>

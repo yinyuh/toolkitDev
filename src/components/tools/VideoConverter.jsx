@@ -148,11 +148,11 @@ const VideoConverter = () => {
             <p className="text-red-600 dark:text-red-300">{error}</p>
          </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
            {/* Upload Area */}
            {!videoFile ? (
               <div 
-                className="p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-theme-primary hover:bg-theme-primary/5 transition-all cursor-pointer m-6 rounded-xl"
+                className="p-12 text-center border-2 border-dashed border-border-theme hover:border-accent hover:bg-accent/5 transition-all cursor-pointer m-6 rounded-xl"
                 onClick={() => document.getElementById('video-upload').click()}
               >
                  <input 
@@ -162,28 +162,28 @@ const VideoConverter = () => {
                     className="hidden" 
                     onChange={handleFileUpload}
                  />
-                 <div className="w-16 h-16 bg-theme-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-theme-primary">
+                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4 text-accent">
                     <FileVideo size={32} />
                  </div>
-                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                 <h3 className="text-xl font-bold text-text-theme mb-2">
                     点击上传视频文件
                  </h3>
-                 <p className="text-gray-500 dark:text-gray-400">
+                 <p className="text-text-secondary">
                     支持 MP4, MKV, AVI, MOV, WEBM, FLV 等
                  </p>
               </div>
            ) : (
               <div className="p-8">
-                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100 dark:border-gray-700">
+                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-border-theme">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 bg-theme-primary/10 rounded-lg flex items-center justify-center text-theme-primary">
+                       <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent">
                           <FileVideo size={24} />
                        </div>
                        <div>
-                          <h3 className="font-bold text-gray-800 dark:text-gray-100 truncate max-w-[200px]">
+                          <h3 className="font-bold text-text-theme truncate max-w-[200px]">
                              {videoFile.name}
                           </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-text-secondary">
                              {formatSize(videoFile.size)}
                           </p>
                        </div>
@@ -199,7 +199,7 @@ const VideoConverter = () => {
                  {status === 'ready' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                          <label className="block text-sm font-medium text-text-secondary mb-3">
                              目标格式
                           </label>
                           <div className="flex flex-wrap gap-2">
@@ -209,8 +209,8 @@ const VideoConverter = () => {
                                    onClick={() => setTargetFormat(fmt)}
                                    className={`px-4 py-2 rounded-lg border text-sm font-bold uppercase transition-all ${
                                       targetFormat === fmt 
-                                        ? 'border-theme-primary bg-theme-primary/10 text-theme-primary shadow-sm' 
-                                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                                        ? 'border-accent bg-accent/10 text-accent shadow-sm' 
+                                        : 'border-border-theme hover:border-accent bg-div-secondary text-text-secondary'
                                    }`}
                                 >
                                    {fmt}
@@ -219,36 +219,36 @@ const VideoConverter = () => {
                           </div>
                        </div>
                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                          <label className="block text-sm font-medium text-text-secondary mb-3">
                              转换模式
                           </label>
                           <div className="space-y-3">
-                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'copy' ? 'border-theme-primary bg-theme-primary/5' : 'border-gray-200 dark:border-gray-700'}`}>
+                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'copy' ? 'border-accent bg-accent/5' : 'border-border-theme'}`}>
                                 <input 
                                   type="radio" 
                                   name="mode" 
                                   value="copy" 
                                   checked={mode === 'copy'} 
                                   onChange={(e) => setMode(e.target.value)}
-                                  className="mt-1 w-4 h-4 text-theme-primary border-gray-300 focus:ring-theme-primary"
+                                  className="mt-1 w-4 h-4 text-accent border-border-theme focus:ring-accent"
                                 />
                                 <div>
-                                   <span className="block text-sm font-bold text-gray-800 dark:text-gray-200">极速模式 (Copy Stream)</span>
-                                   <span className="block text-xs text-gray-500 mt-1">仅更换容器，不重新编码，速度极快。若视频流不兼容可能会失败。</span>
+                                   <span className="block text-sm font-bold text-text-theme">极速模式 (Copy Stream)</span>
+                                   <span className="block text-xs text-text-secondary mt-1">仅更换容器，不重新编码，速度极快。若视频流不兼容可能会失败。</span>
                                 </div>
                              </label>
-                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'encode' ? 'border-theme-primary bg-theme-primary/5' : 'border-gray-200 dark:border-gray-700'}`}>
+                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'encode' ? 'border-accent bg-accent/5' : 'border-border-theme'}`}>
                                 <input 
                                   type="radio" 
                                   name="mode" 
                                   value="encode" 
                                   checked={mode === 'encode'} 
                                   onChange={(e) => setMode(e.target.value)}
-                                  className="mt-1 w-4 h-4 text-theme-primary border-gray-300 focus:ring-theme-primary"
+                                  className="mt-1 w-4 h-4 text-accent border-border-theme focus:ring-accent"
                                 />
                                 <div>
-                                   <span className="block text-sm font-bold text-gray-800 dark:text-gray-200">兼容模式 (Re-encode)</span>
-                                   <span className="block text-xs text-gray-500 mt-1">重新编码视频和音频，确保最大兼容性，速度较慢。</span>
+                                   <span className="block text-sm font-bold text-text-theme">兼容模式 (Re-encode)</span>
+                                   <span className="block text-xs text-text-secondary mt-1">重新编码视频和音频，确保最大兼容性，速度较慢。</span>
                                 </div>
                              </label>
                           </div>
@@ -259,7 +259,7 @@ const VideoConverter = () => {
                  {status === 'ready' && (
                     <button 
                        onClick={convert}
-                       className="w-full py-4 bg-theme-primary text-white rounded-xl font-bold text-lg hover:bg-theme-primary/90 shadow-lg shadow-theme-primary/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
+                       className="w-full py-4 bg-accent text-white rounded-xl font-bold text-lg hover:bg-accent-hover shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
                     >
                        开始转换
                        <ArrowRight size={20} />
@@ -269,17 +269,17 @@ const VideoConverter = () => {
                  {status === 'converting' && (
                     <div className="space-y-6 py-8">
                        <div className="flex flex-col items-center">
-                          <Loader2 size={40} className="animate-spin text-theme-primary mb-4" />
-                          <div className="text-lg font-bold text-gray-800 dark:text-gray-200">正在处理视频...</div>
-                          <div className="text-sm text-gray-500 mt-1">请勿关闭页面</div>
+                          <Loader2 size={40} className="animate-spin text-accent mb-4" />
+                          <div className="text-lg font-bold text-text-theme">正在处理视频...</div>
+                          <div className="text-sm text-text-secondary mt-1">请勿关闭页面</div>
                        </div>
-                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden relative">
+                       <div className="w-full bg-div-secondary rounded-full h-4 overflow-hidden relative">
                           <div 
-                             className="bg-theme-primary h-full rounded-full transition-all duration-300"
+                             className="bg-accent h-full rounded-full transition-all duration-300"
                              style={{ width: `${Math.max(5, progress)}%` }}
                           ></div>
                        </div>
-                       <div className="bg-black/80 rounded-lg p-4 font-mono text-xs text-green-400 h-32 overflow-y-auto custom-scrollbar">
+                       <div className="bg-div-secondary rounded-lg p-4 font-mono text-xs text-green-400 h-32 overflow-y-auto custom-scrollbar">
                           {logs.map((log, i) => <div key={i}>{log}</div>)}
                        </div>
                     </div>
@@ -291,23 +291,23 @@ const VideoConverter = () => {
                           <Check size={40} />
                        </div>
                        <div>
-                          <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                          <h3 className="text-3xl font-bold text-text-theme mb-2">
                              转换完成!
                           </h3>
-                          <p className="text-gray-500">您的新视频已准备好</p>
+                          <p className="text-text-secondary">您的新视频已准备好</p>
                        </div>
                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
                           <a 
                              href={outputUrl}
                              download={`converted_${videoFile.name.split('.')[0]}.${targetFormat}`}
-                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 transition-all shadow-lg shadow-theme-primary/20"
+                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover transition-all shadow-lg shadow-accent/20"
                           >
                              <Download size={20} />
                              下载视频
                           </a>
                           <button 
                              onClick={() => { setVideoFile(null); setStatus('idle'); setOutputUrl(''); }}
-                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-div-secondary text-text-theme rounded-xl font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all"
                           >
                              转换下一个
                           </button>

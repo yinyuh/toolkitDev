@@ -136,15 +136,15 @@ const AvatarGenerator = () => {
           
           {/* Left: Controls */}
           <div className="lg:col-span-4 space-y-6">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
+                <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                    <Settings size={20} />
                    配置头像
                 </h3>
                 
                 {/* Style Selector */}
                 <div className="mb-6">
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       风格样式
                    </label>
                    <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto custom-scrollbar p-1">
@@ -154,8 +154,8 @@ const AvatarGenerator = () => {
                             onClick={() => setCurrentStyleId(s.id)}
                             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
                                currentStyleId === s.id
-                                 ? 'bg-theme-primary text-white shadow-md'
-                                 : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'
+                                 ? 'bg-accent text-white shadow-md'
+                                 : 'bg-div-secondary hover:bg-div-hover dark:hover:bg-div-hover text-text-secondary'
                             }`}
                          >
                             <div className="w-2 h-2 rounded-full bg-current opacity-50"></div>
@@ -167,7 +167,7 @@ const AvatarGenerator = () => {
 
                 {/* Seed Input */}
                 <div className="mb-6">
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       Seed (种子)
                    </label>
                    <div className="flex gap-2">
@@ -175,12 +175,12 @@ const AvatarGenerator = () => {
                          type="text" 
                          value={seed}
                          onChange={(e) => setSeed(e.target.value)}
-                         className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary outline-none transition-all"
+                         className="flex-1 px-4 py-2 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all"
                          placeholder="输入字符生成..."
                       />
                       <button 
                          onClick={handleRandomize}
-                         className="p-2 bg-theme-primary text-white rounded-lg hover:bg-theme-primary/90 transition-all shadow-sm"
+                         className="p-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-all shadow-sm"
                          title="随机生成"
                       >
                          <RefreshCw size={20} />
@@ -190,13 +190,13 @@ const AvatarGenerator = () => {
 
                 {/* Background Color */}
                 <div className="mb-4">
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       背景颜色
                    </label>
                    <div className="flex flex-wrap gap-2">
                       <button 
                          onClick={() => setOptions({...options, backgroundColor: []})}
-                         className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${options.backgroundColor.length === 0 ? 'ring-2 ring-offset-2 ring-theme-primary border-transparent' : 'border-gray-300'}`}
+                         className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${options.backgroundColor.length === 0 ? 'ring-2 ring-offset-2 ring-accent border-transparent' : 'border-border-theme'}`}
                          title="透明"
                       >
                          <div className="w-full h-px bg-red-500 rotate-45 transform scale-150"></div>
@@ -207,7 +207,7 @@ const AvatarGenerator = () => {
                             onClick={() => setOptions({...options, backgroundColor: [color]})}
                             className={`w-8 h-8 rounded-full border transition-all ${
                                options.backgroundColor.includes(color) 
-                               ? 'ring-2 ring-offset-2 ring-theme-primary border-transparent' 
+                               ? 'ring-2 ring-offset-2 ring-accent border-transparent' 
                                : 'border-transparent'
                             }`}
                             style={{ backgroundColor: `#${color}` }}
@@ -218,7 +218,7 @@ const AvatarGenerator = () => {
 
                 {/* Radius */}
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       圆角 ({options.radius}%)
                    </label>
                    <input 
@@ -228,7 +228,7 @@ const AvatarGenerator = () => {
                       step="1"
                       value={options.radius}
                       onChange={(e) => setOptions({...options, radius: parseInt(e.target.value)})}
-                      className="w-full accent-theme-primary"
+                      className="w-full accent-accent"
                    />
                 </div>
              </div>
@@ -236,12 +236,12 @@ const AvatarGenerator = () => {
 
           {/* Right: Preview */}
           <div className="lg:col-span-8">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 flex flex-col items-center justify-center min-h-[500px] relative">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-8 flex flex-col items-center justify-center min-h-[500px] relative">
                 
                 {/* Avatar Display */}
                 <div className="relative w-64 h-64 md:w-80 md:h-80 transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
                     {loading || !svgContent ? (
-                        <Loader2 className="animate-spin text-theme-primary w-12 h-12" />
+                        <Loader2 className="animate-spin text-accent w-12 h-12" />
                     ) : (
                         <div dangerouslySetInnerHTML={{ __html: svgContent }} />
                     )}
@@ -252,7 +252,7 @@ const AvatarGenerator = () => {
                    <button 
                       onClick={() => handleDownload('png')}
                       disabled={loading || !svgContent}
-                      className="flex items-center gap-2 px-6 py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 transition-all shadow-lg shadow-theme-primary/20 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover transition-all shadow-lg shadow-accent/20 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                    >
                       <Download size={20} />
                       下载 PNG
@@ -260,7 +260,7 @@ const AvatarGenerator = () => {
                    <button 
                       onClick={() => handleDownload('svg')}
                       disabled={loading || !svgContent}
-                      className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-all hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-6 py-3 bg-div-theme border border-border-theme text-text-theme rounded-xl font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                    >
                       <Download size={20} />
                       下载 SVG
@@ -268,14 +268,14 @@ const AvatarGenerator = () => {
                    <button 
                       onClick={copySvg}
                       disabled={loading || !svgContent}
-                      className="flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-6 py-3 bg-div-secondary text-text-secondary rounded-xl font-medium hover:bg-div-hover dark:hover:bg-div-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                    >
                       {copied ? <Check size={20} className="text-green-500" /> : <Copy size={20} />}
                       复制 SVG 代码
                    </button>
                 </div>
                 
-                <div className="absolute top-4 right-4 text-xs text-gray-400">
+                <div className="absolute top-4 right-4 text-xs text-text-secondary">
                    Powered by DiceBear
                 </div>
              </div>

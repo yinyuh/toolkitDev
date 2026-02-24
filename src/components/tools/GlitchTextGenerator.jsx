@@ -74,26 +74,26 @@ const GlitchTextGenerator = () => {
           
           {/* Controls */}
           <div className="space-y-6">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
+                <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                    <Zap size={20} />
                    参数设置
                 </h3>
                 
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         输入文本
                     </label>
                     <textarea 
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary outline-none transition-all min-h-[100px]"
+                        className="w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all min-h-[100px]"
                         placeholder="输入要故障化的文字..."
                     />
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         混乱度 ({chaos}%)
                     </label>
                     <input 
@@ -102,12 +102,12 @@ const GlitchTextGenerator = () => {
                         max="100" 
                         value={chaos}
                         onChange={(e) => setChaos(parseInt(e.target.value))}
-                        className="w-full accent-theme-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                        className="w-full accent-accent h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         干扰方向
                     </label>
                     <div className="flex gap-4">
@@ -116,27 +116,27 @@ const GlitchTextGenerator = () => {
                                 type="checkbox" 
                                 checked={directions.top}
                                 onChange={(e) => setDirections({...directions, top: e.target.checked})}
-                                className="w-4 h-4 text-theme-primary rounded focus:ring-theme-primary border-gray-300"
+                                className="w-4 h-4 text-accent rounded focus:ring-accent border-border-theme"
                             />
-                            <span className="text-gray-700 dark:text-gray-300 text-sm">上方</span>
+                            <span className="text-text-secondary text-sm">上方</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input 
                                 type="checkbox" 
                                 checked={directions.middle}
                                 onChange={(e) => setDirections({...directions, middle: e.target.checked})}
-                                className="w-4 h-4 text-theme-primary rounded focus:ring-theme-primary border-gray-300"
+                                className="w-4 h-4 text-accent rounded focus:ring-accent border-border-theme"
                             />
-                            <span className="text-gray-700 dark:text-gray-300 text-sm">中间</span>
+                            <span className="text-text-secondary text-sm">中间</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input 
                                 type="checkbox" 
                                 checked={directions.bottom}
                                 onChange={(e) => setDirections({...directions, bottom: e.target.checked})}
-                                className="w-4 h-4 text-theme-primary rounded focus:ring-theme-primary border-gray-300"
+                                className="w-4 h-4 text-accent rounded focus:ring-accent border-border-theme"
                             />
-                            <span className="text-gray-700 dark:text-gray-300 text-sm">下方</span>
+                            <span className="text-text-secondary text-sm">下方</span>
                         </label>
                     </div>
                 </div>
@@ -145,20 +145,20 @@ const GlitchTextGenerator = () => {
 
           {/* Preview */}
           <div className="space-y-6">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 min-h-[300px] flex flex-col">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 min-h-[300px] flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-800 dark:text-gray-100">效果预览</h3>
+                    <h3 className="font-bold text-text-theme">效果预览</h3>
                     <div className="flex gap-2">
                          <button 
                             onClick={() => setText('')}
-                            className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                            className="p-2 text-text-secondary hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
                             title="清空"
                         >
                             <RotateCcw size={18} />
                         </button>
                         <button 
                             onClick={handleCopy}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary/90 transition-all shadow-sm"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-all shadow-sm"
                         >
                             {copied ? <Check size={16} /> : <Copy size={16} />}
                             {copied ? '已复制' : '复制'}
@@ -166,12 +166,12 @@ const GlitchTextGenerator = () => {
                     </div>
                 </div>
                 
-                <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-lg p-4 overflow-auto border border-gray-200 dark:border-gray-700">
+                <div className="flex-1 bg-div-secondary rounded-lg p-4 overflow-auto border border-border-theme">
                     <p 
-                        className="text-2xl md:text-3xl break-all text-center leading-loose text-gray-800 dark:text-gray-100" 
+                        className="text-2xl md:text-3xl break-all text-center leading-loose text-text-theme" 
                         style={{ fontFamily: '"Courier Prime", monospace' }}
                     >
-                        {result || <span className="text-gray-400 text-base italic">预览将显示在这里...</span>}
+                        {result || <span className="text-text-secondary text-base italic">预览将显示在这里...</span>}
                     </p>
                 </div>
              </div>

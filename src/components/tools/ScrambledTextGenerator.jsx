@@ -80,15 +80,15 @@ const ScrambledTextGenerator = () => {
           
           {/* Input */}
           <div className="flex flex-col h-full">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex-1 flex flex-col">
-                <h3 className="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 flex-1 flex flex-col">
+                <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                    <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">1</div>
                    输入文本
                 </h3>
                 <textarea 
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    className="flex-1 w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary outline-none transition-all min-h-[200px] resize-none"
+                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all min-h-[200px] resize-none"
                     placeholder="输入一段文字（支持中文/英文）..."
                 />
              </div>
@@ -96,30 +96,30 @@ const ScrambledTextGenerator = () => {
 
           {/* Arrow (Desktop only) */}
           <div className="hidden md:flex items-center justify-center">
-             <div className="bg-gray-100 dark:bg-gray-700 rounded-full p-2 text-gray-400">
+             <div className="bg-div-secondary rounded-full p-2 text-text-secondary">
                 <ArrowRight size={24} />
              </div>
           </div>
 
           {/* Output */}
           <div className="flex flex-col h-full">
-             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex-1 flex flex-col">
+             <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 flex-1 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                    <h3 className="font-bold text-text-theme flex items-center gap-2">
                        <div className="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">2</div>
                        乱序结果
                     </h3>
                     <div className="flex gap-2">
                         <button 
                             onClick={scrambleText}
-                            className="p-2 text-gray-500 hover:text-theme-primary hover:bg-theme-primary/10 rounded-lg transition-all"
+                            className="p-2 text-text-secondary hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
                             title="重新乱序"
                         >
                             <Shuffle size={18} />
                         </button>
                         <button 
                             onClick={handleCopy}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary/90 transition-all shadow-sm"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-all shadow-sm"
                         >
                             {copied ? <Check size={16} /> : <Copy size={16} />}
                             {copied ? '已复制' : '复制'}
@@ -129,7 +129,7 @@ const ScrambledTextGenerator = () => {
                 <textarea 
                     readOnly
                     value={outputText}
-                    className="flex-1 w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none min-h-[200px] resize-none"
+                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:outline-none min-h-[200px] resize-none"
                 />
              </div>
           </div>

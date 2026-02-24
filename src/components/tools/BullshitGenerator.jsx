@@ -135,25 +135,25 @@ const BullshitGenerator = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+       <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
           
           {/* Controls */}
-          <div className="p-6 md:p-8 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+          <div className="p-6 md:p-8 border-b border-border-theme bg-div-secondary">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       文章主题
                    </label>
                    <input 
                       type="text" 
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary outline-none transition-all text-lg font-bold"
+                      className="w-full px-4 py-3 rounded-xl border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all text-lg font-bold"
                       placeholder="请输入主题，例如：今天中午吃什么"
                    />
                 </div>
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                   <label className="block text-sm font-medium text-text-secondary mb-2">
                       文章字数 (约 {length} 字)
                    </label>
                    <div className="flex items-center gap-4 h-[52px]">
@@ -164,12 +164,12 @@ const BullshitGenerator = () => {
                           step="100"
                           value={length}
                           onChange={(e) => setLength(parseInt(e.target.value))}
-                          className="flex-1 accent-theme-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                          className="flex-1 accent-accent h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
                        />
                        <button 
                           onClick={generate}
                           disabled={isGenerating || !topic.trim()}
-                          className={`px-6 py-2.5 bg-theme-primary text-white rounded-xl font-bold transition-all shadow-lg shadow-theme-primary/20 flex items-center gap-2 ${isGenerating ? 'opacity-70 cursor-not-allowed' : 'hover:bg-theme-primary/90 hover:-translate-y-0.5'}`}
+                          className={`px-6 py-2.5 bg-accent text-white rounded-xl font-bold transition-all shadow-lg shadow-accent/20 flex items-center gap-2 ${isGenerating ? 'opacity-70 cursor-not-allowed' : 'hover:bg-accent-hover hover:-translate-y-0.5'}`}
                        >
                           {isGenerating ? <RefreshCw size={20} className="animate-spin" /> : <Sparkles size={20} />}
                           生成
@@ -180,28 +180,28 @@ const BullshitGenerator = () => {
           </div>
 
           {/* Result Area */}
-          <div className="p-6 md:p-8 min-h-[400px] relative bg-white dark:bg-gray-800">
+          <div className="p-6 md:p-8 min-h-[400px] relative bg-div-theme">
              {result ? (
                 <>
                     <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
                         <button 
                            onClick={handleCopy}
-                           className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all shadow-sm"
+                           className="flex items-center gap-2 px-4 py-2 bg-div-secondary text-text-secondary rounded-lg font-medium hover:bg-div-hover transition-all shadow-sm"
                         >
                            {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
                            {copied ? '已复制' : '复制全文'}
                         </button>
                     </div>
-                    <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-loose text-lg whitespace-pre-wrap font-serif">
-                        <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white border-b pb-4 border-gray-100 dark:border-gray-700">
+                    <div className="prose max-w-none text-text-theme leading-loose text-lg whitespace-pre-wrap font-serif">
+                        <h2 className="text-2xl font-bold mb-6 text-center text-text-theme border-b pb-4 border-border-theme">
                             {topic}
                         </h2>
                         {result}
                     </div>
                 </>
              ) : (
-                <div className="flex flex-col items-center justify-center h-full py-20 text-gray-400 dark:text-gray-500">
-                   <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center mb-6">
+                <div className="flex flex-col items-center justify-center h-full py-20 text-text-secondary">
+                   <div className="w-20 h-20 bg-div-secondary rounded-full flex items-center justify-center mb-6">
                       <FileText size={40} />
                    </div>
                    <p className="text-xl font-medium">输入主题并点击生成按钮</p>

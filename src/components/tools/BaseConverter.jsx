@@ -77,7 +77,7 @@ const BaseConverter = () => {
 
   const InputField = ({ label, value, base, placeholder }) => (
     <div className="relative group">
-      <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">
+      <label className="block text-sm font-medium text-text-secondary mb-2 uppercase tracking-wider">
         {label}
       </label>
       <div className="relative">
@@ -85,12 +85,12 @@ const BaseConverter = () => {
           type="text" 
           value={value}
           onChange={(e) => handleInput(e.target.value, base)}
-          className="w-full p-4 pr-12 text-lg md:text-xl font-mono bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-theme-primary focus:border-transparent outline-none transition-all shadow-sm group-hover:shadow-md"
+          className="w-full p-4 pr-12 text-lg md:text-xl font-mono bg-div-theme border border-border-theme rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all shadow-sm group-hover:shadow-md"
           placeholder={placeholder}
         />
         <button 
           onClick={() => handleCopy(value, base)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-theme-primary transition-colors opacity-0 group-hover:opacity-100"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-text-secondary hover:text-accent transition-colors opacity-0 group-hover:opacity-100"
           title="复制"
         >
           {copied === base ? <Check size={18} /> : <Copy size={18} />}
@@ -101,7 +101,7 @@ const BaseConverter = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-inner">
+      <div className="bg-div-secondary rounded-2xl p-8 border border-border-theme shadow-inner">
         {error && (
           <div className="mb-6 p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm text-center font-medium animate-pulse">
             {error}
@@ -116,8 +116,8 @@ const BaseConverter = () => {
         </div>
 
         {/* Visual Bits (Simple 8-bit visualizer for demo) */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-           <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div className="mt-12 pt-8 border-t border-border-theme">
+           <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
               <Binary size={16} />
               8-Bit 可视化 (低8位)
            </h3>
@@ -135,8 +135,8 @@ const BaseConverter = () => {
                        }}
                        className={`w-10 h-14 md:w-12 md:h-16 rounded-lg flex flex-col items-center justify-center gap-1 transition-all border-2 ${
                           bitValue 
-                            ? 'bg-theme-primary border-theme-primary text-white shadow-lg shadow-theme-primary/30 transform -translate-y-1' 
-                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-400 hover:border-gray-400'
+                            ? 'bg-accent border-accent text-white shadow-lg shadow-accent/30 transform -translate-y-1' 
+                            : 'bg-div-theme border-border-theme text-text-secondary hover:border-accent'
                        }`}
                     >
                        <span className="text-xl font-bold font-mono">{bitValue}</span>

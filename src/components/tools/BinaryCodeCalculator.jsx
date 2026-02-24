@@ -102,21 +102,21 @@ const BinaryCodeCalculator = () => {
   };
 
   const ResultCard = ({ title, value, desc }) => (
-    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+    <div className="bg-div-secondary rounded-lg p-4 border border-border-theme">
         <div className="flex justify-between items-start mb-2">
             <div>
-                <h4 className="font-bold text-gray-800 dark:text-gray-100 text-sm">{title}</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{desc}</p>
+                <h4 className="font-bold text-text-theme text-sm">{title}</h4>
+                <p className="text-xs text-text-secondary mt-0.5">{desc}</p>
             </div>
             <button 
                 onClick={() => navigator.clipboard.writeText(value.replace(/\s/g, ''))}
-                className="text-gray-400 hover:text-theme-primary transition-colors"
+                className="text-text-secondary hover:text-accent transition-colors"
                 title="复制"
             >
                 <Copy size={16} />
             </button>
         </div>
-        <div className="font-mono text-lg md:text-xl text-theme-primary break-all">
+        <div className="font-mono text-lg md:text-xl text-accent break-all">
             {value}
         </div>
     </div>
@@ -124,13 +124,13 @@ const BinaryCodeCalculator = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6">
-       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+       <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
           
           {/* Header & Input */}
-          <div className="p-6 md:p-8 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+          <div className="p-6 md:p-8 border-b border-border-theme bg-div-secondary">
              <div className="flex flex-col md:flex-row gap-6 items-end">
                 <div className="flex-1 w-full">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         输入十进制整数
                     </label>
                     <div className="relative">
@@ -138,28 +138,28 @@ const BinaryCodeCalculator = () => {
                             type="number" 
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 text-lg font-mono focus:ring-2 focus:ring-theme-primary outline-none transition-all"
+                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-border-theme bg-div-secondary text-text-theme text-lg font-mono focus:ring-2 focus:ring-accent outline-none transition-all"
                             placeholder="例如: -5"
                         />
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary">
                             <Calculator size={20} />
                         </div>
                     </div>
                 </div>
 
                 <div className="w-full md:w-auto">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         字长 (Bit Depth)
                     </label>
-                    <div className="flex bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600 p-1">
+                    <div className="flex bg-div-secondary rounded-xl border border-border-theme p-1">
                         {[8, 16, 32].map(b => (
                             <button
                                 key={b}
                                 onClick={() => setBits(b)}
                                 className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                                     bits === b 
-                                    ? 'bg-theme-primary text-white shadow-sm' 
-                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    ? 'bg-accent text-white shadow-sm' 
+                                    : 'text-text-secondary hover:bg-div-hover'
                                 }`}
                             >
                                 {b}位

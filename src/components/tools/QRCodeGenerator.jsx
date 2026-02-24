@@ -108,7 +108,7 @@ const QRCodeGenerator = () => {
         {/* Left: Configuration */}
         <div className="lg:col-span-7 space-y-6">
            {/* Tabs */}
-           <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl overflow-x-auto">
+           <div className="flex bg-div-secondary p-1 rounded-xl overflow-x-auto">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -121,8 +121,8 @@ const QRCodeGenerator = () => {
                     }}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       activeTab === tab.id 
-                        ? 'bg-white dark:bg-gray-700 text-theme-primary shadow-sm' 
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-div-theme text-accent shadow-sm' 
+                        : 'text-text-secondary hover:text-text-theme'
                     }`}
                   >
                     <Icon size={18} />
@@ -133,14 +133,14 @@ const QRCodeGenerator = () => {
            </div>
 
            {/* Input Forms */}
-           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+           <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
               {activeTab === 'url' && (
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">网址或文本内容</label>
+                   <label className="block text-sm font-medium text-text-secondary mb-2">网址或文本内容</label>
                    <textarea 
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none h-32"
+                      className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary focus:ring-2 focus:ring-accent outline-none h-32"
                       placeholder="https://example.com"
                    />
                 </div>
@@ -149,30 +149,30 @@ const QRCodeGenerator = () => {
               {activeTab === 'wifi' && (
                 <div className="space-y-4">
                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">WiFi 名称 (SSID)</label>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">WiFi 名称 (SSID)</label>
                       <input 
                         type="text" 
                         value={wifiSsid}
                         onChange={(e) => setWifiSsid(e.target.value)}
-                        className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                        className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                       />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">密码</label>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">密码</label>
                       <input 
                         type="text" 
                         value={wifiPassword}
                         onChange={(e) => setWifiPassword(e.target.value)}
-                        className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary outline-none"
+                        className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary focus:ring-2 focus:ring-accent outline-none"
                       />
                    </div>
                    <div className="flex gap-4">
                       <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">加密方式</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">加密方式</label>
                         <select 
                           value={wifiEncryption}
                           onChange={(e) => setWifiEncryption(e.target.value)}
-                          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none"
+                          className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none"
                         >
                            <option value="WPA">WPA/WPA2</option>
                            <option value="WEP">WEP</option>
@@ -185,9 +185,9 @@ const QRCodeGenerator = () => {
                               type="checkbox" 
                               checked={wifiHidden}
                               onChange={(e) => setWifiHidden(e.target.checked)}
-                              className="w-4 h-4 text-theme-primary rounded border-gray-300"
+                              className="w-4 h-4 text-accent rounded border-border-theme"
                             />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">隐藏网络</span>
+                            <span className="text-sm text-text-secondary">隐藏网络</span>
                          </label>
                       </div>
                    </div>
@@ -198,78 +198,78 @@ const QRCodeGenerator = () => {
                 <div className="space-y-4">
                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">姓</label>
-                        <input type="text" value={vcardLastName} onChange={(e) => setVcardLastName(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none" />
+                        <label className="block text-sm font-medium text-text-secondary mb-2">姓</label>
+                        <input type="text" value={vcardLastName} onChange={(e) => setVcardLastName(e.target.value)} className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">名</label>
-                        <input type="text" value={vcardFirstName} onChange={(e) => setVcardFirstName(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none" />
+                        <label className="block text-sm font-medium text-text-secondary mb-2">名</label>
+                        <input type="text" value={vcardFirstName} onChange={(e) => setVcardFirstName(e.target.value)} className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none" />
                       </div>
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">公司/组织</label>
-                      <input type="text" value={vcardOrg} onChange={(e) => setVcardOrg(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none" />
+                      <label className="block text-sm font-medium text-text-secondary mb-2">公司/组织</label>
+                      <input type="text" value={vcardOrg} onChange={(e) => setVcardOrg(e.target.value)} className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none" />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">电话</label>
-                      <input type="text" value={vcardPhone} onChange={(e) => setVcardPhone(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none" />
+                      <label className="block text-sm font-medium text-text-secondary mb-2">电话</label>
+                      <input type="text" value={vcardPhone} onChange={(e) => setVcardPhone(e.target.value)} className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none" />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">邮箱</label>
-                      <input type="email" value={vcardEmail} onChange={(e) => setVcardEmail(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none" />
+                      <label className="block text-sm font-medium text-text-secondary mb-2">邮箱</label>
+                      <input type="email" value={vcardEmail} onChange={(e) => setVcardEmail(e.target.value)} className="w-full p-3 border border-border-theme rounded-lg bg-div-secondary outline-none" />
                    </div>
                 </div>
               )}
            </div>
 
            {/* Customization */}
-           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-              <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+           <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
+              <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                  <Settings size={18} />
                  样式设置
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">前景色</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">前景色</label>
                     <div className="flex gap-2">
                        <input 
                          type="color" 
                          value={fgColor}
                          onChange={(e) => setFgColor(e.target.value)}
-                         className="h-10 w-14 p-1 rounded border border-gray-200 dark:border-gray-700 cursor-pointer"
+                         className="h-10 w-14 p-1 rounded border border-border-theme cursor-pointer"
                        />
                        <input 
                          type="text" 
                          value={fgColor}
                          onChange={(e) => setFgColor(e.target.value)}
-                         className="flex-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 uppercase font-mono"
+                         className="flex-1 p-2 border border-border-theme rounded-lg bg-div-secondary uppercase font-mono"
                        />
                     </div>
                  </div>
                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">背景色</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">背景色</label>
                     <div className="flex gap-2">
                        <input 
                          type="color" 
                          value={bgColor}
                          onChange={(e) => setBgColor(e.target.value)}
-                         className="h-10 w-14 p-1 rounded border border-gray-200 dark:border-gray-700 cursor-pointer"
+                         className="h-10 w-14 p-1 rounded border border-border-theme cursor-pointer"
                        />
                        <input 
                          type="text" 
                          value={bgColor}
                          onChange={(e) => setBgColor(e.target.value)}
-                         className="flex-1 p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 uppercase font-mono"
+                         className="flex-1 p-2 border border-border-theme rounded-lg bg-div-secondary uppercase font-mono"
                        />
                     </div>
                  </div>
                  
                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Logo 图片</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Logo 图片</label>
                     <div className="flex gap-2 items-center">
                        <button 
                          onClick={() => fileInputRef.current?.click()}
-                         className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-sm flex items-center gap-2"
+                         className="px-4 py-2 bg-div-secondary hover:bg-div-hover dark:hover:bg-div-hover rounded-lg text-sm flex items-center gap-2"
                        >
                           <ImageIcon size={16} />
                           上传
@@ -283,7 +283,7 @@ const QRCodeGenerator = () => {
                        />
                        {logoUrl && (
                           <div className="relative">
-                             <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded object-cover border border-gray-200" />
+                             <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded object-cover border border-border-theme" />
                              <button 
                                onClick={() => { setLogoUrl(''); setIncludeLogo(false); }}
                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5"
@@ -296,11 +296,11 @@ const QRCodeGenerator = () => {
                  </div>
 
                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">纠错等级 (Error Level)</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">纠错等级 (Error Level)</label>
                     <select 
                       value={level}
                       onChange={(e) => setLevel(e.target.value)}
-                      className="w-full p-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 outline-none"
+                      className="w-full p-2 border border-border-theme rounded-lg bg-div-secondary outline-none"
                     >
                        <option value="L">低 (L) - 7%</option>
                        <option value="M">中 (M) - 15%</option>
@@ -315,12 +315,12 @@ const QRCodeGenerator = () => {
         {/* Right: Preview */}
         <div className="lg:col-span-5">
            <div className="sticky top-6">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 flex flex-col items-center">
-                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">二维码预览</h2>
+              <div className="bg-div-theme rounded-2xl shadow-lg border border-border-theme p-8 flex flex-col items-center">
+                 <h2 className="text-xl font-bold text-text-theme mb-6">二维码预览</h2>
                  
                  <div 
                    ref={qrRef}
-                   className="p-4 bg-white rounded-xl shadow-sm border border-gray-200 mb-8"
+                   className="p-4 bg-div-secondary rounded-xl shadow-sm border border-border-theme mb-8"
                  >
                     <QRCodeCanvas
                        value={content}
@@ -343,8 +343,8 @@ const QRCodeGenerator = () => {
                  <div className="w-full space-y-4">
                     <div>
                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-gray-500">尺寸</span>
-                          <span className="text-gray-700 dark:text-gray-300 font-mono">{size}px</span>
+                          <span className="text-text-secondary">尺寸</span>
+                          <span className="text-text-theme font-mono">{size}px</span>
                        </div>
                        <input 
                          type="range" 
@@ -353,13 +353,13 @@ const QRCodeGenerator = () => {
                          step="32" 
                          value={size} 
                          onChange={(e) => setSize(parseInt(e.target.value))}
-                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                         className="w-full h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
                        />
                     </div>
 
                     <button 
                       onClick={() => handleDownload('png')}
-                      className="w-full py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 flex items-center justify-center gap-2 shadow-lg shadow-theme-primary/20 transition-all active:scale-[0.98]"
+                      className="w-full py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover flex items-center justify-center gap-2 shadow-lg shadow-accent/20 transition-all active:scale-[0.98]"
                     >
                        <Download size={20} />
                        下载 PNG 图片

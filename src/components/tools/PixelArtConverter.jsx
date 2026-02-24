@@ -127,16 +127,16 @@ const PixelArtConverter = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col lg:flex-row min-h-[600px] h-[calc(100vh-200px)]">
+    <div className="bg-div-theme rounded-xl shadow-lg border border-border-theme overflow-hidden flex flex-col lg:flex-row min-h-[600px] h-[calc(100vh-200px)]">
       {/* Left: Canvas Preview */}
-      <div className="flex-1 bg-gray-100 dark:bg-gray-900 relative overflow-hidden flex items-center justify-center p-4">
+      <div className="flex-1 bg-div-secondary relative overflow-hidden flex items-center justify-center p-4">
         {!image ? (
             <div 
-                className="flex flex-col items-center justify-center cursor-pointer p-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                className="flex flex-col items-center justify-center cursor-pointer p-8 border-2 border-dashed border-border-theme rounded-lg hover:bg-div-hover dark:hover:bg-div-hover transition-colors"
                 onClick={() => fileInputRef.current.click()}
             >
-                <svg className="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <p className="text-gray-500 font-medium">点击上传图片</p>
+                <svg className="w-12 h-12 text-text-secondary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p className="text-text-secondary font-medium">点击上传图片</p>
                 <input 
                     type="file" 
                     ref={fileInputRef} 
@@ -164,13 +164,13 @@ const PixelArtConverter = () => {
       </div>
 
       {/* Right: Controls */}
-      <div className="w-full lg:w-80 bg-white dark:bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-6 z-10 overflow-y-auto">
+      <div className="w-full lg:w-80 bg-div-theme border-t lg:border-t-0 lg:border-l border-border-theme p-6 flex flex-col gap-6 z-10 overflow-y-auto">
         <div>
-            <h3 className="font-bold text-gray-800 dark:text-white mb-4">参数设置</h3>
+            <h3 className="font-bold text-text-theme mb-4">参数设置</h3>
             
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         像素大小 (Pixel Size): {pixelSize}px
                     </label>
                     <input 
@@ -180,18 +180,18 @@ const PixelArtConverter = () => {
                         step="1" 
                         value={pixelSize}
                         onChange={(e) => setPixelSize(parseInt(e.target.value))}
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                        className="w-full h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer accent-accent"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
                         调色板 (Palette)
                     </label>
                     <select 
                         value={palette}
                         onChange={(e) => setPalette(e.target.value)}
-                        className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm py-2"
+                        className="w-full rounded-lg border-border-theme bg-div-secondary text-sm py-2"
                     >
                         <option value="original">原色 (Original)</option>
                         <option value="gameboy">GameBoy (绿调)</option>
@@ -208,7 +208,7 @@ const PixelArtConverter = () => {
             <button 
                 onClick={downloadImage}
                 disabled={!image}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-accent hover:bg-accent-hover text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 下载像素画

@@ -119,11 +119,11 @@ const PasswordGenerator = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl mx-auto my-8">
+    <div className="bg-div-theme rounded-xl shadow-lg border border-div-theme overflow-hidden max-w-2xl mx-auto my-8">
       {/* Result Area */}
-      <div className="bg-gray-50 dark:bg-gray-900 p-8 text-center relative border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-theme-secondary p-8 text-center relative border-b border-div-theme">
         <div className="relative inline-block w-full max-w-lg">
-          <div className="text-3xl md:text-4xl font-mono font-bold text-gray-800 dark:text-white break-all tracking-wider min-h-[3rem] flex items-center justify-center">
+          <div className="text-3xl md:text-4xl font-mono font-bold text-theme-primary break-all tracking-wider min-h-[3rem] flex items-center justify-center">
             {password || '请选择字符类型'}
           </div>
           <button
@@ -131,7 +131,7 @@ const PasswordGenerator = () => {
             className={`absolute top-1/2 -right-12 -translate-y-1/2 p-2 rounded-lg transition-colors ${
               copied 
                 ? 'text-green-500 bg-green-100 dark:bg-green-900/30' 
-                : 'text-gray-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30'
+                : 'text-theme-secondary hover:text-accent hover:bg-accent/10'
             }`}
             title="复制密码"
           >
@@ -145,11 +145,11 @@ const PasswordGenerator = () => {
         
         {/* Strength Meter */}
         <div className="mt-6 max-w-xs mx-auto">
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-theme-secondary mb-1">
             <span>密码强度</span>
             <span>{getStrengthText()}</span>
           </div>
-          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex">
+          <div className="h-2 bg-theme-secondary rounded-full overflow-hidden flex">
             <div className={`h-full transition-all duration-500 ${getStrengthColor()}`} style={{ width: `${(strength / 4) * 100}%` }}></div>
           </div>
         </div>
@@ -159,7 +159,7 @@ const PasswordGenerator = () => {
       <div className="p-6 md:p-8">
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <label className="text-gray-700 dark:text-gray-300 font-medium">密码长度: {length}</label>
+            <label className="text-theme-primary font-medium">密码长度: {length}</label>
           </div>
           <input
             type="range"
@@ -167,9 +167,9 @@ const PasswordGenerator = () => {
             max="64"
             value={length}
             onChange={(e) => setLength(parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
+            className="w-full h-2 bg-theme-secondary rounded-lg appearance-none cursor-pointer accent-accent"
           />
-          <div className="flex justify-between text-xs text-gray-400 mt-2">
+          <div className="flex justify-between text-xs text-theme-secondary mt-2">
             <span>4</span>
             <span>32</span>
             <span>64</span>
@@ -177,56 +177,56 @@ const PasswordGenerator = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <label className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
+          <label className="flex items-center p-3 rounded-lg border border-div-theme hover:bg-theme-secondary cursor-pointer transition-colors">
             <input
               type="checkbox"
               checked={options.uppercase}
               onChange={() => handleOptionChange('uppercase')}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+              className="w-5 h-5 text-accent rounded focus:ring-accent border-theme"
             />
-            <span className="ml-3 text-gray-700 dark:text-gray-300">大写字母 (A-Z)</span>
+            <span className="ml-3 text-theme-primary">大写字母 (A-Z)</span>
           </label>
-          <label className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
+          <label className="flex items-center p-3 rounded-lg border border-div-theme hover:bg-theme-secondary cursor-pointer transition-colors">
             <input
               type="checkbox"
               checked={options.lowercase}
               onChange={() => handleOptionChange('lowercase')}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+              className="w-5 h-5 text-accent rounded focus:ring-accent border-theme"
             />
-            <span className="ml-3 text-gray-700 dark:text-gray-300">小写字母 (a-z)</span>
+            <span className="ml-3 text-theme-primary">小写字母 (a-z)</span>
           </label>
-          <label className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
+          <label className="flex items-center p-3 rounded-lg border border-div-theme hover:bg-theme-secondary cursor-pointer transition-colors">
             <input
               type="checkbox"
               checked={options.numbers}
               onChange={() => handleOptionChange('numbers')}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+              className="w-5 h-5 text-accent rounded focus:ring-accent border-theme"
             />
-            <span className="ml-3 text-gray-700 dark:text-gray-300">数字 (0-9)</span>
+            <span className="ml-3 text-theme-primary">数字 (0-9)</span>
           </label>
-          <label className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
+          <label className="flex items-center p-3 rounded-lg border border-div-theme hover:bg-theme-secondary cursor-pointer transition-colors">
             <input
               type="checkbox"
               checked={options.symbols}
               onChange={() => handleOptionChange('symbols')}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+              className="w-5 h-5 text-accent rounded focus:ring-accent border-theme"
             />
-            <span className="ml-3 text-gray-700 dark:text-gray-300">特殊符号 (!@#$)</span>
+            <span className="ml-3 text-theme-primary">特殊符号 (!@#$)</span>
           </label>
-          <label className="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors md:col-span-2">
+          <label className="flex items-center p-3 rounded-lg border border-div-theme hover:bg-theme-secondary cursor-pointer transition-colors md:col-span-2">
             <input
               type="checkbox"
               checked={options.excludeSimilar}
               onChange={() => handleOptionChange('excludeSimilar')}
-              className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+              className="w-5 h-5 text-accent rounded focus:ring-accent border-theme"
             />
-            <span className="ml-3 text-gray-700 dark:text-gray-300">排除易混淆字符 (l, 1, O, 0 等)</span>
+            <span className="ml-3 text-theme-primary">排除易混淆字符 (l, 1, O, 0 等)</span>
           </label>
         </div>
 
         <button
           onClick={generatePassword}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full bg-accent hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.001 0 01-15.357-2m15.357 2H15"></path></svg>
           重新生成
