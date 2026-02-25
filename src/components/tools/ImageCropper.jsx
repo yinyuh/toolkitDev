@@ -11,7 +11,6 @@ const ImageCropper = () => {
   const [quality, setQuality] = useState(0.9);
   const [originalSize, setOriginalSize] = useState({ width: 0, height: 0 });
   const [outputSize, setOutputSize] = useState({ width: 0, height: 0 });
-  const [lockAspectRatio, setLockAspectRatio] = useState(true);
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -47,26 +46,14 @@ const ImageCropper = () => {
 
   const handleWidthChange = (e) => {
     const newWidth = parseInt(e.target.value) || 0;
-    if (lockAspectRatio && outputSize.height > 0) {
-      const aspectRatio = outputSize.height / outputSize.width;
-      const newHeight = Math.round(newWidth * aspectRatio);
-      setOutputSize({ width: newWidth, height: newHeight });
-    } else {
-      setOutputSize({ ...outputSize, width: newWidth });
-    }
+    setOutputSize({ ...outputSize, width: newWidth });
     // 自动更新预览
     setTimeout(getCropData, 300);
   };
 
   const handleHeightChange = (e) => {
     const newHeight = parseInt(e.target.value) || 0;
-    if (lockAspectRatio && outputSize.width > 0) {
-      const aspectRatio = outputSize.width / outputSize.height;
-      const newWidth = Math.round(newHeight * aspectRatio);
-      setOutputSize({ width: newWidth, height: newHeight });
-    } else {
-      setOutputSize({ ...outputSize, height: newHeight });
-    }
+    setOutputSize({ ...outputSize, height: newHeight });
     // 自动更新预览
     setTimeout(getCropData, 300);
   };
@@ -196,17 +183,6 @@ const ImageCropper = () => {
                         className="w-20 px-2 py-1 border border-border-theme rounded-md bg-div-theme text-sm"
                         min="1"
                     />
-                    <button
-                        onClick={() => setLockAspectRatio(!lockAspectRatio)}
-                        className={`p-1 rounded-md transition-colors cursor-pointer ${
-                            lockAspectRatio 
-                                ? 'bg-accent text-white' 
-                                : 'bg-div-theme hover:bg-theme-secondary text-text-primary'
-                        }`}
-                        title={lockAspectRatio ? '解锁宽高比' : '锁定宽高比'}
-                    >
-                        🔒
-                    </button>
                 </div>
 
                 <div className="flex-1"></div>
