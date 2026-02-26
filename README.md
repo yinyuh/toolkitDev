@@ -1,6 +1,5 @@
 # 🛠️ 工具人-ToolKitRen - 免费在线工具箱
 
-> 一个基于 Astro + React 构建的现代化、高性能在线工具箱，提供 30+ 款开发者和设计师常用的实用工具。所有处理均在浏览器端完成，无需上传服务器，保护用户隐私。
 
 
 ## ✨ 主要特性
@@ -61,33 +60,6 @@
   - `svgo`: SVG 优化
   - `chart.js`: 图表绘制
   - `jszip`: 文件打包
-
-## 🚀 快速开始
-
-### 环境要求
-- Node.js 18+
-- npm 或 pnpm
-
-### 安装与运行
-
-```bash
-# 1. 克隆项目
-git clone https://github.com/your-username/toolkitren.git
-cd toolkitren
-
-# 2. 安装依赖
-npm install
-
-# 3. 启动开发服务器
-npm run dev
-# 访问 http://localhost:4321
-
-# 4. 构建生产版本
-npm run build
-
-# 5. 本地预览构建结果
-npm run preview
-```
 
 ## 📄 许可证
 
