@@ -163,7 +163,7 @@ const UnitConverter = () => {
           />
         </div>
 
-        <div className="flex overflow-x-auto pb-4 gap-2 custom-scrollbar">
+        <div className="flex overflow-x-auto gap-2 py-2 unit-scrollbar">
           {filteredMeasures.map((m) => {
           const Icon = m.icon;
           return (

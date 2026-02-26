@@ -265,6 +265,25 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Unit scrollbar styles */
+.unit-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) transparent;
+}
+
+.unit-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.unit-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.unit-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 20px;
+}
+
 /* Theme switcher specific styles */
 .theme-switcher-dropdown {
   background-color: var(--bg-secondary);
