@@ -137,7 +137,7 @@ const ImageCompressor = () => {
         
         {/* Upload Area */}
         <div 
-            className="bg-white dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
+            className="bg-theme-primary border-2 border-dashed border-border-theme rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-theme-secondary transition-colors shadow-sm"
             onClick={() => fileInputRef.current.click()}
         >
             <input 
@@ -157,7 +157,7 @@ const ImageCompressor = () => {
 
         {/* List */}
         {files.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="bg-theme-primary rounded-xl shadow-lg border border-border-theme overflow-hidden">
                 <div className="p-4 border-b border-border-theme bg-div-secondary flex justify-between items-center">
                     <h3 className="font-bold text-text-theme">压缩列表 ({files.length})</h3>
                     <div className="flex gap-2">
@@ -237,7 +237,7 @@ const ImageCompressor = () => {
 
       {/* Settings Sidebar */}
       <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-theme-primary rounded-xl shadow-lg border border-border-theme p-6">
             <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 压缩设置
@@ -270,7 +270,7 @@ const ImageCompressor = () => {
                     <select 
                         value={settings.fileType}
                         onChange={(e) => setSettings({...settings, fileType: e.target.value})}
-                        className="w-full rounded-lg border-border-theme bg-white dark:bg-gray-800 text-sm py-2 px-3"
+                        className="w-full rounded-lg border-2 border-border-theme bg-theme-primary text-text-primary text-sm py-2 px-3"
                     >
                         <option value="original">保持原格式</option>
                         <option value="image/jpeg">JPEG (更小)</option>
@@ -287,13 +287,13 @@ const ImageCompressor = () => {
                             type="number"
                             value={settings.maxWidthOrHeight}
                             onChange={(e) => setSettings({...settings, maxWidthOrHeight: parseInt(e.target.value)})}
-                            className="w-full rounded-lg border-border-theme bg-white dark:bg-gray-800 text-sm py-2 px-3"
+                            className="w-full rounded-lg border-2 border-border-theme bg-theme-primary text-text-primary text-sm py-2 px-3"
                         />
                 </div>
 
                 <button 
                     onClick={handleRecompress}
-                    className="w-full py-2 bg-div-secondary text-text-theme font-medium rounded-lg hover:bg-div-hover dark:hover:bg-div-hover transition-colors"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-lg hover:bg-accent-hover transition-colors transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg cursor-pointer"
                 >
                     应用并重新压缩
                 </button>
@@ -315,7 +315,7 @@ const ImageCompressor = () => {
       {/* Compare Modal */}
       {compareItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setCompareItem(null)}>
-            <div className="bg-div-theme rounded-2xl overflow-hidden w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="bg-theme-primary rounded-2xl overflow-hidden w-full max-w-5xl h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="p-4 border-b border-border-theme flex justify-between items-center">
                     <h3 className="font-bold text-lg text-text-theme">画质对比: {compareItem.originalFile.name}</h3>
                     <button onClick={() => setCompareItem(null)} className="text-text-secondary hover:text-text-theme">
@@ -348,7 +348,7 @@ const ImageCompressor = () => {
         </div>
       )}
       
-      <style jsx>{`
+      <style>{`
         .bg-checkered {
             background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), 
                               linear-gradient(-45deg, #ccc 25%, transparent 25%), 
@@ -358,7 +358,7 @@ const ImageCompressor = () => {
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
             background-color: #fff;
         }
-        :global(.dark) .bg-checkered {
+        [data-theme="dark"] .bg-checkered {
             background-image: linear-gradient(45deg, #333 25%, transparent 25%), 
                               linear-gradient(-45deg, #333 25%, transparent 25%), 
                               linear-gradient(45deg, transparent 75%, #333 75%), 

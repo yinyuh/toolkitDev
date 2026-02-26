@@ -30,7 +30,6 @@ const VideoCompressor = () => {
 
   const load = async () => {
     setStatus('loading_ffmpeg');
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
     const ffmpeg = ffmpegRef.current;
     
     ffmpeg.on('log', ({ message }) => {
@@ -45,10 +44,8 @@ const VideoCompressor = () => {
     });
 
     try {
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
+      // 使用 @ffmpeg/ffmpeg 内置的加载方式，它会自动处理 COOP/COEP 问题
+      await ffmpeg.load();
       setLoaded(true);
       setStatus('idle');
       setFfmpeg(ffmpeg);
@@ -114,13 +111,57 @@ const VideoCompressor = () => {
 
       args.push(outputFileName);
 
-      await ffmpeg.exec(args);
+      console.log('FFmpeg 命令:', args.join(' '));
+      console.log('输出文件名:', outputFileName);
 
-      const data = await ffmpeg.readFile(outputFileName);
-      const url = URL.createObjectURL(new Blob([data.buffer], { type: `video/${format}` }));
-      
-      setOutputVideoUrl(url);
-      setStatus('done');
+      // 执行 FFmpeg 命令
+      try {
+        await ffmpeg.exec(args);
+        console.log('FFmpeg 命令执行成功');
+      } catch (execError) {
+        console.error('FFmpeg 命令执行失败:', execError);
+        setError(`压缩失败: FFmpeg 命令执行错误 - ${execError.message}。请检查 FFmpeg 日志获取详细信息。`);
+        setStatus('error');
+        return;
+      }
+
+      // 检查输出文件是否存在
+      try {
+        // 尝试列出目录内容，查看文件是否生成
+        const files = await ffmpeg.listDir('.');
+        console.log('FFmpeg 工作目录文件:', files);
+        
+        const data = await ffmpeg.readFile(outputFileName);
+        console.log('读取文件成功，数据长度:', data ? data.buffer.byteLength : 0);
+        
+        // 确保数据存在且有内容
+        if (!data || !data.buffer || data.buffer.byteLength === 0) {
+          throw new Error('压缩后的视频数据为空');
+        }
+        
+        // 创建正确的 MIME 类型
+        let mimeType;
+        if (format === 'mp4') {
+          mimeType = 'video/mp4';
+        } else if (format === 'webm') {
+          mimeType = 'video/webm';
+        } else {
+          mimeType = 'video/mp4'; // 默认使用 mp4
+        }
+        
+        // 创建 blob 并生成 URL
+        const blob = new Blob([data.buffer], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        console.log('生成 blob URL 成功');
+        
+        setOutputVideoUrl(url);
+        setStatus('done');
+      } catch (readError) {
+        console.error('读取输出文件时出错:', readError);
+        // 尝试获取 FFmpeg 日志以获取更多信息
+        setError(`压缩失败: ${readError.message}。请检查浏览器控制台和 FFmpeg 日志获取详细信息。`);
+        setStatus('error');
+      }
     } catch (err) {
       console.error(err);
       setError("压缩过程中发生错误: " + err.message);
@@ -164,10 +205,10 @@ const VideoCompressor = () => {
       ) : (
         <div className="space-y-8">
           {/* Upload Area */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="bg-div-theme rounded-xl shadow-sm border border-div-theme overflow-hidden">
              {!videoFile ? (
                 <div 
-                  className="p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-theme-primary hover:bg-theme-primary/5 transition-all cursor-pointer m-4 rounded-xl"
+                  className="p-12 text-center border-2 border-dashed border-div-theme hover:border-theme-primary hover:bg-theme-primary/5 transition-all cursor-pointer m-4 rounded-xl"
                   onClick={() => document.getElementById('video-upload').click()}
                 >
                    <input 
@@ -180,10 +221,10 @@ const VideoCompressor = () => {
                    <div className="w-16 h-16 bg-theme-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-theme-primary">
                       <FileVideo size={32} />
                    </div>
-                   <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                   <h3 className="text-xl font-bold text-theme-primary mb-2">
                       点击上传或拖拽视频文件
                    </h3>
-                   <p className="text-gray-500 dark:text-gray-400">
+                   <p className="text-theme-secondary">
                       支持 MP4, MOV, WebM 等格式 (建议 &lt; 500MB)
                    </p>
                 </div>
@@ -195,10 +236,10 @@ const VideoCompressor = () => {
                             <FileVideo size={24} />
                          </div>
                          <div>
-                            <h3 className="font-bold text-gray-800 dark:text-gray-100 truncate max-w-[200px] md:max-w-md">
+                            <h3 className="font-bold text-theme-primary truncate max-w-[200px] md:max-w-md">
                                {videoFile.name}
                             </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm text-theme-secondary">
                                {formatSize(videoFile.size)}
                             </p>
                          </div>
@@ -214,13 +255,13 @@ const VideoCompressor = () => {
                    {status === 'ready' && (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-theme-primary mb-2">
                                目标分辨率
                             </label>
                             <select 
                                value={resolution}
                                onChange={(e) => setResolution(e.target.value)}
-                               className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                               className="w-full p-2 rounded-lg border border-div-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-theme-primary focus:border-transparent"
                             >
                                <option value="original">保持原样 (Original)</option>
                                <option value="720p">720p (HD)</option>
@@ -228,13 +269,13 @@ const VideoCompressor = () => {
                             </select>
                          </div>
                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-theme-primary mb-2">
                                压缩质量 (CRF)
                             </label>
                             <select 
                                value={quality}
                                onChange={(e) => setQuality(e.target.value)}
-                               className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                               className="w-full p-2 rounded-lg border border-div-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-theme-primary focus:border-transparent"
                             >
                                <option value="high">高质量 (大文件)</option>
                                <option value="medium">平衡 (推荐)</option>
@@ -242,13 +283,13 @@ const VideoCompressor = () => {
                             </select>
                          </div>
                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-theme-primary mb-2">
                                输出格式
                             </label>
                             <select 
                                value={format}
                                onChange={(e) => setFormat(e.target.value)}
-                               className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                               className="w-full p-2 rounded-lg border border-div-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-theme-primary focus:border-transparent"
                             >
                                <option value="mp4">MP4 (通用)</option>
                                <option value="webm">WebM (Web 优化)</option>
@@ -260,7 +301,7 @@ const VideoCompressor = () => {
                    {status === 'ready' && (
                       <button 
                          onClick={compress}
-                         className="w-full py-3 bg-theme-primary text-white rounded-xl font-bold text-lg hover:bg-theme-primary/90 shadow-lg shadow-theme-primary/20 transition-all transform active:scale-[0.98]"
+                         className="w-full py-3 bg-accent text-white rounded-xl font-bold text-lg hover:bg-accent/90 shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98]"
                       >
                          开始压缩
                       </button>
@@ -268,11 +309,11 @@ const VideoCompressor = () => {
 
                    {status === 'compressing' && (
                       <div className="space-y-4">
-                         <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-300">
+                         <div className="flex justify-between text-sm font-medium text-theme-secondary">
                             <span>正在处理...</span>
                             <span>{progress}%</span>
                          </div>
-                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
+                         <div className="w-full bg-div-theme rounded-full h-4 overflow-hidden">
                             <div 
                                className="bg-theme-primary h-full rounded-full transition-all duration-300 progress-bar-striped"
                                style={{ width: `${progress}%` }}
@@ -290,17 +331,17 @@ const VideoCompressor = () => {
                             <Check size={32} />
                          </div>
                          <div>
-                            <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                            <h3 className="text-2xl font-bold text-theme-primary mb-2">
                                压缩完成!
                             </h3>
-                            <p className="text-gray-500 dark:text-gray-400">
+                            <p className="text-theme-secondary">
                                您的视频已准备好下载
                             </p>
                          </div>
                          <a 
                             href={outputVideoUrl}
                             download={`compressed_${videoFile.name.split('.')[0]}.${format}`}
-                            className="inline-flex items-center gap-2 px-8 py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 transition-all shadow-lg shadow-theme-primary/20"
+                            className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
                          >
                             <Download size={20} />
                             下载视频
@@ -319,26 +360,26 @@ const VideoCompressor = () => {
           </div>
 
           {/* Logs */}
-          <div className="bg-gray-900 rounded-xl overflow-hidden shadow-sm border border-gray-800">
+          <div className="bg-div-theme rounded-xl overflow-hidden shadow-sm border border-div-theme">
              <div 
-                className="px-4 py-2 bg-gray-800 flex items-center justify-between cursor-pointer"
+                className="px-4 py-2 bg-div-theme/80 flex items-center justify-between cursor-pointer"
                 onClick={() => setShowLogs(!showLogs)}
              >
-                <div className="flex items-center gap-2 text-gray-400 text-sm font-mono">
+                <div className="flex items-center gap-2 text-theme-secondary text-sm font-mono">
                    <Terminal size={14} />
                    <span>FFmpeg Logs</span>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-theme-secondary">
                    {showLogs ? '隐藏' : '显示'}
                 </div>
              </div>
              {showLogs && (
                 <div 
                    ref={messageRef}
-                   className="p-4 h-48 overflow-y-auto font-mono text-xs text-green-400 bg-black/50 custom-scrollbar"
+                   className="p-4 h-48 overflow-y-auto font-mono text-xs text-green-400 bg-div-theme/90 custom-scrollbar"
                 >
                    {logs.length === 0 ? (
-                      <span className="text-gray-600">Waiting for logs...</span>
+                      <span className="text-theme-secondary">Waiting for logs...</span>
                    ) : (
                       logs.map((log, i) => <div key={i}>{log}</div>)
                    )}
@@ -348,36 +389,7 @@ const VideoCompressor = () => {
         </div>
       )}
 
-      <style jsx>{`
-        .progress-bar-striped {
-          background-image: linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.15) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(255, 255, 255, 0.15) 50%,
-            rgba(255, 255, 255, 0.15) 75%,
-            transparent 75%,
-            transparent
-          );
-          background-size: 1rem 1rem;
-          animation: progress-bar-stripes 1s linear infinite;
-        }
-        @keyframes progress-bar-stripes {
-          0% { background-position: 1rem 0; }
-          100% { background-position: 0 0; }
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #1f2937;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #4b5563;
-          border-radius: 20px;
-        }
-      `}</style>
+      {/* 样式已移至外部 CSS 或使用内联样式 */}
     </div>
   );
 };

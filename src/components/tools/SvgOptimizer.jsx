@@ -43,7 +43,7 @@ const SvgOptimizer = () => {
     moveGroupAttrsToElems: true,
     collapseGroups: true,
     convertPathData: true,
-    convertTransform: true,
+    convertTransform: false, // Disabled to avoid console warning
     removeEmptyAttrs: true,
     removeEmptyContainers: true,
     mergePaths: true,
@@ -237,78 +237,95 @@ const SvgOptimizer = () => {
       )}
 
       {/* Header Area */}
-      <div className="mb-8 text-center">
-        <div 
-          className={`border-2 border-dashed rounded-xl p-8 transition-colors cursor-pointer
-            ${inputSvg ? 'border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50' : 'border-theme-primary bg-theme-primary/5 hover:bg-theme-primary/10'}
-          `}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileUpload} 
-            accept=".svg" 
-            className="hidden" 
-          />
-          
-          {!inputSvg ? (
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-4 bg-theme-primary/10 rounded-full text-theme-primary">
-                <Upload size={32} />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                  点击上传或拖拽 SVG 文件
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  或者直接 Ctrl+V 粘贴 SVG 代码
-                </p>
+      <div className="mb-8">
+        {/* Hidden file input (only one instance) */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileUpload} 
+          accept=".svg" 
+          className="hidden" 
+        />
+        
+        {!inputSvg ? (
+          /* Centered upload area when no file is uploaded */
+          <div className="flex justify-center">
+            <div className="max-w-2xl w-full">
+              <div 
+                className="border-2 border-dashed rounded-xl p-6 transition-colors cursor-pointer border-theme-primary bg-theme-primary/5 hover:bg-theme-primary/10"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+                onClick={() => { fileInputRef.current.value = ''; fileInputRef.current?.click(); }}
+              >
+                <div className="flex flex-col items-center gap-4">
+                  <div className="p-4 bg-theme-primary/10 rounded-full text-theme-primary">
+                    <Upload size={32} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-text-theme mb-2">
+                      点击上传或拖拽 SVG 文件
+                    </h3>
+                    <p className="text-text-secondary">
+                      或者直接 Ctrl+V 粘贴 SVG 代码
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-             <div className="flex flex-col items-center gap-4">
-                <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                  <Check size={24} />
-                  <span className="text-lg font-medium">{fileName}</span>
+          </div>
+        ) : (
+          /* Side-by-side layout when file is uploaded */
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Upload Area */}
+            <div>
+              <div 
+                className="border-2 border-dashed rounded-xl p-4 transition-colors cursor-pointer border-border-theme bg-theme-secondary h-full"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+                onClick={() => { fileInputRef.current.value = ''; fileInputRef.current?.click(); }}
+              >
+                <div className="flex flex-col items-center gap-3 h-full justify-center">
+                  <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                    <Check size={20} />
+                    <span className="text-md font-medium">{fileName}</span>
+                  </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current.value = ''; fileInputRef.current?.click(); }}
+                      className="px-3 py-1 bg-div-secondary text-text-theme rounded-lg text-xs hover:bg-div-hover transition-colors cursor-pointer"
+                    >
+                      重新上传
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setInputSvg(''); setOutputSvg(''); setFileName('image.svg'); setOriginalSize(0); setOptimizedSize(0); }}
+                      className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-xs hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors cursor-pointer"
+                    >
+                      清除
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-4">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    重新上传
-                  </button>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); setInputSvg(''); setOutputSvg(''); }}
-                    className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
-                  >
-                    清除
-                  </button>
-                </div>
-             </div>
-          )}
-        </div>
+              </div>
+            </div>
 
-        {/* Savings Stats */}
-        {inputSvg && outputSvg && (
-          <div className="mt-6 flex justify-center items-center gap-4 animate-fade-in">
-             <div className="px-6 py-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-xs text-gray-500 dark:text-gray-400">原始大小</div>
-                  <div className="font-mono font-bold text-gray-700 dark:text-gray-200">{formatBytes(originalSize)}</div>
+            {/* Savings Stats */}
+            {outputSvg && (
+              <div className="animate-fade-in">
+                <div className="w-full px-4 py-4 bg-theme-primary rounded-lg shadow-sm border border-border-theme flex flex-col items-center gap-2 h-full">
+                  <div className="text-center">
+                    <div className="text-xs text-text-secondary">原始大小</div>
+                    <div className="font-mono font-bold text-text-theme">{formatBytes(originalSize)}</div>
+                  </div>
+                  <div className="text-text-secondary">→</div>
+                  <div className="text-center">
+                    <div className="text-xs text-text-secondary">优化后</div>
+                    <div className="font-mono font-bold text-theme-primary">{formatBytes(optimizedSize)}</div>
+                  </div>
+                  <div className="mt-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-bold text-sm">
+                    -{getSavings()}%
+                  </div>
                 </div>
-                <div className="text-gray-300 dark:text-gray-600">→</div>
-                <div className="text-left">
-                  <div className="text-xs text-gray-500 dark:text-gray-400">优化后</div>
-                  <div className="font-mono font-bold text-theme-primary">{formatBytes(optimizedSize)}</div>
-                </div>
-                <div className="ml-4 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-bold text-sm">
-                  -{getSavings()}%
-                </div>
-             </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -324,22 +341,142 @@ const SvgOptimizer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Settings Sidebar */}
           <div className="lg:col-span-3 space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
-              <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+            <div className="bg-theme-primary rounded-xl shadow-sm border border-border-theme p-4">
+              <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                 <RefreshCw size={18} />
                 优化选项
               </h3>
-              <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+              
+              {/* Quick Action Buttons */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <button 
+                  onClick={() => {
+                    const newPlugins = Object.fromEntries(
+                      Object.entries(plugins).map(([key]) => [key, true])
+                    );
+                    setPlugins(newPlugins);
+                  }}
+                  className="px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent-hover transition-colors cursor-pointer"
+                >
+                  全选
+                </button>
+                <button 
+                  onClick={() => {
+                    const newPlugins = Object.fromEntries(
+                      Object.entries(plugins).map(([key]) => [key, false])
+                    );
+                    setPlugins(newPlugins);
+                  }}
+                  className="px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent-hover transition-colors cursor-pointer"
+                >
+                  全不选
+                </button>
+                <button 
+                  onClick={() => {
+                    const newPlugins = Object.fromEntries(
+                      Object.entries(plugins).map(([key, value]) => [key, !value])
+                    );
+                    setPlugins(newPlugins);
+                  }}
+                  className="px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent-hover transition-colors cursor-pointer"
+                >
+                  反选
+                </button>
+                <button 
+                  onClick={() => setPlugins({
+                    removeDoctype: true,
+                    removeXMLProcInst: true,
+                    removeComments: true,
+                    removeMetadata: true,
+                    removeEditorsNSData: true,
+                    cleanupAttrs: true,
+                    mergeStyles: true,
+                    inlineStyles: true,
+                    minifyStyles: true,
+                    cleanupIds: true,
+                    removeUselessDefs: true,
+                    cleanupNumericValues: true,
+                    convertColors: true,
+                    removeUnknownsAndDefaults: true,
+                    removeNonInheritableGroupAttrs: true,
+                    removeUselessStrokeAndFill: true,
+                    removeViewBox: false,
+                    cleanupEnableBackground: true,
+                    removeHiddenElems: true,
+                    removeEmptyText: true,
+                    convertShapeToPath: true,
+                    convertEllipseToCircle: true,
+                    moveElemsAttrsToGroup: true,
+                    moveGroupAttrsToElems: true,
+                    collapseGroups: true,
+                    convertPathData: true,
+                    convertTransform: false, // Disabled to avoid console warning
+                    removeEmptyAttrs: true,
+                    removeEmptyContainers: true,
+                    mergePaths: true,
+                    removeUnusedNS: true,
+                    sortAttrs: true,
+                    sortDefsChildren: true,
+                    removeTitle: true,
+                    removeDesc: true,
+                  })}
+                  className="px-3 py-1 bg-accent text-white rounded-lg text-xs hover:bg-accent-hover transition-colors cursor-pointer"
+                >
+                  重置
+                </button>
+              </div>
+              
+              {/* Precision Sliders */}
+              <div className="space-y-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                    数值精度
+                  </label>
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="6" 
+                    step="1" 
+                    defaultValue="2"
+                    className="w-full h-2 bg-div-theme rounded-lg appearance-none cursor-pointer"
+                    style={{ accentColor: 'var(--accent-color)' }}
+                  />
+                  <div className="flex justify-between text-xs text-text-secondary mt-1">
+                    <span>低</span>
+                    <span>高</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                    变换精度
+                  </label>
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="6" 
+                    step="1" 
+                    defaultValue="2"
+                    className="w-full h-2 bg-div-theme rounded-lg appearance-none cursor-pointer"
+                    style={{ accentColor: 'var(--accent-color)' }}
+                  />
+                  <div className="flex justify-between text-xs text-text-secondary mt-1">
+                    <span>低</span>
+                    <span>高</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {Object.entries(plugins).map(([key, enabled]) => (
-                  <label key={key} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded cursor-pointer group">
-                    <span className="text-sm text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">
+                  <label key={key} className="flex items-center justify-between p-2 hover:bg-div-hover rounded cursor-pointer group">
+                    <span className="text-sm text-text-secondary group-hover:text-text-theme">
                       {pluginLabels[key] || key}
                     </span>
                     <input 
                       type="checkbox" 
                       checked={enabled} 
                       onChange={() => togglePlugin(key)}
-                      className="w-4 h-4 text-theme-primary rounded border-gray-300 focus:ring-theme-primary"
+                      className="w-4 h-4 text-theme-primary rounded border-border-theme focus:ring-theme-primary"
                     />
                   </label>
                 ))}
@@ -350,14 +487,14 @@ const SvgOptimizer = () => {
           {/* Main Content */}
           <div className="lg:col-span-9 space-y-4">
             {/* Toolbar */}
-            <div className="flex justify-between items-center bg-white dark:bg-gray-800 p-2 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
-              <div className="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+            <div className="flex justify-between items-center bg-theme-primary p-2 rounded-lg border border-border-theme shadow-sm">
+              <div className="flex bg-div-secondary p-1 rounded-lg">
                 <button
                   onClick={() => setViewMode('preview')}
                   className={`px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all ${
                     viewMode === 'preview' 
-                      ? 'bg-white dark:bg-gray-600 text-theme-primary shadow-sm' 
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ? 'bg-theme-primary text-theme-primary shadow-sm' 
+                      : 'text-text-secondary hover:text-text-theme'
                   }`}
                 >
                   <ImageIcon size={16} />
@@ -367,8 +504,8 @@ const SvgOptimizer = () => {
                   onClick={() => setViewMode('code')}
                   className={`px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all ${
                     viewMode === 'code' 
-                      ? 'bg-white dark:bg-gray-600 text-theme-primary shadow-sm' 
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      ? 'bg-theme-primary text-theme-primary shadow-sm' 
+                      : 'text-text-secondary hover:text-text-theme'
                   }`}
                 >
                   <Code size={16} />
@@ -378,14 +515,14 @@ const SvgOptimizer = () => {
               <div className="flex gap-2">
                 <button 
                   onClick={handleCopy}
-                  className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg tooltip-trigger"
+                  className="p-2 text-text-secondary hover:bg-div-hover rounded-lg tooltip-trigger cursor-pointer"
                   title="复制 SVG 代码"
                 >
                   <Copy size={20} />
                 </button>
                 <button 
                   onClick={handleDownload}
-                  className="px-4 py-2 bg-theme-primary text-white rounded-lg hover:bg-theme-primary/90 flex items-center gap-2 shadow-sm"
+                  className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover flex items-center gap-2 shadow-sm cursor-pointer"
                 >
                   <Download size={18} />
                   下载
@@ -394,22 +531,22 @@ const SvgOptimizer = () => {
             </div>
 
             {/* Content Area */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden min-h-[500px]">
+            <div className="bg-theme-primary rounded-xl shadow-sm border border-border-theme overflow-hidden min-h-[500px]">
               {viewMode === 'preview' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 h-full min-h-[500px] divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 h-full min-h-[500px] divide-y md:divide-y-0 md:divide-x divide-border-theme">
                    {/* Original */}
                    <div className="p-4 flex flex-col h-full">
-                      <div className="mb-2 text-sm font-medium text-gray-500 text-center">原始</div>
-                      <div className="flex-1 bg-[url('/transparent-bg.png')] bg-repeat rounded-lg overflow-hidden flex items-center justify-center p-4 border border-gray-200 dark:border-gray-700 relative">
+                      <div className="mb-2 text-sm font-medium text-text-secondary text-center">原始</div>
+                      <div className="flex-1 bg-[url('/transparent-bg.png')] bg-repeat rounded-lg overflow-hidden flex items-center justify-center p-4 border border-border-theme relative">
                         <div dangerouslySetInnerHTML={{ __html: inputSvg }} className="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto" />
                       </div>
                    </div>
                    {/* Optimized */}
                    <div className="p-4 flex flex-col h-full">
                       <div className="mb-2 text-sm font-medium text-theme-primary text-center">优化后</div>
-                      <div className="flex-1 bg-[url('/transparent-bg.png')] bg-repeat rounded-lg overflow-hidden flex items-center justify-center p-4 border border-gray-200 dark:border-gray-700 relative">
+                      <div className="flex-1 bg-[url('/transparent-bg.png')] bg-repeat rounded-lg overflow-hidden flex items-center justify-center p-4 border border-border-theme relative">
                         {isProcessing ? (
-                          <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm z-10">
+                          <div className="absolute inset-0 flex items-center justify-center bg-theme-primary/50 backdrop-blur-sm z-10">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-theme-primary"></div>
                           </div>
                         ) : (
@@ -419,30 +556,30 @@ const SvgOptimizer = () => {
                    </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 h-full min-h-[500px] divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 h-full min-h-[500px] divide-y md:divide-y-0 md:divide-x divide-border-theme">
                    {/* Original Code */}
                    <div className="flex flex-col h-full">
-                      <div className="p-2 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 text-center text-xs text-gray-500">
+                      <div className="p-2 bg-div-secondary border-b border-border-theme text-center text-xs text-text-secondary">
                         原始代码
                       </div>
                       <textarea 
-                        className="flex-1 w-full p-4 font-mono text-xs resize-none bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 focus:outline-none"
+                        className="flex-1 w-full p-4 font-mono text-xs resize-none bg-div-secondary text-text-secondary focus:outline-none"
                         value={inputSvg}
                         readOnly
                       />
                    </div>
                    {/* Optimized Code */}
                    <div className="flex flex-col h-full relative">
-                      <div className="p-2 bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 text-center text-xs text-theme-primary">
+                      <div className="p-2 bg-div-secondary border-b border-border-theme text-center text-xs text-theme-primary">
                         优化后代码
                       </div>
                       <textarea 
-                        className="flex-1 w-full p-4 font-mono text-xs resize-none bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none"
+                        className="flex-1 w-full p-4 font-mono text-xs resize-none bg-theme-primary text-text-theme focus:outline-none"
                         value={outputSvg}
                         readOnly
                       />
                       {isProcessing && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm z-10">
+                        <div className="absolute inset-0 flex items-center justify-center bg-theme-primary/50 backdrop-blur-sm z-10">
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-theme-primary"></div>
                         </div>
                       )}
@@ -454,7 +591,7 @@ const SvgOptimizer = () => {
         </div>
       )}
       
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
