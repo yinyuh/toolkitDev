@@ -31,6 +31,12 @@ const { title = "工具人-ToolKitRen - 免费在线工具箱", description = "�
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         document.documentElement.classList.add(`theme-${savedTheme}`);
+        // 添加或移除 dark 类以支持 Tailwind 的深色模式
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
       })();
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2594166946464616" 

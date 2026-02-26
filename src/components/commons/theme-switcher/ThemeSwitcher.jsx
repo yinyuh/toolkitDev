@@ -57,6 +57,13 @@ export default function ThemeSwitcher() {
     // 设置data-theme属性用于CSS变量
     document.documentElement.setAttribute('data-theme', themeName);
     
+    // 同步dark类用于Tailwind CSS暗模式
+    if (themeName === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
     // 保存到localStorage
     localStorage.setItem('theme', themeName);
   };
