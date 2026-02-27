@@ -88,7 +88,11 @@ const VideoCompressor = () => {
     const outputFileName = 'output.' + format;
 
     try {
+      console.log('开始压缩，输入文件:', inputFileName, '输出文件:', outputFileName);
+      
+      // 写入输入文件
       await ffmpeg.writeFile(inputFileName, await fetchFile(videoFile));
+      console.log('输入文件写入成功');
 
       let args = ['-i', inputFileName];
 
@@ -103,16 +107,22 @@ const VideoCompressor = () => {
       if (quality === 'high') crf = '18';
       if (quality === 'low') crf = '28';
       
-      args.push('-c:v', 'libx264');
-      args.push('-crf', crf);
-      args.push('-preset', 'fast'); // Balance speed/compression
-      args.push('-c:a', 'aac');
-      args.push('-b:a', '128k');
+      // 尝试使用更简单的FFmpeg命令
+      // 对于MP4格式，使用更基本的编码参数
+      if (format === 'mp4') {
+        args.push('-c:v', 'libx264');
+        args.push('-crf', '28');
+        args.push('-preset', 'ultrafast'); // 使用超快预设，减少处理时间
+        args.push('-c:a', 'copy'); // 直接复制音频，避免音频编码问题
+      } else if (format === 'webm') {
+        args.push('-c:v', 'libvpx-vp9');
+        args.push('-b:v', '1M');
+        args.push('-c:a', 'copy');
+      }
 
       args.push(outputFileName);
 
       console.log('FFmpeg 命令:', args.join(' '));
-      console.log('输出文件名:', outputFileName);
 
       // 执行 FFmpeg 命令
       try {
@@ -131,11 +141,36 @@ const VideoCompressor = () => {
         const files = await ffmpeg.listDir('.');
         console.log('FFmpeg 工作目录文件:', files);
         
-        const data = await ffmpeg.readFile(outputFileName);
-        console.log('读取文件成功，数据长度:', data ? data.buffer.byteLength : 0);
+        // 检查输出文件是否在目录列表中
+        const outputFileExists = files.some(file => file.name === outputFileName && !file.isDir);
+        console.log('输出文件是否存在:', outputFileExists);
+        
+        if (!outputFileExists) {
+          throw new Error('输出文件未生成');
+        }
+        
+        // 尝试读取文件
+        let data;
+        try {
+          data = await ffmpeg.readFile(outputFileName);
+          console.log('读取文件成功，数据:', data);
+          console.log('读取文件成功，数据类型:', typeof data);
+          console.log('读取文件成功，数据是否有buffer属性:', data && 'buffer' in data);
+          console.log('读取文件成功，buffer类型:', data && data.buffer ? typeof data.buffer : 'N/A');
+          console.log('读取文件成功，buffer长度:', data && data.buffer ? data.buffer.byteLength : 0);
+        } catch (readFileError) {
+          console.error('读取文件时出错:', readFileError);
+          throw new Error(`读取文件时出错: ${readFileError.message}`);
+        }
         
         // 确保数据存在且有内容
-        if (!data || !data.buffer || data.buffer.byteLength === 0) {
+        if (!data) {
+          throw new Error('读取文件返回的数据为null或undefined');
+        }
+        if (!data.buffer) {
+          throw new Error('读取文件返回的数据没有buffer属性');
+        }
+        if (data.buffer.byteLength === 0) {
           throw new Error('压缩后的视频数据为空');
         }
         
