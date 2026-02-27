@@ -15,6 +15,8 @@ const VideoCompressor = () => {
   const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
   const [showLogs, setShowLogs] = useState(false);
+  const [outputFileSize, setOutputFileSize] = useState(null); // 压缩后文件大小
+  const abortControllerRef = useRef(null); // 用于中断压缩
   
   // Settings
   const [resolution, setResolution] = useState('original'); // original, 720p, 480p
@@ -23,6 +25,13 @@ const VideoCompressor = () => {
 
   const ffmpegRef = useRef(new FFmpeg());
   const messageRef = useRef(null);
+  const isAbortedRef = useRef(false); // 用于标记是否中断
+  
+  // 全局addLog函数
+  const addLog = (message) => {
+    setLogs(prev => [...prev.slice(-100), message]);
+    console.log(message);
+  };
 
   useEffect(() => {
     load();
@@ -32,11 +41,21 @@ const VideoCompressor = () => {
     setStatus('loading_ffmpeg');
     const ffmpeg = ffmpegRef.current;
     
-    ffmpeg.on('log', ({ message }) => {
-      setLogs(prev => [...prev.slice(-100), message]); // Keep last 100 logs
+    ffmpeg.on('log', ({ message, type }) => {
+      // 添加日志类型前缀，方便区分
+      const logMessage = type === 'stderr' ? `[stderr] ${message}` : `[stdout] ${message}`;
+      setLogs(prev => [...prev.slice(-100), logMessage]);
+      console.log(logMessage);
       if (messageRef.current) {
         messageRef.current.scrollTop = messageRef.current.scrollHeight;
       }
+    });
+    
+    // 添加错误日志监听
+    ffmpeg.on('error', (error) => {
+      const errorMessage = `[error] ${error.message || error}`;
+      setLogs(prev => [...prev.slice(-100), errorMessage]);
+      console.error(errorMessage);
     });
 
     ffmpeg.on('progress', ({ progress, time }) => {
@@ -45,7 +64,9 @@ const VideoCompressor = () => {
 
     try {
       // 使用 @ffmpeg/ffmpeg 内置的加载方式，它会自动处理 COOP/COEP 问题
+      addLog('正在加载FFmpeg...');
       await ffmpeg.load();
+      addLog('FFmpeg加载成功');
       setLoaded(true);
       setStatus('idle');
       setFfmpeg(ffmpeg);
@@ -69,37 +90,83 @@ const VideoCompressor = () => {
     setVideoFile(file);
     setVideoUrl(URL.createObjectURL(file));
     setOutputVideoUrl('');
+    setOutputFileSize(null);
     setProgress(0);
     setLogs([]);
     setError(null);
     setStatus('ready');
   };
 
+  // 中断压缩
+  const abortCompression = async () => {
+    addLog('用户请求中断压缩...');
+    isAbortedRef.current = true;
+    
+    const ffmpeg = ffmpegRef.current;
+    
+    try {
+      // 终止 FFmpeg 进程
+      ffmpeg.terminate();
+      addLog('FFmpeg 进程已终止');
+      
+      // 重新初始化 FFmpeg 实例
+      ffmpegRef.current = new FFmpeg();
+      
+      // 重新加载 FFmpeg 以便下次使用
+      setLoaded(false);
+      setTimeout(async () => {
+        await load();
+      }, 500);
+      
+    } catch (e) {
+      addLog('终止 FFmpeg 时出错: ' + e.message);
+    }
+    
+    setStatus('ready');
+    setProgress(0);
+    setOutputVideoUrl('');
+  };
+
   const compress = async () => {
     if (!loaded || !videoFile) return;
 
+    // 重置中断标记
+    isAbortedRef.current = false;
+
     setStatus('compressing');
     setProgress(0);
+    setOutputFileSize(null);
     setLogs([]);
     setError(null);
+    setShowLogs(true); // 自动显示日志
 
     const ffmpeg = ffmpegRef.current;
     const inputFileName = 'input' + getExtension(videoFile.name);
     const outputFileName = 'output.' + format;
 
     try {
-      console.log('开始压缩，输入文件:', inputFileName, '输出文件:', outputFileName);
+      addLog('开始压缩，输入文件: ' + inputFileName + '，输出文件: ' + outputFileName);
+      addLog('视频文件大小: ' + videoFile.size + ' bytes');
       
       // 写入输入文件
       await ffmpeg.writeFile(inputFileName, await fetchFile(videoFile));
-      console.log('输入文件写入成功');
+      addLog('输入文件写入成功');
+      
+      // 验证输入文件是否写入成功
+      const inputFiles = await ffmpeg.listDir('.');
+      addLog('写入后的文件列表: ' + JSON.stringify(inputFiles, null, 2));
+      const inputFileExists = inputFiles.some(file => file.name === inputFileName && !file.isDir);
+      addLog('输入文件是否存在: ' + inputFileExists);
 
       let args = ['-i', inputFileName];
 
       // Resolution
+      // 使用trunc函数确保宽度和高度都是偶数（libx264要求）
       if (resolution !== 'original') {
-        const scale = resolution === '720p' ? '-1:720' : '-1:480';
-        args.push('-vf', `scale=${scale}`);
+        const scaleFilter = resolution === '720p' 
+          ? 'scale=trunc(oh*a/2)*2:720'  // 高度720，宽度自适应并确保为偶数
+          : 'scale=trunc(oh*a/2)*2:480'; // 高度480，宽度自适应并确保为偶数
+        args.push('-vf', scaleFilter);
       }
 
       // Quality (CRF)
@@ -107,29 +174,61 @@ const VideoCompressor = () => {
       if (quality === 'high') crf = '18';
       if (quality === 'low') crf = '28';
       
-      // 尝试使用更简单的FFmpeg命令
+      // 使用更简单的FFmpeg命令
       // 对于MP4格式，使用更基本的编码参数
       if (format === 'mp4') {
         args.push('-c:v', 'libx264');
-        args.push('-crf', '28');
-        args.push('-preset', 'ultrafast'); // 使用超快预设，减少处理时间
-        args.push('-c:a', 'copy'); // 直接复制音频，避免音频编码问题
-      } else if (format === 'webm') {
-        args.push('-c:v', 'libvpx-vp9');
-        args.push('-b:v', '1M');
+        args.push('-crf', crf);
+        args.push('-preset', 'ultrafast');
         args.push('-c:a', 'copy');
+        args.push('-movflags', '+faststart'); // 优化网络播放
+      } else if (format === 'webm') {
+        // 使用VP8代替VP9，VP8更轻量且内存占用更少
+        args.push('-c:v', 'libvpx');
+        args.push('-crf', crf);
+        args.push('-b:v', '1M'); // 限制视频比特率
+        args.push('-deadline', 'realtime'); // 实时模式，更快但质量稍低
+        args.push('-cpu-used', '5'); // 使用更快的编码速度
+        // WebM不支持AAC音频，需要转换为Vorbis（比Opus更轻量）
+        args.push('-c:a', 'libvorbis');
+        args.push('-q:a', '4'); // Vorbis质量设置
       }
+      
+      // 添加-y参数强制覆盖输出文件
+      args.unshift('-y');
 
       args.push(outputFileName);
 
-      console.log('FFmpeg 命令:', args.join(' '));
+      addLog('FFmpeg 命令: ' + args.join(' '));
 
       // 执行 FFmpeg 命令
       try {
-        await ffmpeg.exec(args);
-        console.log('FFmpeg 命令执行成功');
+        addLog('开始执行FFmpeg命令...');
+        const exitCode = await ffmpeg.exec(args);
+        
+        // 检查是否已中断
+        if (isAbortedRef.current) {
+          addLog('压缩已被用户中断，忽略结果');
+          return;
+        }
+        
+        addLog('FFmpeg 命令执行完成，退出码: ' + exitCode);
+        
+        // 检查退出码
+        if (exitCode !== 0) {
+          throw new Error(`FFmpeg 命令执行失败，退出码: ${exitCode}`);
+        }
+        
+        addLog('FFmpeg 命令执行成功');
       } catch (execError) {
-        console.error('FFmpeg 命令执行失败:', execError);
+        // 检查是否已中断
+        if (isAbortedRef.current) {
+          addLog('压缩已被用户中断');
+          return;
+        }
+        
+        addLog('FFmpeg 命令执行失败: ' + execError.message);
+        addLog('FFmpeg 命令执行失败详情: ' + JSON.stringify(execError, null, 2));
         setError(`压缩失败: FFmpeg 命令执行错误 - ${execError.message}。请检查 FFmpeg 日志获取详细信息。`);
         setStatus('error');
         return;
@@ -139,11 +238,11 @@ const VideoCompressor = () => {
       try {
         // 尝试列出目录内容，查看文件是否生成
         const files = await ffmpeg.listDir('.');
-        console.log('FFmpeg 工作目录文件:', files);
+        addLog('FFmpeg 工作目录文件: ' + JSON.stringify(files, null, 2));
         
         // 检查输出文件是否在目录列表中
         const outputFileExists = files.some(file => file.name === outputFileName && !file.isDir);
-        console.log('输出文件是否存在:', outputFileExists);
+        addLog('输出文件是否存在: ' + outputFileExists);
         
         if (!outputFileExists) {
           throw new Error('输出文件未生成');
@@ -152,12 +251,44 @@ const VideoCompressor = () => {
         // 尝试读取文件
         let data;
         try {
-          data = await ffmpeg.readFile(outputFileName);
-          console.log('读取文件成功，数据:', data);
-          console.log('读取文件成功，数据类型:', typeof data);
-          console.log('读取文件成功，数据是否有buffer属性:', data && 'buffer' in data);
-          console.log('读取文件成功，buffer类型:', data && data.buffer ? typeof data.buffer : 'N/A');
-          console.log('读取文件成功，buffer长度:', data && data.buffer ? data.buffer.byteLength : 0);
+          // 尝试多次读取，可能需要等待文件写入完成
+          let retries = 5;
+          let readSuccess = false;
+          
+          while (retries > 0 && !readSuccess) {
+              try {
+                addLog(`尝试读取文件，剩余重试次数: ${retries}`);
+                
+                // 读取文件 - ffmpeg.readFile 返回 Uint8Array
+                const uint8Data = await ffmpeg.readFile(outputFileName);
+                
+                addLog('读取文件成功，数据类型: ' + (uint8Data ? uint8Data.constructor.name : 'null'));
+                addLog('读取文件成功，数据长度: ' + (uint8Data ? uint8Data.length : 0));
+                addLog('读取文件成功，数据byteLength: ' + (uint8Data && uint8Data.buffer ? uint8Data.buffer.byteLength : 0));
+                
+                // 检查数据是否有效
+                if (uint8Data && uint8Data.length > 0) {
+                  data = uint8Data;
+                  readSuccess = true;
+                  addLog('读取文件成功，数据有效，大小: ' + uint8Data.length + ' bytes');
+                } else {
+                  addLog('读取文件成功但数据为空，重试...');
+                  retries--;
+                  // 等待一段时间后重试
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+              } catch (readFileError) {
+                addLog('读取文件时出错: ' + readFileError.message);
+                addLog('读取文件错误详情: ' + JSON.stringify(readFileError, null, 2));
+                retries--;
+                // 等待一段时间后重试
+                await new Promise(resolve => setTimeout(resolve, 2000));
+              }
+            }
+          
+          if (!readSuccess) {
+            throw new Error('多次尝试后仍无法读取有效的文件数据');
+          }
         } catch (readFileError) {
           console.error('读取文件时出错:', readFileError);
           throw new Error(`读取文件时出错: ${readFileError.message}`);
@@ -167,10 +298,7 @@ const VideoCompressor = () => {
         if (!data) {
           throw new Error('读取文件返回的数据为null或undefined');
         }
-        if (!data.buffer) {
-          throw new Error('读取文件返回的数据没有buffer属性');
-        }
-        if (data.buffer.byteLength === 0) {
+        if (data.length === 0) {
           throw new Error('压缩后的视频数据为空');
         }
         
@@ -184,21 +312,34 @@ const VideoCompressor = () => {
           mimeType = 'video/mp4'; // 默认使用 mp4
         }
         
+        // 检查是否已中断
+        if (isAbortedRef.current) {
+          addLog('压缩已被用户中断，不生成输出文件');
+          return;
+        }
+        
         // 创建 blob 并生成 URL
-        const blob = new Blob([data.buffer], { type: mimeType });
+        // data 是 Uint8Array，直接使用它创建 Blob
+        const blob = new Blob([data], { type: mimeType });
         const url = URL.createObjectURL(blob);
-        console.log('生成 blob URL 成功');
+        addLog('生成 blob URL 成功');
+        
+        // 保存压缩后文件大小
+        setOutputFileSize(data.length);
+        addLog('压缩后文件大小: ' + data.length + ' bytes');
         
         setOutputVideoUrl(url);
         setStatus('done');
       } catch (readError) {
-        console.error('读取输出文件时出错:', readError);
+        addLog('读取输出文件时出错: ' + readError.message);
+        addLog('读取输出文件错误详情: ' + JSON.stringify(readError, null, 2));
         // 尝试获取 FFmpeg 日志以获取更多信息
         setError(`压缩失败: ${readError.message}。请检查浏览器控制台和 FFmpeg 日志获取详细信息。`);
         setStatus('error');
       }
     } catch (err) {
-      console.error(err);
+      addLog('压缩过程中发生错误: ' + err.message);
+      addLog('错误详情: ' + JSON.stringify(err, null, 2));
       setError("压缩过程中发生错误: " + err.message);
       setStatus('error');
     } finally {
@@ -231,11 +372,17 @@ const VideoCompressor = () => {
           <p className="text-lg">正在加载视频转码引擎 (FFmpeg WASM)...</p>
           <p className="text-sm mt-2">首次加载可能需要几秒钟</p>
         </div>
-      ) : status === 'error' ? (
+      ) : status === 'error' && !videoFile ? (
          <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center">
             <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
             <h3 className="text-lg font-bold text-red-700 dark:text-red-400 mb-2">组件加载失败</h3>
             <p className="text-red-600 dark:text-red-300 max-w-lg mx-auto">{error}</p>
+            <button 
+               onClick={() => window.location.reload()}
+               className="mt-4 px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors cursor-pointer"
+            >
+               刷新页面重试
+            </button>
          </div>
       ) : (
         <div className="space-y-8">
@@ -280,8 +427,8 @@ const VideoCompressor = () => {
                          </div>
                       </div>
                       <button 
-                         onClick={() => { setVideoFile(null); setStatus('idle'); setOutputVideoUrl(''); }}
-                         className="text-red-500 hover:text-red-600 text-sm font-medium"
+                         onClick={() => { setVideoFile(null); setStatus('idle'); setOutputVideoUrl(''); setOutputFileSize(null); }}
+                         className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg cursor-pointer transition-colors shadow-sm"
                       >
                          重新上传
                       </button>
@@ -348,15 +495,58 @@ const VideoCompressor = () => {
                             <span>正在处理...</span>
                             <span>{progress}%</span>
                          </div>
-                         <div className="w-full bg-div-theme rounded-full h-4 overflow-hidden">
+                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
                             <div 
-                               className="bg-theme-primary h-full rounded-full transition-all duration-300 progress-bar-striped"
-                               style={{ width: `${progress}%` }}
+                               className="h-full rounded-full transition-all duration-300 progress-bar-striped"
+                               style={{ 
+                                 width: `${progress}%`,
+                                 background: 'linear-gradient(90deg, #3b82f6 0%, #06b6d4 50%, #3b82f6 100%)',
+                                 backgroundSize: '200% 100%',
+                                 animation: 'progress-stripes 1s linear infinite'
+                               }}
                             ></div>
+                         </div>
+                         <div className="flex gap-3">
+                            <button 
+                               onClick={abortCompression}
+                               className="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition-all transform active:scale-[0.98] shadow-lg shadow-red-500/20"
+                            >
+                               中断压缩
+                            </button>
                          </div>
                          <p className="text-center text-xs text-gray-400">
                             请勿关闭页面，视频处理可能需要几分钟...
                          </p>
+                      </div>
+                   )}
+
+                   {status === 'error' && videoFile && (
+                      <div className="text-center space-y-6 animate-fade-in">
+                         <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mx-auto">
+                            <AlertCircle size={32} />
+                         </div>
+                         <div>
+                            <h3 className="text-2xl font-bold text-red-700 dark:text-red-400 mb-2">
+                               压缩失败
+                            </h3>
+                            <p className="text-red-600 dark:text-red-300 max-w-md mx-auto">
+                               {error || "视频压缩过程中出现错误，请重试"}
+                            </p>
+                         </div>
+                         <div className="flex gap-3 justify-center">
+                            <button 
+                               onClick={() => { setVideoFile(null); setStatus('idle'); setOutputVideoUrl(''); setOutputFileSize(null); setError(null); }}
+                               className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all transform active:scale-[0.98] shadow-lg shadow-red-500/20 cursor-pointer"
+                            >
+                               重新上传
+                            </button>
+                            <button 
+                               onClick={() => { setStatus('ready'); setError(null); }}
+                               className="px-6 py-3 bg-accent hover:bg-accent/90 text-white rounded-xl font-bold transition-all transform active:scale-[0.98] shadow-lg shadow-accent/20 cursor-pointer"
+                            >
+                               重试压缩
+                            </button>
+                         </div>
                       </div>
                    )}
 
@@ -372,6 +562,19 @@ const VideoCompressor = () => {
                             <p className="text-theme-secondary">
                                您的视频已准备好下载
                             </p>
+                            {outputFileSize && (
+                               <div className="mt-4 p-4 bg-green-100 dark:bg-green-900/30 rounded-lg inline-block border border-green-200 dark:border-green-800">
+                                  <p className="text-sm text-green-900 dark:text-green-100">
+                                     <span className="font-bold">原始大小:</span> {formatSize(videoFile.size)}
+                                  </p>
+                                  <p className="text-sm text-green-900 dark:text-green-100">
+                                     <span className="font-bold">压缩后大小:</span> {formatSize(outputFileSize)}
+                                  </p>
+                                  <p className="text-sm text-green-900 dark:text-green-100">
+                                     <span className="font-bold">压缩率:</span> {((1 - outputFileSize / videoFile.size) * 100).toFixed(1)}%
+                                  </p>
+                               </div>
+                            )}
                          </div>
                          <a 
                             href={outputVideoUrl}
