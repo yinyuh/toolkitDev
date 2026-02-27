@@ -45,12 +45,47 @@ category: "calculator"
               <input type="date" id="targetDate" class="px-4 py-2 bg-theme-secondary border border-theme-border rounded-lg text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
               <input type="time" id="targetTime" class="px-4 py-2 bg-theme-secondary border border-theme-border rounded-lg text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
+            <div class="mt-4">
+              <label for="targetDescription" class="block text-sm font-medium text-theme-secondary mb-2 text-center">倒计时目标描述</label>
+              <input type="text" id="targetDescription" placeholder="输入倒计时目标描述（可选）" class="w-full max-w-md px-4 py-2 bg-theme-secondary border border-theme-border rounded-lg text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500 mx-auto text-center">
+            </div>
           </div>
           
           <div class="controls flex justify-center flex-wrap gap-3">
-            <button id="startBtn" class="control-btn start-btn btn-theme px-6 py-3 rounded-lg transition-colors">开始</button>
-            <button id="stopBtn" class="control-btn stop-btn btn-theme px-6 py-3 rounded-lg transition-colors" disabled>停止</button>
-            <button id="resetBtn" class="control-btn reset-btn btn-theme px-6 py-3 rounded-lg transition-colors">重置</button>
+            <button id="startBtn" class="control-btn start-btn btn-theme px-6 py-3 rounded-lg transition-colors bg-accent text-white hover:bg-accent/90 cursor-pointer">开始</button>
+            <button id="stopBtn" class="control-btn stop-btn btn-theme px-6 py-3 rounded-lg transition-colors bg-gray-500 text-white hover:bg-gray-600 cursor-pointer" disabled>停止</button>
+            <button id="resetBtn" class="control-btn reset-btn btn-theme px-6 py-3 rounded-lg transition-colors bg-gray-500 text-white hover:bg-gray-600 cursor-pointer">重置</button>
+            <button id="fullscreenBtn" class="control-btn fullscreen-btn btn-theme px-6 py-3 rounded-lg transition-colors bg-accent text-white hover:bg-accent/90 cursor-pointer">全屏显示</button>
+          </div>
+          
+          <!-- 全屏显示模态框 -->
+          <div id="fullscreenModal" class="fixed inset-0 bg-theme-primary bg-opacity-95 z-50 flex items-center justify-center hidden">
+            <button id="exitFullscreenBtn" class="fixed top-4 right-4 text-theme-primary text-2xl hover:text-theme-secondary transition-colors z-10">
+              ×
+            </button>
+            <div class="w-full max-w-6xl p-8">
+              <div class="text-center">
+                <div id="fullscreenDescription" class="text-2xl md:text-4xl font-bold text-theme-primary mb-8"></div>
+                <div class="countdown-display flex justify-center gap-6 md:gap-12 mb-8 flex-wrap">
+                  <div class="time-box bg-theme-secondary rounded-lg p-8 min-w-[120px]">
+                    <div class="time-number text-4xl md:text-6xl font-bold text-accent" id="fullscreenDays">00</div>
+                    <div class="time-label text-theme-primary text-sm mt-2">天</div>
+                  </div>
+                  <div class="time-box bg-theme-secondary rounded-lg p-8 min-w-[120px]">
+                    <div class="time-number text-4xl md:text-6xl font-bold text-accent" id="fullscreenHours">00</div>
+                    <div class="time-label text-theme-primary text-sm mt-2">时</div>
+                  </div>
+                  <div class="time-box bg-theme-secondary rounded-lg p-8 min-w-[120px]">
+                    <div class="time-number text-4xl md:text-6xl font-bold text-accent" id="fullscreenMinutes">00</div>
+                    <div class="time-label text-theme-primary text-sm mt-2">分</div>
+                  </div>
+                  <div class="time-box bg-theme-secondary rounded-lg p-8 min-w-[120px]">
+                    <div class="time-number text-4xl md:text-6xl font-bold text-accent" id="fullscreenSeconds">00</div>
+                    <div class="time-label text-theme-primary text-sm mt-2">秒</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div id="message" class="text-div-theme mt-6 text-lg font-medium"></div>
@@ -62,10 +97,23 @@ category: "calculator"
   <script>
     let countdownInterval;
     let targetDate;
+    let targetDescription = '';
 
     document.getElementById('startBtn').addEventListener('click', startCountdown);
     document.getElementById('stopBtn').addEventListener('click', stopCountdown);
     document.getElementById('resetBtn').addEventListener('click', resetCountdown);
+    document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+    document.getElementById('exitFullscreenBtn').addEventListener('click', toggleFullscreen);
+    
+    // 监听ESC键退出全屏
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('fullscreenModal');
+            if (!modal.classList.contains('hidden')) {
+                toggleFullscreen();
+            }
+        }
+    });
 
     // 设置默认目标时间为24小时后
     const tomorrow = new Date();
@@ -76,6 +124,7 @@ category: "calculator"
     function startCountdown() {
         const date = document.getElementById('targetDate').value;
         const time = document.getElementById('targetTime').value;
+        targetDescription = document.getElementById('targetDescription').value;
 
         if (!date || !time) {
             alert('请选择目标日期和时间！');
@@ -98,6 +147,11 @@ category: "calculator"
         updateCountdown();
         countdownInterval = setInterval(updateCountdown, 1000);
     }
+    
+    // 监听目标描述输入变化
+    document.getElementById('targetDescription').addEventListener('input', function() {
+        targetDescription = this.value;
+    });
 
     function stopCountdown() {
         clearInterval(countdownInterval);
@@ -114,6 +168,8 @@ category: "calculator"
         document.getElementById('minutes').textContent = '00';
         document.getElementById('seconds').textContent = '00';
         document.getElementById('message').textContent = '';
+        document.getElementById('targetDescription').value = '';
+        targetDescription = '';
         
         // 重置按钮状态
         document.getElementById('startBtn').disabled = false;
@@ -129,6 +185,7 @@ category: "calculator"
             document.getElementById('message').textContent = '倒计时结束！';
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').disabled = true;
+            updateFullscreenDisplay('00', '00', '00', '00');
             return;
         }
 
@@ -143,6 +200,44 @@ category: "calculator"
         document.getElementById('hours').textContent = padNumber(hours);
         document.getElementById('minutes').textContent = padNumber(minutes);
         document.getElementById('seconds').textContent = padNumber(seconds);
+
+        // 更新全屏显示
+        updateFullscreenDisplay(padNumber(days), padNumber(hours), padNumber(minutes), padNumber(seconds));
+    }
+
+    function updateFullscreenDisplay(days, hours, minutes, seconds) {
+        document.getElementById('fullscreenDays').textContent = days;
+        document.getElementById('fullscreenHours').textContent = hours;
+        document.getElementById('fullscreenMinutes').textContent = minutes;
+        document.getElementById('fullscreenSeconds').textContent = seconds;
+    }
+
+    function toggleFullscreen() {
+        const modal = document.getElementById('fullscreenModal');
+        const description = document.getElementById('fullscreenDescription');
+        
+        // 设置全屏描述（每次都获取最新值）
+        const currentDescription = document.getElementById('targetDescription').value;
+        description.textContent = currentDescription || targetDescription || '倒计时';
+        
+        // 显示或隐藏全屏模态框
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            // 如果倒计时正在运行，更新全屏显示
+            if (targetDate) {
+                const now = new Date();
+                const difference = targetDate - now;
+                if (difference > 0) {
+                    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                    updateFullscreenDisplay(padNumber(days), padNumber(hours), padNumber(minutes), padNumber(seconds));
+                }
+            }
+        } else {
+            modal.classList.add('hidden');
+        }
     }
 
     function padNumber(number) {
