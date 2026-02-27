@@ -54,6 +54,10 @@ const SvgOptimizer = () => {
     removeDesc: true,
   });
 
+  // Precision settings
+  const [numericPrecision, setNumericPrecision] = useState(2);
+  const [transformPrecision, setTransformPrecision] = useState(2);
+
   const fileInputRef = useRef(null);
 
   // Format bytes helper
@@ -86,9 +90,38 @@ const SvgOptimizer = () => {
         // Dynamic import svgo
         const { optimize } = await import('svgo/browser');
 
+        // Construct plugins with precision settings
+        const pluginsConfig = enabledPlugins.map(pluginName => {
+          if (pluginName === 'cleanupNumericValues') {
+            return {
+              name: pluginName,
+              params: {
+                floatPrecision: numericPrecision
+              }
+            };
+          }
+          if (pluginName === 'convertPathData') {
+            return {
+              name: pluginName,
+              params: {
+                floatPrecision: numericPrecision
+              }
+            };
+          }
+          if (pluginName === 'convertTransform') {
+            return {
+              name: pluginName,
+              params: {
+                floatPrecision: transformPrecision
+              }
+            };
+          }
+          return pluginName;
+        });
+
         const result = optimize(inputSvg, {
           multipass: true,
-          plugins: enabledPlugins,
+          plugins: pluginsConfig,
           js2svg: {
             indent: 2,
             pretty: true, // Make it readable in code view
@@ -112,7 +145,7 @@ const SvgOptimizer = () => {
     // Debounce optimization
     const timer = setTimeout(runOptimization, 300);
     return () => clearTimeout(timer);
-  }, [inputSvg, plugins]);
+  }, [inputSvg, plugins, numericPrecision, transformPrecision]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -437,7 +470,8 @@ const SvgOptimizer = () => {
                     min="0" 
                     max="6" 
                     step="1" 
-                    defaultValue="2"
+                    value={numericPrecision}
+                    onChange={(e) => setNumericPrecision(parseInt(e.target.value))}
                     className="w-full h-2 bg-div-theme rounded-lg appearance-none cursor-pointer"
                     style={{ accentColor: 'var(--accent-color)' }}
                   />
@@ -455,7 +489,8 @@ const SvgOptimizer = () => {
                     min="0" 
                     max="6" 
                     step="1" 
-                    defaultValue="2"
+                    value={transformPrecision}
+                    onChange={(e) => setTransformPrecision(parseInt(e.target.value))}
                     className="w-full h-2 bg-div-theme rounded-lg appearance-none cursor-pointer"
                     style={{ accentColor: 'var(--accent-color)' }}
                   />
