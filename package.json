@@ -38,6 +38,7 @@
     "lucide-react": "^0.575.0",
     "markdown-it": "^14.1.0",
     "onnxruntime-web": "^1.24.1",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.3",
     "react-chartjs-2": "^5.3.1",
