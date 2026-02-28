@@ -14,7 +14,7 @@ const VideoCompressor = () => {
   const [status, setStatus] = useState('idle'); // idle, loading_ffmpeg, ready, compressing, done, error
   const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
-  const [showLogs, setShowLogs] = useState(false);
+  const [showLogs, setShowLogs] = useState(true);
   const [outputFileSize, setOutputFileSize] = useState(null); // 压缩后文件大小
   const abortControllerRef = useRef(null); // 用于中断压缩
   
@@ -27,14 +27,41 @@ const VideoCompressor = () => {
   const messageRef = useRef(null);
   const isAbortedRef = useRef(false); // 用于标记是否中断
   
-  // 全局addLog函数
+  // 全局addLog函数 - 同时输出到控制台和页面日志
   const addLog = (message) => {
-    setLogs(prev => [...prev.slice(-100), message]);
-    console.log(message);
+    const timestamp = new Date().toLocaleTimeString();
+    const logMessage = `[${timestamp}] ${message}`;
+    setLogs(prev => [...prev.slice(-100), logMessage]);
+    console.log(logMessage);
   };
 
   useEffect(() => {
+    // 捕获全局错误
+    const handleError = (event) => {
+      addLog(`[浏览器错误] ${event.message}`);
+      addLog(`[错误详情] ${event.filename}:${event.lineno}:${event.colno}`);
+      if (event.error && event.error.stack) {
+        addLog(`[错误堆栈] ${event.error.stack}`);
+      }
+    };
+
+    // 捕获未处理的Promise错误
+    const handleUnhandledRejection = (event) => {
+      addLog(`[未处理的Promise错误] ${event.reason}`);
+      if (event.reason && event.reason.stack) {
+        addLog(`[错误堆栈] ${event.reason.stack}`);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
     load();
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
   }, []);
 
   const load = async () => {
@@ -43,9 +70,8 @@ const VideoCompressor = () => {
     
     ffmpeg.on('log', ({ message, type }) => {
       // 添加日志类型前缀，方便区分
-      const logMessage = type === 'stderr' ? `[stderr] ${message}` : `[stdout] ${message}`;
-      setLogs(prev => [...prev.slice(-100), logMessage]);
-      console.log(logMessage);
+      const logMessage = type === 'stderr' ? `[FFmpeg-stderr] ${message}` : `[FFmpeg-stdout] ${message}`;
+      addLog(logMessage);
       if (messageRef.current) {
         messageRef.current.scrollTop = messageRef.current.scrollHeight;
       }
@@ -53,9 +79,10 @@ const VideoCompressor = () => {
     
     // 添加错误日志监听
     ffmpeg.on('error', (error) => {
-      const errorMessage = `[error] ${error.message || error}`;
-      setLogs(prev => [...prev.slice(-100), errorMessage]);
-      console.error(errorMessage);
+      addLog(`[FFmpeg-错误] ${error.message || error}`);
+      if (error.stack) {
+        addLog(`[FFmpeg-错误堆栈] ${error.stack}`);
+      }
     });
 
     ffmpeg.on('progress', ({ progress, time }) => {
@@ -169,29 +196,35 @@ const VideoCompressor = () => {
         args.push('-vf', scaleFilter);
       }
 
-      // Quality (CRF)
-      let crf = '23';
-      if (quality === 'high') crf = '18';
-      if (quality === 'low') crf = '28';
+      // Quality (CRF) - CRF值越大，压缩率越高，文件越小
+      // 对于压缩场景，使用较高的CRF值
+      let crf = '28';
+      let preset = 'medium';
+      if (quality === 'high') {
+        crf = '23';
+        preset = 'slow';
+      }
+      if (quality === 'low') {
+        crf = '32';
+        preset = 'fast';
+      }
       
-      // 使用更简单的FFmpeg命令
-      // 对于MP4格式，使用更基本的编码参数
       if (format === 'mp4') {
         args.push('-c:v', 'libx264');
         args.push('-crf', crf);
-        args.push('-preset', 'ultrafast');
-        args.push('-c:a', 'copy');
-        args.push('-movflags', '+faststart'); // 优化网络播放
+        args.push('-preset', preset);
+        args.push('-c:a', 'aac');
+        args.push('-b:a', '128k');
+        args.push('-movflags', '+faststart');
       } else if (format === 'webm') {
-        // 使用VP8代替VP9，VP8更轻量且内存占用更少
+        // 使用 VP8 编码器，兼容性更好
         args.push('-c:v', 'libvpx');
         args.push('-crf', crf);
-        args.push('-b:v', '1M'); // 限制视频比特率
-        args.push('-deadline', 'realtime'); // 实时模式，更快但质量稍低
-        args.push('-cpu-used', '5'); // 使用更快的编码速度
-        // WebM不支持AAC音频，需要转换为Vorbis（比Opus更轻量）
+        args.push('-b:v', '0');
+        args.push('-deadline', 'realtime');
+        args.push('-cpu-used', '4');
         args.push('-c:a', 'libvorbis');
-        args.push('-q:a', '4'); // Vorbis质量设置
+        args.push('-q:a', '4');
       }
       
       // 添加-y参数强制覆盖输出文件
@@ -459,9 +492,9 @@ const VideoCompressor = () => {
                                onChange={(e) => setQuality(e.target.value)}
                                className="w-full p-2 rounded-lg border border-div-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-theme-primary focus:border-transparent"
                             >
-                               <option value="high">高质量 (大文件)</option>
+                               <option value="high">高质量 (压缩较少)</option>
                                <option value="medium">平衡 (推荐)</option>
-                               <option value="low">低质量 (小文件)</option>
+                               <option value="low">高压缩 (最小文件)</option>
                             </select>
                          </div>
                          <div>
