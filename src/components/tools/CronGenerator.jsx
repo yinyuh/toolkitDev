@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// import cronstrue from 'cronstrue/i18n'; // Removed static import
-// import parser from 'cron-parser'; // Removed static import
-import { Clock, Calendar, Copy, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { Clock, Calendar, Copy, Check, AlertCircle, Loader2, Zap, BookOpen, Lightbulb } from 'lucide-react';
 
 const CronGenerator = () => {
   const [expression, setExpression] = useState('* * * * *');
   const [humanReadable, setHumanReadable] = useState('');
   const [nextRuns, setNextRuns] = useState([]);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('minute'); // minute, hour, day, month, week
+  const [activeTab, setActiveTab] = useState('minute');
   const [copied, setCopied] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isManualInput, setIsManualInput] = useState(false);
 
   // Builder State
   const [minute, setMinute] = useState({ type: 'every', start: 0, step: 1, specific: [] });
@@ -19,13 +18,98 @@ const CronGenerator = () => {
   const [month, setMonth] = useState({ type: 'every', start: 1, step: 1, specific: [] });
   const [week, setWeek] = useState({ type: 'every', specific: [] });
 
+  // 常用预设
+  const presets = [
+    { name: '每分钟', expression: '* * * * *', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200' },
+    { name: '每5分钟', expression: '*/5 * * * *', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-200' },
+    { name: '每15分钟', expression: '*/15 * * * *', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-200' },
+    { name: '每30分钟', expression: '*/30 * * * *', color: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-200' },
+    { name: '每小时', expression: '0 * * * *', color: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200' },
+    { name: '每2小时', expression: '0 */2 * * *', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200' },
+    { name: '每天', expression: '0 0 * * *', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200' },
+    { name: '每周', expression: '0 0 * * 0', color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-200' },
+    { name: '每月', expression: '0 0 1 * *', color: 'bg-pink-100 text-pink-800 dark:bg-pink-900/50 dark:text-pink-200' },
+    { name: '每年', expression: '0 0 1 1 *', color: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200' },
+    { name: '工作时间', expression: '0 9-18 * * 1-5', color: 'bg-lime-100 text-lime-800 dark:bg-lime-900/50 dark:text-lime-200' },
+    { name: '工作日', expression: '0 0 * * 1-5', color: 'bg-teal-100 text-teal-800 dark:bg-teal-900/50 dark:text-teal-200' },
+  ];
+
+  // 解析 Cron 表达式并更新状态
+  const parseExpressionToState = (expr) => {
+    const parts = expr.trim().split(/\s+/);
+    if (parts.length !== 5) return;
+
+    const parsePart = (part) => {
+      if (part === '*') return { type: 'every', start: 0, step: 1, specific: [] };
+      if (part.includes('/')) {
+        const [start, step] = part.split('/');
+        return { type: 'step', start: start === '*' ? 0 : parseInt(start), step: parseInt(step), specific: [] };
+      }
+      if (part.includes(',')) {
+        return { type: 'specific', start: 0, step: 1, specific: part.split(',').map(v => parseInt(v)) };
+      }
+      if (part.includes('-')) {
+        // 范围表达式，暂时转换为specific类型
+        const [start, end] = part.split('-');
+        const startNum = parseInt(start);
+        const endNum = parseInt(end);
+        if (!isNaN(startNum) && !isNaN(endNum)) {
+          const specific = [];
+          for (let i = startNum; i <= endNum; i++) {
+            specific.push(i);
+          }
+          return { type: 'specific', start: 0, step: 1, specific };
+        }
+      }
+      if (!isNaN(parseInt(part))) {
+        return { type: 'specific', start: 0, step: 1, specific: [parseInt(part)] };
+      }
+      return { type: 'every', start: 0, step: 1, specific: [] };
+    };
+
+    setMinute(parsePart(parts[0]));
+    setHour(parsePart(parts[1]));
+    setDay(parsePart(parts[2]));
+    setMonth(parsePart(parts[3]));
+    setWeek(parsePart(parts[4]));
+  };
+
   // Update expression when builder state changes
   useEffect(() => {
+    if (isManualInput) return;
+    
     const buildPart = (state, min, max) => {
       if (state.type === 'every') return '*';
-      if (state.type === 'step') return `${state.start}/${state.step}`;
+      if (state.type === 'step') return `${state.start === 0 ? '*' : state.start}/${state.step}`;
       if (state.type === 'specific') {
-        return state.specific.length > 0 ? state.specific.sort((a,b)=>a-b).join(',') : '*'; // Default to * if empty to prevent error
+        if (state.specific.length === 0) return '*';
+        
+        // 排序并去重
+        const sorted = [...new Set(state.specific)].sort((a, b) => a - b);
+        
+        // 尝试转换为范围表达式
+        const ranges = [];
+        let currentStart = sorted[0];
+        
+        for (let i = 1; i < sorted.length; i++) {
+          if (sorted[i] !== sorted[i-1] + 1) {
+            if (currentStart === sorted[i-1]) {
+              ranges.push(currentStart.toString());
+            } else {
+              ranges.push(`${currentStart}-${sorted[i-1]}`);
+            }
+            currentStart = sorted[i];
+          }
+        }
+        
+        // 处理最后一个范围
+        if (currentStart === sorted[sorted.length - 1]) {
+          ranges.push(currentStart.toString());
+        } else {
+          ranges.push(`${currentStart}-${sorted[sorted.length - 1]}`);
+        }
+        
+        return ranges.join(',');
       }
       return '*';
     };
@@ -36,33 +120,48 @@ const CronGenerator = () => {
     const mo = buildPart(month, 1, 12);
     const w = buildPart(week, 0, 6);
 
-    // If both day and week are specified, one usually needs to be ? in Quartz, but standard cron allows both (union).
-    // For simplicity, we'll stick to standard 5-part cron: min hour day month week
-    // If user wants Quartz (6 parts with seconds), we can add seconds tab later.
-    // Let's stick to standard 5-part Linux cron for broad compatibility.
-    
-    setExpression(`${m} ${h} ${d} ${mo} ${w}`);
-  }, [minute, hour, day, month, week]);
+    const newExpression = `${m} ${h} ${d} ${mo} ${w}`;
+    if (newExpression !== expression) {
+      setExpression(newExpression);
+    }
+  }, [minute, hour, day, month, week, isManualInput]);
 
   // Parse expression with dynamic imports
   useEffect(() => {
     let mounted = true;
     const parseCron = async () => {
+      if (!expression.trim()) {
+        setHumanReadable('');
+        setNextRuns([]);
+        setError(null);
+        return;
+      }
+
       setIsCalculating(true);
       try {
-        const cronstrue = (await import('cronstrue/i18n')).default;
-        const parser = (await import('cron-parser')).default;
+        const cronstrueModule = await import('cronstrue/i18n');
+        const cronstrue = cronstrueModule.default || cronstrueModule;
+        
+        const parserModule = await import('cron-parser');
+        const parser = parserModule.default || parserModule;
 
         if (!mounted) return;
 
+        // 验证表达式格式
+        const parts = expression.trim().split(/\s+/);
+        if (parts.length !== 5) {
+          throw new Error('Cron 表达式必须包含 5 个字段');
+        }
+
         // Human readable
-        const desc = cronstrue.toString(expression, { locale: "zh_CN" });
+        let desc = cronstrue.toString(expression, { locale: "zh_CN" });
+        desc = optimizeChineseDescription(desc);
         setHumanReadable(desc);
 
-        // Next runs
-        const interval = parser.parseExpression(expression);
+        // Next runs - 10次
+        const interval = parser.parse(expression);
         const runs = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
           runs.push(interval.next().toDate());
         }
         setNextRuns(runs);
@@ -71,17 +170,13 @@ const CronGenerator = () => {
         if (!mounted) return;
         setHumanReadable('');
         setNextRuns([]);
-        // Don't show error for "invalid" cron while typing if it's just incomplete
-        // But cron-parser throws on invalid.
-        // We can show error only if it's not empty?
-        setError("无效的 Cron 表达式");
+        setError("无效的 Cron 表达式: " + (err.message || '格式错误'));
       } finally {
         if (mounted) setIsCalculating(false);
       }
     };
 
-    // Debounce to avoid too many imports/calcs
-    const timer = setTimeout(parseCron, 500);
+    const timer = setTimeout(parseCron, 300);
     return () => {
         clearTimeout(timer);
         mounted = false;
@@ -94,12 +189,57 @@ const CronGenerator = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const applyPreset = (preset) => {
+    setExpression(preset.expression);
+    parseExpressionToState(preset.expression);
+    setIsManualInput(false);
+  };
+
+  const handleExpressionChange = (e) => {
+    const newExpr = e.target.value;
+    setExpression(newExpr);
+    setIsManualInput(true);
+    // 不立即解析到状态，让用户可以自由输入
+  };
+
+  // 优化中文描述
+  const optimizeChineseDescription = (desc) => {
+    // 处理午夜时间
+    desc = desc.replace('在上午 12:00', '每天午夜执行');
+    desc = desc.replace('在 12:00 AM', '每天午夜执行');
+    
+    // 处理整点时间
+    desc = desc.replace('在下午 12:00', '每天中午执行');
+    desc = desc.replace('在 12:00 PM', '每天中午执行');
+    
+    // 处理每周日
+    desc = desc.replace('在星期日', '每周日');
+    desc = desc.replace('在周日', '每周日');
+    
+    // 处理每月1号
+    desc = desc.replace('在 1 号', '每月1号');
+    
+    // 处理每年1月1号
+    desc = desc.replace('在 1 月 1 号', '每年1月1号');
+    
+    // 处理工作日
+    desc = desc.replace('在星期一、二、三、四、五', '每个工作日');
+    
+    // 处理更自然的表达
+    desc = desc.replace('每隔 1 分钟', '每分钟');
+    desc = desc.replace('每隔 1 小时', '每小时');
+    desc = desc.replace('每隔 1 天', '每天');
+    
+    return desc;
+  };
+
   const TabContent = ({ type, state, setState, range, label }) => {
     const toggleSpecific = (val) => {
       const newSpecific = state.specific.includes(val)
         ? state.specific.filter(v => v !== val)
         : [...state.specific, val];
       setState({ ...state, type: 'specific', specific: newSpecific });
+      setIsManualInput(false);
     };
 
     return (
@@ -109,7 +249,7 @@ const CronGenerator = () => {
             <input 
               type="radio" 
               checked={state.type === 'every'} 
-              onChange={() => setState({ ...state, type: 'every' })}
+              onChange={() => { setState({ ...state, type: 'every' }); setIsManualInput(false); }}
               className="w-5 h-5 text-accent border-border-theme focus:ring-accent"
             />
             <span className="text-text-secondary">每{label}</span>
@@ -120,7 +260,7 @@ const CronGenerator = () => {
               <input 
                 type="radio" 
                 checked={state.type === 'step'} 
-                onChange={() => setState({ ...state, type: 'step' })}
+                onChange={() => { setState({ ...state, type: 'step' }); setIsManualInput(false); }}
                 className="w-5 h-5 text-accent border-border-theme focus:ring-accent"
               />
               <div className="flex items-center gap-2 flex-wrap">
@@ -130,7 +270,7 @@ const CronGenerator = () => {
                   min={range[0]} 
                   max={range[1]} 
                   value={state.start}
-                  onChange={(e) => setState({ ...state, type: 'step', start: parseInt(e.target.value) })}
+                  onChange={(e) => { setState({ ...state, type: 'step', start: parseInt(e.target.value) || 0 }); setIsManualInput(false); }}
                   className="w-16 p-1 border border-border-theme rounded text-center bg-div-secondary"
                 />
                 <span className="text-text-secondary">{label}开始，每隔</span>
@@ -139,7 +279,7 @@ const CronGenerator = () => {
                   min="1" 
                   max={range[1]} 
                   value={state.step}
-                  onChange={(e) => setState({ ...state, type: 'step', step: parseInt(e.target.value) })}
+                  onChange={(e) => { setState({ ...state, type: 'step', step: parseInt(e.target.value) || 1 }); setIsManualInput(false); }}
                   className="w-16 p-1 border border-border-theme rounded text-center bg-div-secondary"
                 />
                 <span className="text-text-secondary">{label}执行一次</span>
@@ -151,7 +291,7 @@ const CronGenerator = () => {
             <input 
               type="radio" 
               checked={state.type === 'specific'} 
-              onChange={() => setState({ ...state, type: 'specific' })}
+              onChange={() => { setState({ ...state, type: 'specific' }); setIsManualInput(false); }}
               className="w-5 h-5 text-accent border-border-theme focus:ring-accent mt-1"
             />
             <div className="flex-1">
@@ -198,8 +338,9 @@ const CronGenerator = () => {
                <input 
                  type="text" 
                  value={expression} 
-                 onChange={(e) => setExpression(e.target.value)}
+                 onChange={handleExpressionChange}
                  className="text-4xl md:text-5xl font-mono font-bold text-center bg-transparent border-b-2 border-border-theme focus:border-accent outline-none w-full max-w-2xl text-text-theme py-2 transition-colors"
+                 placeholder="* * * * *"
                />
                <button 
                  onClick={handleCopy}
@@ -223,6 +364,27 @@ const CronGenerator = () => {
          )}
       </div>
 
+      {/* 常用预设 */}
+      <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6 mb-8">
+        <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
+          <Zap size={18} className="text-yellow-500" />
+          常用预设
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {presets.map((preset, index) => (
+            <button
+              key={index}
+              onClick={() => applyPreset(preset)}
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all hover:scale-105 ${preset.color} ${
+                expression === preset.expression ? 'ring-2 ring-offset-2 ring-accent' : ''
+              }`}
+            >
+              {preset.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
          {/* Builder */}
          <div className="lg:col-span-2 bg-div-theme rounded-2xl shadow-sm border border-border-theme overflow-hidden">
@@ -230,7 +392,7 @@ const CronGenerator = () => {
                {tabs.map(tab => (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => { setActiveTab(tab.id); setIsManualInput(false); }}
                     className={`flex-1 py-4 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
                        activeTab === tab.id 
                          ? 'border-accent text-accent bg-accent/5' 
@@ -261,7 +423,7 @@ const CronGenerator = () => {
          <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6">
             <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
                <Clock size={18} />
-               接下来 5 次运行时间
+               接下来 10 次运行时间
             </h3>
             <div className="space-y-3">
                {isCalculating ? (
@@ -290,6 +452,95 @@ const CronGenerator = () => {
                )}
             </div>
          </div>
+      </div>
+
+      {/* 专业解释说明 */}
+      <div className="mt-8 bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6">
+        <h3 className="font-bold text-text-theme mb-6 flex items-center gap-2">
+          <BookOpen size={20} className="text-accent" />
+          关于 Cron 表达式生成器
+        </h3>
+        
+        <div className="space-y-6">
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+            <p className="text-text-secondary leading-relaxed">
+              Cron 是类 Unix 操作系统中的时间任务调度器。Cron 表达式是由 5 个字段组成的字符串，用于定义计划任务的执行时间。
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 bg-accent/10 rounded flex items-center justify-center text-xs text-accent">1</span>
+              Cron 表达式格式
+            </h4>
+            <div className="grid grid-cols-5 gap-2 mb-4">
+              {[
+                { name: '分钟', range: '0-59', color: 'bg-green-500' },
+                { name: '小时', range: '0-23', color: 'bg-blue-500' },
+                { name: '日期', range: '1-31', color: 'bg-purple-500' },
+                { name: '月份', range: '1-12', color: 'bg-orange-500' },
+                { name: '星期', range: '0-6', color: 'bg-pink-500' },
+              ].map((field, i) => (
+                <div key={i} className="text-center">
+                  <div className={`${field.color} text-white rounded-t-lg py-2 font-bold text-sm`}>*</div>
+                  <div className="bg-div-secondary rounded-b-lg py-2">
+                    <div className="text-xs text-text-theme font-medium">{field.name}</div>
+                    <div className="text-xs text-text-secondary">{field.range}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
+              <span className="w-6 h-6 bg-accent/10 rounded flex items-center justify-center text-xs text-accent">2</span>
+              特殊字符
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                { char: '*', desc: '任意值（通配符）', example: '* * * * * 每分钟执行' },
+                { char: ',', desc: '列表分隔符', example: '0 0 1,15 * * 每月1日和15日执行' },
+                { char: '-', desc: '范围', example: '0 9-18 * * 1-5 工作时间的每小时执行' },
+                { char: '/', desc: '步长值', example: '*/5 * * * * 每5分钟执行' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 p-3 bg-div-secondary rounded-lg">
+                  <code className="w-8 h-8 bg-accent text-white rounded flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    {item.char}
+                  </code>
+                  <div>
+                    <div className="text-sm text-text-theme font-medium">{item.desc}</div>
+                    <div className="text-xs text-text-secondary mt-1">{item.example}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
+              <Lightbulb size={16} className="text-yellow-500" />
+              常用示例
+            </h4>
+            <div className="space-y-2">
+              {[
+                { expr: '0 0 * * *', desc: '每天午夜执行' },
+                { expr: '0 9 * * 1', desc: '每周一上午9点执行' },
+                { expr: '0 */4 * * *', desc: '每4小时执行' },
+                { expr: '30 4 1,15 * *', desc: '每月1日和15日凌晨4:30执行' },
+                { expr: '0 0 * * 0', desc: '每周日午夜执行' },
+                { expr: '0 12 1 * *', desc: '每月1日中午12点执行' },
+              ].map((example, i) => (
+                <div key={i} className="flex items-center gap-4 p-3 bg-div-secondary rounded-lg hover:bg-div-hover transition-colors cursor-pointer" onClick={() => { setExpression(example.expr); parseExpressionToState(example.expr); }}>
+                  <code className="px-3 py-1 bg-accent/10 text-accent rounded font-mono text-sm font-bold">
+                    {example.expr}
+                  </code>
+                  <span className="text-sm text-text-secondary">{example.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

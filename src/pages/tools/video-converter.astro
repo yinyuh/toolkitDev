@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import VideoConverter from '../../components/tools/VideoConverter';
+import VideoConverterComponent from '../../components/tools/VideoConverter';
 
 title: "在线视频格式转换工具"
 description: "免费在线视频格式转换工具，支持 MP4, MKV, AVI, MOV, WebM 等格式互转，使用 FFmpeg WASM 技术，保护隐私。"
@@ -21,7 +21,7 @@ order: 16
     </div>
     
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-      <VideoConverter client:only="react" />
+      <VideoConverterComponent client:only="react" />
     </div>
 
     <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
