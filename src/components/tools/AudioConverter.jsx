@@ -24,26 +24,69 @@ const AudioConverter = () => {
 
   const load = async () => {
     setStatus('loading_ffmpeg');
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
     const ffmpeg = ffmpegRef.current;
     
     ffmpeg.on('progress', ({ progress, time }) => {
       setProgress(Math.round(progress * 100));
     });
 
-    try {
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      setLoaded(true);
-      setStatus('idle');
-      setFfmpeg(ffmpeg);
-    } catch (err) {
-      console.error(err);
-      setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器。");
-      setStatus('error');
+    // 尝试多个 CDN 源
+    const cdnSources = [
+      {
+        name: 'unpkg-umd',
+        baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd',
+        core: '/ffmpeg-core.js',
+        wasm: '/ffmpeg-core.wasm'
+      },
+      {
+        name: 'unpkg-esm',
+        baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm',
+        core: '/ffmpeg-core.js',
+        wasm: '/ffmpeg-core.wasm'
+      },
+      {
+        name: 'jsdelivr-umd',
+        baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd',
+        core: '/ffmpeg-core.js',
+        wasm: '/ffmpeg-core.wasm'
+      },
+      {
+        name: 'jsdelivr-esm',
+        baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm',
+        core: '/ffmpeg-core.js',
+        wasm: '/ffmpeg-core.wasm'
+      }
+    ];
+
+    let lastError = null;
+
+    for (const source of cdnSources) {
+      try {
+        console.log(`Trying to load FFmpeg from: ${source.name}`);
+        const coreURL = `${source.baseURL}${source.core}`;
+        const wasmURL = `${source.baseURL}${source.wasm}`;
+
+        await ffmpeg.load({
+          coreURL,
+          wasmURL,
+        });
+        
+        console.log(`Successfully loaded FFmpeg from: ${source.name}`);
+        setLoaded(true);
+        setStatus('idle');
+        setFfmpeg(ffmpeg);
+        return; // 成功加载，退出函数
+      } catch (err) {
+        console.warn(`Failed to load from ${source.name}:`, err);
+        lastError = err;
+        // 继续尝试下一个源
+      }
     }
+
+    // 所有源都失败了
+    console.error('All CDN sources failed:', lastError);
+    setError(`无法加载转换引擎。请检查网络连接是否能访问 unpkg.com 或 jsdelivr.net，或尝试使用最新版 Chrome/Edge 浏览器。`);
+    setStatus('error');
   };
 
   const handleFileUpload = (e) => {
@@ -123,8 +166,8 @@ const AudioConverter = () => {
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-6">
       {!loaded && status !== 'error' ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500 animate-pulse">
-          <Loader2 size={48} className="animate-spin mb-4 text-theme-primary" />
+        <div className="flex flex-col items-center justify-center py-20 text-text-secondary animate-pulse">
+          <Loader2 size={48} className="animate-spin mb-4 text-accent" />
           <p className="text-lg">正在加载音频引擎...</p>
         </div>
       ) : status === 'error' ? (
@@ -134,11 +177,11 @@ const AudioConverter = () => {
             <p className="text-red-600 dark:text-red-300">{error}</p>
          </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div className="bg-div-secondary rounded-xl shadow-sm border border-border-theme overflow-hidden">
            {/* Upload Area */}
            {!audioFile ? (
               <div 
-                className="p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-theme-primary hover:bg-theme-primary/5 transition-all cursor-pointer m-6 rounded-xl"
+                className="p-12 text-center border-2 border-dashed border-border-theme hover:border-accent hover:bg-accent/5 transition-all cursor-pointer m-6 rounded-xl"
                 onClick={() => document.getElementById('audio-upload').click()}
               >
                  <input 
@@ -148,28 +191,28 @@ const AudioConverter = () => {
                     className="hidden" 
                     onChange={handleFileUpload}
                  />
-                 <div className="w-16 h-16 bg-theme-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-theme-primary">
+                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4 text-accent">
                     <Music size={32} />
                  </div>
-                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                 <h3 className="text-xl font-bold text-theme-primary mb-2">
                     点击上传音频文件
                  </h3>
-                 <p className="text-gray-500 dark:text-gray-400">
+                 <p className="text-text-secondary">
                     支持 MP3, WAV, M4A, AAC, FLAC 等
                  </p>
               </div>
            ) : (
               <div className="p-8">
-                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100 dark:border-gray-700">
+                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-border-theme">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 bg-theme-primary/10 rounded-lg flex items-center justify-center text-theme-primary">
+                       <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent">
                           <Volume2 size={24} />
                        </div>
                        <div>
-                          <h3 className="font-bold text-gray-800 dark:text-gray-100 truncate max-w-[200px]">
+                          <h3 className="font-bold text-theme-primary truncate max-w-[200px]">
                              {audioFile.name}
                           </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-text-secondary">
                              {formatSize(audioFile.size)}
                           </p>
                        </div>
@@ -185,7 +228,7 @@ const AudioConverter = () => {
                  {status === 'ready' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          <label className="block text-sm font-medium text-theme-primary mb-2">
                              目标格式
                           </label>
                           <div className="grid grid-cols-2 gap-2">
@@ -195,8 +238,8 @@ const AudioConverter = () => {
                                    onClick={() => setFormat(fmt)}
                                    className={`p-3 rounded-lg border text-sm font-bold uppercase transition-all ${
                                       format === fmt 
-                                        ? 'border-theme-primary bg-theme-primary/10 text-theme-primary' 
-                                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                                        ? 'border-accent bg-accent/10 text-accent' 
+                                        : 'border-border-theme hover:border-accent'
                                    }`}
                                 >
                                    {fmt}
@@ -205,14 +248,14 @@ const AudioConverter = () => {
                           </div>
                        </div>
                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          <label className="block text-sm font-medium text-theme-primary mb-2">
                              比特率 (画质)
                           </label>
                           <select 
                              value={bitrate}
                              onChange={(e) => setBitrate(e.target.value)}
                              disabled={format === 'wav'}
-                             className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-theme-primary focus:border-transparent outline-none disabled:opacity-50"
+                             className="w-full p-3 rounded-lg border border-border-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-accent focus:border-transparent outline-none disabled:opacity-50"
                           >
                              <option value="128k">128 kbps (标准)</option>
                              <option value="192k">192 kbps (高)</option>
@@ -225,7 +268,7 @@ const AudioConverter = () => {
                  {status === 'ready' && (
                     <button 
                        onClick={convert}
-                       className="w-full py-3 bg-theme-primary text-white rounded-xl font-bold text-lg hover:bg-theme-primary/90 shadow-lg shadow-theme-primary/20 transition-all transform active:scale-[0.98]"
+                       className="w-full py-3 bg-accent text-white rounded-xl font-bold text-lg hover:bg-accent/90 shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98]"
                     >
                        开始转换
                     </button>
@@ -233,14 +276,13 @@ const AudioConverter = () => {
 
                  {status === 'converting' && (
                     <div className="space-y-4 py-4">
-                       <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-300">
+                       <div className="flex justify-between text-sm font-medium text-theme-primary">
                           <span>正在处理...</span>
-                          {/* FFmpeg audio conversion often doesn't report accurate progress, show spinner */}
                        </div>
-                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden relative">
-                          <div className="absolute inset-0 bg-theme-primary/20 animate-pulse"></div>
+                       <div className="w-full bg-div-theme rounded-full h-4 overflow-hidden relative">
+                          <div className="absolute inset-0 bg-accent/20 animate-pulse"></div>
                           <div 
-                             className="bg-theme-primary h-full rounded-full transition-all duration-300"
+                             className="bg-accent h-full rounded-full transition-all duration-300"
                              style={{ width: `${Math.max(5, progress)}%` }}
                           ></div>
                        </div>
@@ -253,7 +295,7 @@ const AudioConverter = () => {
                           <Check size={32} />
                        </div>
                        <div>
-                          <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                          <h3 className="text-2xl font-bold text-theme-primary mb-2">
                              转换完成!
                           </h3>
                           <audio controls src={outputUrl} className="w-full mt-4" />
@@ -261,7 +303,7 @@ const AudioConverter = () => {
                        <a 
                           href={outputUrl}
                           download={`converted_${audioFile.name.split('.')[0]}.${format}`}
-                          className="inline-flex items-center gap-2 px-8 py-3 bg-theme-primary text-white rounded-xl font-bold hover:bg-theme-primary/90 transition-all shadow-lg shadow-theme-primary/20"
+                          className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
                        >
                           <Download size={20} />
                           下载音频
