@@ -10,6 +10,7 @@ const CronGenerator = () => {
   const [copied, setCopied] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isManualInput, setIsManualInput] = useState(false);
+  const [runCount, setRunCount] = useState(10);
 
   // Builder State
   const [minute, setMinute] = useState({ type: 'every', start: 0, step: 1, specific: [] });
@@ -158,10 +159,10 @@ const CronGenerator = () => {
         desc = optimizeChineseDescription(desc);
         setHumanReadable(desc);
 
-        // Next runs - 10次
+        // Next runs
         const interval = parser.parse(expression);
         const runs = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < runCount; i++) {
           runs.push(interval.next().toDate());
         }
         setNextRuns(runs);
@@ -181,7 +182,7 @@ const CronGenerator = () => {
         clearTimeout(timer);
         mounted = false;
     };
-  }, [expression]);
+  }, [expression, runCount]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(expression);
@@ -327,7 +328,7 @@ const CronGenerator = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
+    <div className="max-w-5xl mx-auto p-4 md:p-6">
       {/* Result Display */}
       <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-8 mb-8 text-center relative overflow-hidden">
          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
@@ -385,72 +386,108 @@ const CronGenerator = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         {/* Builder */}
-         <div className="lg:col-span-2 bg-div-theme rounded-2xl shadow-sm border border-border-theme overflow-hidden">
-            <div className="flex border-b border-border-theme overflow-x-auto">
-               {tabs.map(tab => (
-                  <button
-                    key={tab.id}
-                    onClick={() => { setActiveTab(tab.id); setIsManualInput(false); }}
-                    className={`flex-1 py-4 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
-                       activeTab === tab.id 
-                         ? 'border-accent text-accent bg-accent/5' 
-                         : 'border-transparent text-text-secondary hover:text-text-theme'
-                    }`}
-                  >
-                     {tab.label}
-                  </button>
-               ))}
-            </div>
-            <div className="p-6">
-               {tabs.map(tab => (
-                  activeTab === tab.id && (
-                     <TabContent 
-                        key={tab.id}
-                        type={tab.id}
-                        state={tab.state}
-                        setState={tab.setState}
-                        range={tab.range}
-                        label={tab.label}
-                     />
-                  )
-               ))}
-            </div>
+      {/* Builder */}
+      <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme overflow-hidden mb-8">
+         <div className="flex border-b border-border-theme overflow-x-auto">
+            {tabs.map(tab => (
+               <button
+                 key={tab.id}
+                 onClick={() => { setActiveTab(tab.id); setIsManualInput(false); }}
+                 className={`flex-1 py-4 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
+                    activeTab === tab.id 
+                      ? 'border-accent text-accent bg-accent/5' 
+                      : 'border-transparent text-text-secondary hover:text-text-theme'
+                 }`}
+               >
+                  {tab.label}
+               </button>
+            ))}
          </div>
+         <div className="p-6">
+            {tabs.map(tab => (
+               activeTab === tab.id && (
+                  <TabContent 
+                     key={tab.id}
+                     type={tab.id}
+                     state={tab.state}
+                     setState={tab.setState}
+                     range={tab.range}
+                     label={tab.label}
+                  />
+               )
+            ))}
+         </div>
+      </div>
 
-         {/* Next Runs */}
-         <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6">
-            <h3 className="font-bold text-text-theme mb-4 flex items-center gap-2">
-               <Clock size={18} />
-               接下来 10 次运行时间
-            </h3>
-            <div className="space-y-3">
-               {isCalculating ? (
-                  <div className="text-center py-4 text-text-secondary">
-                    <Loader2 className="animate-spin mx-auto mb-2" />
-                    计算中...
-                  </div>
-               ) : (
-                 <>
-                   {nextRuns.map((date, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 bg-div-secondary rounded-lg">
-                         <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center text-xs font-bold text-accent">
-                            {i + 1}
-                         </div>
-                         <div className="text-sm text-text-secondary font-mono">
-                            {date.toLocaleString('zh-CN')}
-                         </div>
+      {/* Next Runs */}
+      <div className="bg-div-theme rounded-2xl shadow-sm border border-border-theme p-6">
+         <div className="mb-4">
+           <h3 className="font-bold text-text-theme flex items-center gap-2 mb-3">
+             <Clock size={18} />
+             接下来运行时间
+           </h3>
+           <div className="flex items-center gap-3">
+             <span className="text-sm text-text-secondary">显示次数：</span>
+             <div className="flex items-center gap-2">
+               <select 
+                 value={runCount}
+                 onChange={(e) => setRunCount(parseInt(e.target.value))}
+                 className="px-3 py-1 border border-border-theme rounded text-sm bg-div-secondary focus:outline-none focus:ring-2 focus:ring-accent"
+               >
+                 <option value="10">10次</option>
+                 <option value="20">20次</option>
+                 <option value="50">50次</option>
+                 <option value="100">100次</option>
+               </select>
+               <input 
+                 type="number" 
+                 value={runCount}
+                 onChange={(e) => {
+                   const value = parseInt(e.target.value) || 10;
+                   setRunCount(Math.min(Math.max(value, 1), 100));
+                 }}
+                 min="1"
+                 max="100"
+                 className="w-16 px-2 py-1 border border-border-theme rounded text-sm bg-div-secondary focus:outline-none focus:ring-2 focus:ring-accent text-center"
+               />
+             </div>
+           </div>
+         </div>
+         <div className="max-h-80 overflow-y-auto custom-scrollbar pr-2">
+            {isCalculating ? (
+               <div className="text-center py-4 text-text-secondary">
+                 <Loader2 className="animate-spin mx-auto mb-2" />
+                 计算中...
+               </div>
+            ) : (
+              <>
+                {nextRuns.map((date, i) => {
+                  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                  const weekDay = weekDays[date.getDay()];
+                  const dateStr = date.toLocaleDateString('zh-CN');
+                  const timeStr = date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                   
+                  return (
+                   <div key={i} className="flex items-center justify-between py-3" style={{ borderBottom: i < nextRuns.length - 1 ? '1px solid #dfe0e6' : 'none' }}>
+                      <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center text-xs font-bold text-accent flex-shrink-0">
+                         {i + 1}
                       </div>
-                   ))}
-                   {nextRuns.length === 0 && !error && (
-                      <div className="text-center text-text-secondary py-8">
-                         等待计算...
+                      <div className="text-sm text-text-secondary font-mono text-right">
+                         <span>{dateStr}</span>
+                         <span className="mx-1"> </span>
+                         <span>{timeStr}</span>
+                         <span className="ml-2 text-accent">({weekDay})</span>
                       </div>
-                   )}
-                 </>
-               )}
-            </div>
+                   </div>
+                  );
+                })}
+                {nextRuns.length === 0 && !error && (
+                   <div className="text-center text-text-secondary py-8">
+                      等待计算...
+                   </div>
+                )}
+              </>
+            )}
          </div>
       </div>
 
