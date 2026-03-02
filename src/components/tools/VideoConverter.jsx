@@ -12,6 +12,7 @@ const VideoConverter = () => {
   const [status, setStatus] = useState('idle'); // idle, loading_ffmpeg, ready, converting, done, error
   const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [outputSize, setOutputSize] = useState(0);
   
   // Settings
   const [targetFormat, setTargetFormat] = useState('mp4'); // mp4, webm, mkv, avi, mov
@@ -88,6 +89,7 @@ const VideoConverter = () => {
 
     setVideoFile(file);
     setOutputUrl('');
+    setOutputSize(0);
     setProgress(0);
     setError(null);
     setStatus('ready');
@@ -135,6 +137,9 @@ const VideoConverter = () => {
 
       const data = await ffmpeg.readFile(outputFileName);
       const url = URL.createObjectURL(new Blob([data.buffer], { type: `video/${targetFormat}` }));
+      
+      // 计算输出文件大小
+      setOutputSize(data.buffer.byteLength);
       
       setOutputUrl(url);
       setStatus('done');
@@ -302,6 +307,38 @@ const VideoConverter = () => {
                              className="bg-accent h-full rounded-full transition-all duration-300"
                              style={{ width: `${Math.max(5, progress)}%` }}
                           ></div>
+                          <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-text-theme">
+                             {progress}%
+                          </div>
+                       </div>
+                       <div className="flex justify-center">
+                          <button 
+                             onClick={async () => {
+                                try {
+                                   const ffmpeg = ffmpegRef.current;
+                                   // 中断 FFmpeg 执行
+                                   if (ffmpeg && ffmpeg.terminate) {
+                                      await ffmpeg.terminate();
+                                   }
+                                   // 重置状态
+                                   setStatus('ready');
+                                   setProgress(0);
+                                   setError('转换已中断');
+                                   // 重新初始化 FFmpeg 实例
+                                   ffmpegRef.current = new FFmpeg();
+                                   setFfmpeg(null);
+                                   setLoaded(false);
+                                   load();
+                                } catch (err) {
+                                   console.error('中断失败:', err);
+                                   setError('中断失败: ' + err.message);
+                                   setStatus('error');
+                                }
+                             }}
+                             className="px-6 py-2 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 transition-all shadow-lg shadow-red-200"
+                          >
+                             中断视频处理
+                          </button>
                        </div>
                        <div className="bg-theme-secondary rounded-lg p-4 font-mono text-xs text-green-400 h-32 overflow-y-auto custom-scrollbar">
                           {logs.map((log, i) => <div key={i}>{log}</div>)}
@@ -310,16 +347,53 @@ const VideoConverter = () => {
                  )}
 
                  {status === 'done' && (
-                    <div className="text-center space-y-6 py-8 animate-in fade-in slide-in-from-bottom-4">
-                       <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Check size={40} />
+                    <div className="space-y-6 py-8 animate-in fade-in slide-in-from-bottom-4">
+                       <div className="text-center">
+                          <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                             <Check size={40} />
+                          </div>
+                          <div>
+                             <h3 className="text-3xl font-bold text-text-theme mb-2">
+                                转换完成!
+                             </h3>
+                             <p className="text-text-secondary">您的新视频已准备好</p>
+                          </div>
                        </div>
-                       <div>
-                          <h3 className="text-3xl font-bold text-text-theme mb-2">
-                             转换完成!
-                          </h3>
-                          <p className="text-text-secondary">您的新视频已准备好</p>
+                       
+                       {/* 视频播放器 */}
+                       <div className="bg-div-theme rounded-xl border border-border-theme p-4">
+                          <h4 className="text-lg font-bold text-text-theme mb-4 text-center">预览视频</h4>
+                          <video 
+                             src={outputUrl} 
+                             controls 
+                             className="w-full h-auto rounded-lg"
+                             poster={URL.createObjectURL(new Blob([], { type: 'image/jpeg' }))}
+                          >
+                             您的浏览器不支持视频播放。
+                          </video>
                        </div>
+                       
+                       {/* 文件大小对比 */}
+                       <div className="bg-div-theme rounded-xl border border-border-theme p-4">
+                          <h4 className="text-lg font-bold text-text-theme mb-4 text-center">文件大小对比</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <div className="text-center p-3 bg-theme-secondary rounded-lg">
+                                <div className="text-sm text-text-secondary mb-1">转换前</div>
+                                <div className="text-xl font-bold text-text-theme">{formatSize(videoFile.size)}</div>
+                             </div>
+                             <div className="text-center p-3 bg-theme-secondary rounded-lg">
+                                <div className="text-sm text-text-secondary mb-1">转换后</div>
+                                <div className="text-xl font-bold text-text-theme">{formatSize(outputSize)}</div>
+                             </div>
+                             <div className="text-center p-3 bg-theme-secondary rounded-lg">
+                                <div className="text-sm text-text-secondary mb-1">比率</div>
+                                <div className={`text-xl font-bold ${outputSize < videoFile.size ? 'text-green-500' : 'text-red-500'}`}>
+                                   {outputSize > 0 ? ((outputSize / videoFile.size) * 100).toFixed(1) + '%' : '0%'}
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       
                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
                           <a 
                              href={outputUrl}
@@ -330,7 +404,7 @@ const VideoConverter = () => {
                              下载视频
                           </a>
                           <button 
-                             onClick={() => { setVideoFile(null); setStatus('idle'); setOutputUrl(''); }}
+                             onClick={() => { setVideoFile(null); setStatus('idle'); setOutputUrl(''); setOutputSize(0); }}
                              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-theme-secondary text-text-theme rounded-xl font-bold hover:bg-theme-secondary hover:opacity-90 transition-all"
                           >
                              转换下一个
