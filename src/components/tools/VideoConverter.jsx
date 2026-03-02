@@ -25,7 +25,6 @@ const VideoConverter = () => {
 
   const load = async () => {
     setStatus('loading_ffmpeg');
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
     const ffmpeg = ffmpegRef.current;
     
     ffmpeg.on('log', ({ message }) => {
@@ -37,13 +36,38 @@ const VideoConverter = () => {
     });
 
     try {
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      setLoaded(true);
-      setStatus('idle');
-      setFfmpeg(ffmpeg);
+      const cdnSources = [
+        { name: 'unpkg-umd', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'unpkg-esm', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'jsdelivr-umd', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'jsdelivr-esm', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' }
+      ];
+      
+      let lastError = null;
+      for (const source of cdnSources) {
+        try {
+          console.log(`尝试从 ${source.name} 加载 FFmpeg...`);
+          const coreURL = await toBlobURL(`${source.baseURL}${source.core}`, 'text/javascript');
+          const wasmURL = await toBlobURL(`${source.baseURL}${source.wasm}`, 'application/wasm');
+          
+          await ffmpeg.load({
+            coreURL: coreURL,
+            wasmURL: wasmURL,
+          });
+          console.log(`成功从 ${source.name} 加载 FFmpeg`);
+          setLoaded(true);
+          setStatus('idle');
+          setFfmpeg(ffmpeg);
+          return;
+        } catch (err) {
+          console.warn(`从 ${source.name} 加载失败:`, err);
+          lastError = err;
+        }
+      }
+      
+      console.error('所有 CDN 源加载失败:', lastError);
+      setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
+      setStatus('error');
     } catch (err) {
       console.error(err);
       setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
@@ -135,9 +159,9 @@ const VideoConverter = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 bg-theme-primary rounded-xl">
       {!loaded && status !== 'error' ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500 animate-pulse">
+        <div className="flex flex-col items-center justify-center py-20 text-text-secondary animate-pulse">
           <Loader2 size={48} className="animate-spin mb-4 text-theme-primary" />
           <p className="text-lg">正在加载转换引擎...</p>
         </div>
@@ -152,7 +176,7 @@ const VideoConverter = () => {
            {/* Upload Area */}
            {!videoFile ? (
               <div 
-                className="p-12 text-center border-2 border-dashed border-border-theme hover:border-accent hover:bg-accent/5 transition-all cursor-pointer m-6 rounded-xl"
+                className="p-12 text-center border-2 border-dashed border-border-theme bg-div-theme hover:border-accent hover:bg-accent/5 transition-all cursor-pointer m-6 rounded-xl"
                 onClick={() => document.getElementById('video-upload').click()}
               >
                  <input 
@@ -210,7 +234,7 @@ const VideoConverter = () => {
                                    className={`px-4 py-2 rounded-lg border text-sm font-bold uppercase transition-all ${
                                       targetFormat === fmt 
                                         ? 'border-accent bg-accent/10 text-accent shadow-sm' 
-                                        : 'border-border-theme hover:border-accent bg-div-secondary text-text-secondary'
+                                        : 'border-border-theme hover:border-accent bg-theme-secondary text-text-secondary'
                                    }`}
                                 >
                                    {fmt}
@@ -223,12 +247,12 @@ const VideoConverter = () => {
                              转换模式
                           </label>
                           <div className="space-y-3">
-                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'copy' ? 'border-accent bg-accent/5' : 'border-border-theme'}`}>
+                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'copy' ? 'border-accent bg-accent/5' : 'border-border-theme bg-div-theme'}`}>
                                 <input 
                                   type="radio" 
                                   name="mode" 
                                   value="copy" 
-                                  checked={mode === 'copy'} 
+                                  checked={mode === 'copy' ? true : false} 
                                   onChange={(e) => setMode(e.target.value)}
                                   className="mt-1 w-4 h-4 text-accent border-border-theme focus:ring-accent"
                                 />
@@ -237,12 +261,12 @@ const VideoConverter = () => {
                                    <span className="block text-xs text-text-secondary mt-1">仅更换容器，不重新编码，速度极快。若视频流不兼容可能会失败。</span>
                                 </div>
                              </label>
-                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'encode' ? 'border-accent bg-accent/5' : 'border-border-theme'}`}>
+                             <label className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${mode === 'encode' ? 'border-accent bg-accent/5' : 'border-border-theme bg-div-theme'}`}>
                                 <input 
                                   type="radio" 
                                   name="mode" 
                                   value="encode" 
-                                  checked={mode === 'encode'} 
+                                  checked={mode === 'encode' ? true : false} 
                                   onChange={(e) => setMode(e.target.value)}
                                   className="mt-1 w-4 h-4 text-accent border-border-theme focus:ring-accent"
                                 />
@@ -273,13 +297,13 @@ const VideoConverter = () => {
                           <div className="text-lg font-bold text-text-theme">正在处理视频...</div>
                           <div className="text-sm text-text-secondary mt-1">请勿关闭页面</div>
                        </div>
-                       <div className="w-full bg-div-secondary rounded-full h-4 overflow-hidden relative">
+                       <div className="w-full bg-theme-secondary rounded-full h-4 overflow-hidden relative">
                           <div 
                              className="bg-accent h-full rounded-full transition-all duration-300"
                              style={{ width: `${Math.max(5, progress)}%` }}
                           ></div>
                        </div>
-                       <div className="bg-div-secondary rounded-lg p-4 font-mono text-xs text-green-400 h-32 overflow-y-auto custom-scrollbar">
+                       <div className="bg-theme-secondary rounded-lg p-4 font-mono text-xs text-green-400 h-32 overflow-y-auto custom-scrollbar">
                           {logs.map((log, i) => <div key={i}>{log}</div>)}
                        </div>
                     </div>
@@ -307,7 +331,7 @@ const VideoConverter = () => {
                           </a>
                           <button 
                              onClick={() => { setVideoFile(null); setStatus('idle'); setOutputUrl(''); }}
-                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-div-secondary text-text-theme rounded-xl font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all"
+                             className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-theme-secondary text-text-theme rounded-xl font-bold hover:bg-theme-secondary hover:opacity-90 transition-all"
                           >
                              转换下一个
                           </button>
@@ -326,7 +350,7 @@ const VideoConverter = () => {
         </div>
       )}
       
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
