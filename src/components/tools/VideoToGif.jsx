@@ -33,7 +33,6 @@ const VideoToGif = () => {
 
   const load = async () => {
     setStatus('loading_ffmpeg');
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
     const ffmpeg = ffmpegRef.current;
     
     ffmpeg.on('progress', ({ progress, time }) => {
@@ -41,13 +40,38 @@ const VideoToGif = () => {
     });
 
     try {
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      });
-      setLoaded(true);
-      setStatus('idle');
-      setFfmpeg(ffmpeg);
+      const cdnSources = [
+        { name: 'unpkg-umd', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'unpkg-esm', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'jsdelivr-umd', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
+        { name: 'jsdelivr-esm', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' }
+      ];
+      
+      let lastError = null;
+      for (const source of cdnSources) {
+        try {
+          console.log(`尝试从 ${source.name} 加载 FFmpeg...`);
+          const coreURL = await toBlobURL(`${source.baseURL}${source.core}`, 'text/javascript');
+          const wasmURL = await toBlobURL(`${source.baseURL}${source.wasm}`, 'application/wasm');
+          
+          await ffmpeg.load({
+            coreURL: coreURL,
+            wasmURL: wasmURL,
+          });
+          console.log(`成功从 ${source.name} 加载 FFmpeg`);
+          setLoaded(true);
+          setStatus('idle');
+          setFfmpeg(ffmpeg);
+          return;
+        } catch (err) {
+          console.warn(`从 ${source.name} 加载失败:`, err);
+          lastError = err;
+        }
+      }
+      
+      console.error('所有 CDN 源加载失败:', lastError);
+      setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
+      setStatus('error');
     } catch (err) {
       console.error(err);
       setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
@@ -140,9 +164,9 @@ const VideoToGif = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 bg-theme-primary rounded-xl">
       {!loaded && status !== 'error' ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500 animate-pulse">
+        <div className="flex flex-col items-center justify-center py-20 text-text-secondary animate-pulse">
           <Loader2 size={48} className="animate-spin mb-4 text-theme-primary" />
           <p className="text-lg">正在加载转换引擎...</p>
         </div>

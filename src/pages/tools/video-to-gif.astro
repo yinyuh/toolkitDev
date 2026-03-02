@@ -12,40 +12,16 @@ order: 17
 <Layout title="在线视频转 GIF 工具" description="免费在线视频转 GIF 工具，支持截取片段、调整帧率和尺寸，使用 FFmpeg WASM 技术，保护隐私。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
         视频转 GIF 工具
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
         将视频转换为高质量 GIF 动图。支持截取片段、自定义帧率和尺寸，完全在浏览器本地处理，无需上传服务器。
       </p>
     </div>
     
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
       <VideoToGif client:only="react" />
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scissors"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">自由裁剪</h3>
-        <p class="text-gray-600 dark:text-gray-400">精确选择视频的开始和结束时间，只转换精彩片段。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">参数调节</h3>
-        <p class="text-gray-600 dark:text-gray-400">自定义 GIF 的宽度和帧率 (FPS)，平衡画质与文件大小。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">隐私安全</h3>
-        <p class="text-gray-600 dark:text-gray-400">基于 WebAssembly 技术，所有处理均在本地浏览器完成。</p>
-      </div>
     </div>
   </div>
 </Layout>
