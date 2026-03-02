@@ -11,6 +11,7 @@ const AudioConverter = () => {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('idle'); // idle, loading_ffmpeg, ready, converting, done, error
   const [error, setError] = useState(null);
+  const [outputSize, setOutputSize] = useState(null);
   
   // Settings
   const [format, setFormat] = useState('mp3'); // mp3, wav, aac, ogg
@@ -95,6 +96,7 @@ const AudioConverter = () => {
     
     setAudioFile(file);
     setOutputUrl('');
+    setOutputSize(null);
     setProgress(0);
     setError(null);
     setStatus('ready');
@@ -106,6 +108,7 @@ const AudioConverter = () => {
     setStatus('converting');
     setProgress(0);
     setError(null);
+    setOutputSize(null);
 
     const ffmpeg = ffmpegRef.current;
     const inputExt = audioFile.name.split('.').pop();
@@ -124,12 +127,15 @@ const AudioConverter = () => {
         args.push('-c:a', 'aac');
       } else if (format === 'ogg') {
         args.push('-c:a', 'libvorbis');
+        args.push('-q:a', '4'); // 设置质量参数，避免转换失败
+      } else if (format === 'flac') {
+        args.push('-c:a', 'flac');
       } else if (format === 'wav') {
         // wav usually pcm_s16le default
       }
 
-      // Bitrate (except for WAV which is usually lossless)
-      if (format !== 'wav') {
+      // Bitrate (except for WAV and FLAC which are usually lossless)
+      if (format !== 'wav' && format !== 'flac') {
         args.push('-b:a', bitrate);
       }
 
@@ -140,6 +146,8 @@ const AudioConverter = () => {
       const data = await ffmpeg.readFile(outputFileName);
       const url = URL.createObjectURL(new Blob([data.buffer], { type: `audio/${format}` }));
       
+      // 计算输出文件大小
+      setOutputSize(data.buffer.byteLength);
       setOutputUrl(url);
       setStatus('done');
     } catch (err) {
@@ -161,6 +169,12 @@ const AudioConverter = () => {
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const calculateRatio = (original, converted) => {
+    if (!original || !converted) return null;
+    const ratio = ((converted - original) / original) * 100;
+    return ratio.toFixed(1);
   };
 
   return (
@@ -187,7 +201,7 @@ const AudioConverter = () => {
                  <input 
                     id="audio-upload"
                     type="file" 
-                    accept="audio/*" 
+                    accept="audio/*,.mp3,.wav,.m4a,.aac,.flac" 
                     className="hidden" 
                     onChange={handleFileUpload}
                  />
@@ -232,7 +246,7 @@ const AudioConverter = () => {
                              目标格式
                           </label>
                           <div className="grid grid-cols-2 gap-2">
-                             {['mp3', 'wav', 'aac', 'ogg'].map(fmt => (
+                             {['mp3', 'wav', 'aac', 'ogg', 'flac'].map(fmt => (
                                 <button
                                    key={fmt}
                                    onClick={() => setFormat(fmt)}
@@ -246,6 +260,14 @@ const AudioConverter = () => {
                                 </button>
                              ))}
                           </div>
+                          {/* MP3转WAV警告 */}
+                          {audioFile && audioFile.name.toLowerCase().endsWith('.mp3') && format === 'wav' && (
+                            <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                              <p className="text-xs" style={{ color: 'rgb(220, 38, 38)', WebkitTextFillColor: 'rgb(220, 38, 38)' }} data-dark-style={{ color: 'rgb(234, 179, 8)' }}>
+                                <span className="font-bold">注意:</span> 将 MP3 转换为 WAV 会导致文件大小大幅增加（通常增加 10-20 倍），但不会提升音质。建议仅在需要无损格式时使用。
+                              </p>
+                            </div>
+                          )}
                        </div>
                        <div>
                           <label className="block text-sm font-medium text-theme-primary mb-2">
@@ -254,7 +276,7 @@ const AudioConverter = () => {
                           <select 
                              value={bitrate}
                              onChange={(e) => setBitrate(e.target.value)}
-                             disabled={format === 'wav'}
+                             disabled={format === 'wav' || format === 'flac'}
                              className="w-full p-3 rounded-lg border border-border-theme bg-div-theme text-theme-primary focus:ring-2 focus:ring-accent focus:border-transparent outline-none disabled:opacity-50"
                           >
                              <option value="128k">128 kbps (标准)</option>
@@ -298,6 +320,25 @@ const AudioConverter = () => {
                           <h3 className="text-2xl font-bold text-theme-primary mb-2">
                              转换完成!
                           </h3>
+                          {/* 文件大小对比 */}
+                          {outputSize !== null && (
+                            <div className="bg-div-secondary rounded-lg p-4 mb-4">
+                              <div className="flex items-center justify-between text-sm mb-2">
+                                <span className="text-text-secondary">原始文件:</span>
+                                <span className="font-medium">{formatSize(audioFile.size)}</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm mb-2">
+                                <span className="text-text-secondary">转换后文件:</span>
+                                <span className="font-medium">{formatSize(outputSize)}</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-text-secondary">大小变化:</span>
+                                <span className={`font-medium ${calculateRatio(audioFile.size, outputSize) > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                  {calculateRatio(audioFile.size, outputSize) > 0 ? '+' : ''}{calculateRatio(audioFile.size, outputSize)}%
+                                </span>
+                              </div>
+                            </div>
+                          )}
                           <audio controls src={outputUrl} className="w-full mt-4" />
                        </div>
                        <a 
