@@ -538,7 +538,13 @@ const QRCodeGenerator = () => {
                        step="32" 
                        value={modalSize} 
                        onChange={(e) => setModalSize(parseInt(e.target.value))}
-                       className="w-full h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
+                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                       style={{
+                         accentColor: '#6b7280',
+                         background: '#e5e7eb',
+                         height: '8px',
+                         borderRadius: '4px'
+                       }}
                      />
                   </div>
                   
