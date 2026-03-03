@@ -192,7 +192,7 @@ const ChartGenerator = () => {
                     </h3>
                     <button 
                         onClick={addDataPoint}
-                        className="p-1.5 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-all"
+                        className="p-1.5 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-all cursor-pointer"
                         title="添加数据"
                     >
                         <Plus size={18} />
@@ -244,7 +244,7 @@ const ChartGenerator = () => {
                     <h3 className="font-bold text-text-theme">图表预览</h3>
                     <button 
                         onClick={downloadChart}
-                        className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg font-bold hover:bg-accent-hover transition-all shadow-lg shadow-accent/20"
+                        className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg font-bold hover:bg-accent-hover transition-all shadow-lg shadow-accent/20 cursor-pointer"
                     >
                         <Download size={18} />
                         下载图表
@@ -258,18 +258,7 @@ const ChartGenerator = () => {
           </div>
        </div>
 
-       <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0,0,0,0.05);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: rgba(0,0,0,0.1);
-          border-radius: 20px;
-        }
-      `}</style>
+
     </div>
   );
 };
