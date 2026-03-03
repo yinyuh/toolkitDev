@@ -12,40 +12,16 @@ order: 21
 <Layout title="在线故障文字生成器 (Glitch Text)" description="免费在线故障文字生成器，一键生成带有故障效果的 Zalgo 文本，支持自定义混乱度和方向，适用于社交媒体和个性化设计。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
         故障文字生成器
       </h1>
       <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-        将普通文本转换为具有“故障”或“诅咒”效果的 Zalgo 文本。通过添加 Unicode 组合字符，让文字看起来混乱、破碎。
+        将普通文本转换为具有"故障"或"诅咒"效果的 Zalgo 文本。通过添加 Unicode 组合字符，让文字看起来混乱、破碎。
       </p>
     </div>
     
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
       <GlitchTextGenerator client:only="react" />
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">混乱控制</h3>
-        <p class="text-gray-600 dark:text-gray-400">自由调节故障程度，从轻微干扰到完全不可读的混乱效果。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 15 22 12 19 9"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">方向自定义</h3>
-        <p class="text-gray-600 dark:text-gray-400">选择故障符号出现的位置（上方、中间、下方），打造独特视觉风格。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">一键复制</h3>
-        <p class="text-gray-600 dark:text-gray-400">生成的文本兼容大多数社交平台（Twitter, Discord, Instagram 等）。</p>
-      </div>
     </div>
   </div>
 </Layout>

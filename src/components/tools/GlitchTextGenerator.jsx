@@ -2,6 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { Copy, Check, RotateCcw, Zap } from 'lucide-react';
 import '@fontsource/courier-prime';
 
+// Add global styles for range input
+const style = document.createElement('style');
+style.textContent = `
+  input[type="range"] {
+    accent-color: red;
+    background: white;
+    border: 1px solid #ddd;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: red;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    margin-top: -6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: red;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 4px;
+  }
+  input[type="range"]::-moz-range-track {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 4px;
+  }
+`;
+document.head.appendChild(style);
+
 const GlitchTextGenerator = () => {
   const [text, setText] = useState('GLITCH TEXT');
   const [chaos, setChaos] = useState(30);
@@ -11,16 +58,16 @@ const GlitchTextGenerator = () => {
 
   // Zalgo characters
   const ZALGO_UP = [
-    '\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310', 
+    '\u030d', '\u030e', '\u0304', '\u0305', '\u0311', '\u0310', '\u0306', '\u0310', 
     '\u0352', '\u0357', '\u0351', '\u0307', '\u0308', '\u030a', '\u0342', '\u0343', 
     '\u0344', '\u034a', '\u034b', '\u034c', '\u0303', '\u0302', '\u030c', '\u0350', 
-    '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u033d', 
+    '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u031d', 
     '\u0309', '\u0363', '\u0364', '\u0365', '\u0366', '\u0367', '\u0368', '\u0369', 
     '\u036a', '\u036b', '\u036c', '\u036d', '\u036e', '\u036f', '\u033e', '\u035b', 
     '\u0346', '\u031a'
   ];
   const ZALGO_DOWN = [
-    '\u0316', '\u0317', '\u0318', '\u0319', '\u031c', '\u031d', '\u031e', '\u031f', 
+    '\u0316', '\u0317', '\u0318', '\u031c', '\u031d', '\u031e', '\u031f', 
     '\u0320', '\u0324', '\u0325', '\u0326', '\u0329', '\u032a', '\u032b', '\u032c', 
     '\u032d', '\u032e', '\u032f', '\u0330', '\u0331', '\u0332', '\u0333', '\u0339', 
     '\u033a', '\u033b', '\u033c', '\u0345', '\u0347', '\u0348', '\u0349', '\u034d', 
@@ -102,7 +149,7 @@ const GlitchTextGenerator = () => {
                         max="100" 
                         value={chaos}
                         onChange={(e) => setChaos(parseInt(e.target.value))}
-                        className="w-full accent-accent h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
+                        className="w-full h-2 rounded-lg appearance-none cursor-pointer"
                     />
                 </div>
 
