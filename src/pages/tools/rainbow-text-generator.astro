@@ -12,7 +12,7 @@ order: 22
 <Layout title="在线彩虹文字生成器 (Rainbow Text)" description="免费在线彩虹文字生成器，一键生成渐变色文字，支持 HTML, BBCode, Markdown 格式，适用于论坛发帖、博客排版和个性签名。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
         彩虹文字生成器
       </h1>
       <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -20,32 +20,8 @@ order: 22
       </p>
     </div>
     
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
       <RainbowTextGenerator client:only="react" />
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">色彩丰富</h3>
-        <p class="text-gray-600 dark:text-gray-400">基于 HSL 色彩空间生成平滑的彩虹渐变效果，支持自定义颜色跨度。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">多格式支持</h3>
-        <p class="text-gray-600 dark:text-gray-400">兼容 HTML (网页), BBCode (论坛), Markdown (文档) 等多种格式。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">实时预览</h3>
-        <p class="text-gray-600 dark:text-gray-400">所见即所得，调整参数后立即查看文字效果，满意后一键复制。</p>
-      </div>
     </div>
   </div>
 </Layout>
