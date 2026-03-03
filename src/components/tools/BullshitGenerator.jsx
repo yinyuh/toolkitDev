@@ -1,6 +1,53 @@
 import React, { useState } from 'react';
 import { Sparkles, Copy, Check, RefreshCw, FileText } from 'lucide-react';
 
+// Add global styles for range input
+const style = document.createElement('style');
+style.textContent = `
+  input[type="range"] {
+    accent-color: red;
+    background: white;
+    border: 1px solid #ddd;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: red;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    margin-top: -6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: red;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 4px;
+  }
+  input[type="range"]::-moz-range-track {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 4px;
+  }
+`;
+document.head.appendChild(style);
+
 const BullshitGenerator = () => {
   const [topic, setTopic] = useState('今天中午吃什么');
   const [length, setLength] = useState(500);
@@ -164,7 +211,7 @@ const BullshitGenerator = () => {
                           step="100"
                           value={length}
                           onChange={(e) => setLength(parseInt(e.target.value))}
-                          className="flex-1 accent-accent h-2 bg-div-secondary rounded-lg appearance-none cursor-pointer"
+                          className="flex-1 h-2 rounded-lg appearance-none cursor-pointer"
                        />
                        <button 
                           onClick={generate}
