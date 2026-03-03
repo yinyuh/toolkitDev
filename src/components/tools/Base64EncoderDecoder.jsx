@@ -94,7 +94,7 @@ const Base64EncoderDecoder = () => {
             type="button"
             onClick={() => setMode('encode')}
             className={`px-6 py-3 text-sm font-medium ${mode === 'encode' 
-              ? 'bg-theme-primary text-white rounded-l-lg' 
+              ? 'bg-accent text-white rounded-l-lg' 
               : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
           >
             <FileText className="inline-block w-4 h-4 mr-2" />
@@ -104,7 +104,7 @@ const Base64EncoderDecoder = () => {
             type="button"
             onClick={() => setMode('decode')}
             className={`px-6 py-3 text-sm font-medium ${mode === 'decode' 
-              ? 'bg-theme-primary text-white rounded-r-lg' 
+              ? 'bg-accent text-white rounded-r-lg' 
               : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
           >
             <FileText className="inline-block w-4 h-4 mr-2" />
@@ -193,6 +193,18 @@ const Base64EncoderDecoder = () => {
               </button>
             </div>
           </div>
+
+          {/* 占位区域，与左边文件上传区域高度匹配 */}
+          {mode === 'encode' && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
+                &nbsp;
+              </label>
+              <div className="w-full h-32 rounded-lg bg-div-secondary">
+                {/* 占位空间 */}
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2">
