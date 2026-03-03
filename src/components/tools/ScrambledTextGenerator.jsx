@@ -75,8 +75,8 @@ const ScrambledTextGenerator = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-6">
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+    <div className="w-full p-4 md:p-6">
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           
           {/* Input */}
           <div className="flex flex-col h-full">
@@ -88,16 +88,9 @@ const ScrambledTextGenerator = () => {
                 <textarea 
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all min-h-[200px] resize-none"
+                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none transition-all min-h-[300px] resize-none"
                     placeholder="输入一段文字（支持中文/英文）..."
                 />
-             </div>
-          </div>
-
-          {/* Arrow (Desktop only) */}
-          <div className="hidden md:flex items-center justify-center">
-             <div className="bg-div-secondary rounded-full p-2 text-text-secondary">
-                <ArrowRight size={24} />
              </div>
           </div>
 
@@ -112,14 +105,15 @@ const ScrambledTextGenerator = () => {
                     <div className="flex gap-2">
                         <button 
                             onClick={scrambleText}
-                            className="p-2 text-text-secondary hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
+                            className="p-2 text-text-secondary hover:text-accent hover:bg-accent/10 rounded-lg transition-all cursor-pointer flex items-center"
                             title="重新乱序"
                         >
+                            <span className="mr-1 text-sm">重新乱序</span>
                             <Shuffle size={18} />
                         </button>
                         <button 
                             onClick={handleCopy}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-all shadow-sm"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent-hover transition-all shadow-sm cursor-pointer"
                         >
                             {copied ? <Check size={16} /> : <Copy size={16} />}
                             {copied ? '已复制' : '复制'}
@@ -129,7 +123,7 @@ const ScrambledTextGenerator = () => {
                 <textarea 
                     readOnly
                     value={outputText}
-                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:outline-none min-h-[200px] resize-none"
+                    className="flex-1 w-full px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:outline-none min-h-[300px] resize-none"
                 />
              </div>
           </div>
