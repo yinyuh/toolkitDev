@@ -115,8 +115,8 @@ const Base64EncoderDecoder = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Section */}
-        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 h-[700px] flex flex-col overflow-hidden">
+          <div className="flex justify-between items-center mb-4 flex-shrink-0">
             <h3 className="text-lg font-bold text-text-theme">
               {mode === 'encode' ? '输入文本或上传文件' : '输入 Base64 编码'}
             </h3>
@@ -129,7 +129,7 @@ const Base64EncoderDecoder = () => {
           </div>
 
           {mode === 'encode' && (
-            <div className="mb-4">
+            <div className="mb-4 flex-shrink-0">
               <label className="block text-sm font-medium text-text-secondary mb-2">
                 或上传文件
               </label>
@@ -155,22 +155,22 @@ const Base64EncoderDecoder = () => {
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
+          <div className="flex-1 flex flex-col min-h-0">
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex-shrink-0">
               {mode === 'encode' ? '输入文本' : '输入 Base64 编码'}
             </label>
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={mode === 'encode' ? '输入要编码的文本...' : '输入要解码的 Base64 编码...'}
-              className="w-full h-64 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none"
+              className="w-full flex-1 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none min-h-0"
             />
           </div>
         </div>
 
         {/* Output Section */}
-        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 h-[700px] flex flex-col overflow-hidden">
+          <div className="flex justify-between items-center mb-4 flex-shrink-0">
             <h3 className="text-lg font-bold text-text-theme">
               {mode === 'encode' ? 'Base64 编码结果' : '解码结果'}
             </h3>
@@ -194,39 +194,27 @@ const Base64EncoderDecoder = () => {
             </div>
           </div>
 
-          {/* 占位区域，与左边文件上传区域高度匹配 */}
-          {mode === 'encode' && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-text-secondary mb-2">
-                &nbsp;
-              </label>
-              <div className="w-full h-32 rounded-lg bg-div-secondary">
-                {/* 占位空间 */}
-              </div>
-            </div>
-          )}
-
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2 flex-shrink-0">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">
+          <div className="flex-1 flex flex-col min-h-0">
+            <label className="block text-sm font-medium text-text-secondary mb-2 flex-shrink-0">
               结果
             </label>
             <textarea
               value={outputText}
               readOnly
-              className="w-full h-64 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none"
+              className="w-full flex-1 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none min-h-0"
               placeholder={mode === 'encode' ? '编码结果将显示在这里...' : '解码结果将显示在这里...'}
             />
           </div>
 
           {outputText && (
-            <div className="mt-4 text-sm text-text-secondary">
+            <div className="mt-4 text-sm text-text-secondary flex-shrink-0">
               {mode === 'encode' 
                 ? `编码后长度: ${outputText.length} 字符` 
                 : `解码后长度: ${outputText.length} 字符`}
