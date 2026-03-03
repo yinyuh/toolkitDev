@@ -12,6 +12,7 @@ const VideoToGif = () => {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('idle'); // idle, loading_ffmpeg, ready, converting, done, error
   const [error, setError] = useState(null);
+  const [showFullscreenGif, setShowFullscreenGif] = useState(false);
   
   // Settings
   const [startTime, setStartTime] = useState(0);
@@ -163,6 +164,37 @@ const VideoToGif = () => {
       return `${mins}:${secs.toString().padStart(2, '0')}.${ms}`;
   };
 
+  // Format seconds to MM:SS for input display
+  const formatTimeInput = (seconds) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Parse MM:SS format to seconds
+  const parseTimeInput = (input) => {
+      if (!input || input.trim() === '') return null;
+      
+      // Support formats: "90", "1:30", "01:30", "1:30.5"
+      const trimmed = input.trim();
+      
+      // Check if it's just a number (seconds only)
+      if (!trimmed.includes(':')) {
+          const seconds = parseFloat(trimmed);
+          return isNaN(seconds) ? null : seconds;
+      }
+      
+      // Parse MM:SS or M:SS format
+      const parts = trimmed.split(':');
+      if (parts.length === 2) {
+          const mins = parseInt(parts[0]) || 0;
+          const secs = parseFloat(parts[1]) || 0;
+          return mins * 60 + secs;
+      }
+      
+      return null;
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 bg-theme-primary rounded-xl">
       {!loaded && status !== 'error' ? (
@@ -214,16 +246,16 @@ const VideoToGif = () => {
                     </div>
                     <button 
                        onClick={() => { setVideoFile(null); setStatus('idle'); setOutputUrl(''); setVideoUrl(''); }}
-                       className="text-red-500 hover:text-red-600 text-sm font-medium"
+                       className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-lg text-sm font-medium cursor-pointer transition-all"
                     >
                        重新上传
                     </button>
                  </div>
 
-                 {/* Video Preview & Settings Grid */}
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    {/* Left: Video Preview */}
-                    <div>
+                 {/* Video Preview & Settings */}
+                 <div className="mb-8">
+                    {/* Preview Section - Full Width */}
+                    <div className="mb-6">
                         <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
                             <Play size={18} /> 预览与裁剪
                         </h4>
@@ -236,9 +268,26 @@ const VideoToGif = () => {
                                 onLoadedMetadata={onVideoLoadedMetadata}
                             />
                         </div>
-                        <div className="flex gap-4 items-center">
+                        <div className="flex gap-4 items-start">
                             <div className="flex-1">
-                                <label className="block text-xs text-text-secondary mb-1">开始时间 ({formatTime(startTime)})</label>
+                                <label className="block text-xs text-text-secondary mb-1">开始时间</label>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="0:00"
+                                        value={formatTimeInput(startTime)} 
+                                        onChange={(e) => {
+                                            const val = parseTimeInput(e.target.value);
+                                            if (val !== null) {
+                                                const newVal = Math.max(0, Math.min(val, endTime - 0.5));
+                                                setStartTime(newVal);
+                                                if(videoRef.current) videoRef.current.currentTime = newVal;
+                                            }
+                                        }}
+                                        className="w-24 px-2 py-1 text-sm border border-border-theme rounded bg-div-theme text-text-theme focus:border-accent outline-none text-center"
+                                    />
+                                    <span className="text-xs text-text-secondary">分:秒</span>
+                                </div>
                                 <input 
                                     type="range" 
                                     min="0" 
@@ -254,7 +303,24 @@ const VideoToGif = () => {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-xs text-text-secondary mb-1">结束时间 ({formatTime(endTime)})</label>
+                                <label className="block text-xs text-text-secondary mb-1">结束时间</label>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="0:00"
+                                        value={formatTimeInput(endTime)} 
+                                        onChange={(e) => {
+                                            const val = parseTimeInput(e.target.value);
+                                            if (val !== null) {
+                                                const newVal = Math.max(startTime + 0.5, Math.min(val, duration));
+                                                setEndTime(newVal);
+                                                if(videoRef.current) videoRef.current.currentTime = newVal;
+                                            }
+                                        }}
+                                        className="w-24 px-2 py-1 text-sm border border-border-theme rounded bg-div-theme text-text-theme focus:border-accent outline-none text-center"
+                                    />
+                                    <span className="text-xs text-text-secondary">分:秒</span>
+                                </div>
                                 <input 
                                     type="range" 
                                     min="0" 
@@ -275,70 +341,71 @@ const VideoToGif = () => {
                         </div>
                     </div>
 
-                    {/* Right: Settings */}
-                    <div className="flex flex-col">
+                    {/* Settings Section - Below Preview */}
+                    <div>
                          <h4 className="font-bold text-text-theme mb-3 flex items-center gap-2">
                             <Settings size={18} /> 输出设置
                         </h4>
                         
-                        <div className="bg-div-secondary rounded-xl p-5 space-y-5 flex-1">
-                            <div>
-                                <label className="block text-sm font-medium text-text-secondary mb-2">
-                                    宽度 (px)
-                                </label>
-                                <div className="flex flex-wrap gap-2">
-                                    {[320, 480, 640].map(w => (
-                                        <button
-                                            key={w}
-                                            onClick={() => setWidth(w)}
-                                            className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all ${
-                                                width === w
-                                                ? 'border-accent bg-accent/10 text-accent'
-                                                : 'border-border-theme bg-div-theme text-text-secondary'
-                                            }`}
-                                        >
-                                            {w}px
-                                        </button>
-                                    ))}
-                                    <div className="relative flex-1 min-w-[80px]">
+                        <div className="bg-div-secondary rounded-xl p-5 space-y-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                                        宽度 (px)
+                                    </label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {[320, 480, 640].map(w => (
+                                            <button
+                                                key={w}
+                                                onClick={() => setWidth(w)}
+                                                className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all ${
+                                                    width === w
+                                                    ? 'border-accent bg-accent/10 text-accent'
+                                                    : 'border-border-theme bg-div-theme text-text-secondary'
+                                                }`}
+                                            >
+                                                {w}px
+                                            </button>
+                                        ))}
+                                        <div className="relative flex-1 min-w-[80px]">
+                                            <input 
+                                                type="number" 
+                                                value={width}
+                                                onChange={(e) => setWidth(parseInt(e.target.value) || 320)}
+                                                className="w-full px-3 py-1.5 rounded-lg border border-border-theme bg-div-theme text-sm focus:border-accent outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                                        帧率 (FPS) - 越低体积越小
+                                    </label>
+                                    <div className="flex items-center gap-3">
                                         <input 
-                                            type="number" 
-                                            value={width}
-                                            onChange={(e) => setWidth(parseInt(e.target.value) || 320)}
-                                            className="w-full px-3 py-1.5 rounded-lg border border-border-theme bg-div-theme text-sm focus:border-accent outline-none"
+                                            type="range" 
+                                            min="5" 
+                                            max="30" 
+                                            step="1" 
+                                            value={fps}
+                                            onChange={(e) => setFps(parseInt(e.target.value))}
+                                            className="flex-1 accent-accent"
                                         />
+                                        <span className="w-12 text-right font-mono text-text-secondary">{fps}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-text-secondary mb-2">
-                                    帧率 (FPS) - 越低体积越小
-                                </label>
-                                <div className="flex items-center gap-3">
-                                    <input 
-                                        type="range" 
-                                        min="5" 
-                                        max="30" 
-                                        step="1" 
-                                        value={fps}
-                                        onChange={(e) => setFps(parseInt(e.target.value))}
-                                        className="flex-1 accent-accent"
-                                    />
-                                    <span className="w-12 text-right font-mono text-text-secondary">{fps}</span>
-                                </div>
-                            </div>
-
-                            <div className="mt-auto pt-4">
-                                {status === 'ready' && (
-                                    <button 
-                                        onClick={convert}
-                                        className="w-full py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2"
-                                    >
-                                        开始生成 GIF
-                                        <ArrowRight size={18} />
-                                    </button>
-                                )}
+                            <div className="pt-2">
+                                <button 
+                                    onClick={convert}
+                                    disabled={status !== 'ready'}
+                                    className="w-full py-3 bg-accent text-white rounded-xl font-bold hover:bg-accent-hover shadow-lg shadow-accent/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    开始生成 GIF
+                                    <ArrowRight size={18} />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -365,9 +432,12 @@ const VideoToGif = () => {
                  {status === 'done' && outputUrl && (
                     <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-xl p-6 animate-in fade-in slide-in-from-bottom-4">
                        <div className="flex flex-col md:flex-row gap-6 items-center">
-                          <div className="relative group">
-                              <img src={outputUrl} alt="Generated GIF" className="max-h-[300px] rounded-lg shadow-md bg-white/50" />
+                          <div className="relative group cursor-pointer" onClick={() => setShowFullscreenGif(true)}>
+                              <img src={outputUrl} alt="Generated GIF" className="max-h-[300px] rounded-lg shadow-md bg-white/50 hover:opacity-90 transition-opacity" />
                               <div className="absolute top-2 right-2 bg-div-secondary text-text-theme text-xs px-2 py-1 rounded">GIF</div>
+                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <div className="bg-black/50 text-white px-3 py-1 rounded-lg text-sm">点击全屏查看</div>
+                              </div>
                           </div>
                           
                           <div className="flex-1 text-center md:text-left">
@@ -390,7 +460,7 @@ const VideoToGif = () => {
                                 </a>
                                 <button 
                                    onClick={() => { setStatus('ready'); setOutputUrl(''); }}
-                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-div-theme border border-border-theme text-text-theme rounded-lg font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all"
+                                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-div-theme border border-border-theme text-text-theme rounded-lg font-bold hover:bg-div-hover dark:hover:bg-div-hover transition-all cursor-pointer"
                                 >
                                    继续调整
                                 </button>
@@ -408,6 +478,29 @@ const VideoToGif = () => {
                  )}
               </div>
            )}
+        </div>
+      )}
+
+      {/* Fullscreen GIF Modal */}
+      {showFullscreenGif && outputUrl && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowFullscreenGif(false)}
+        >
+          <div className="relative max-w-full max-h-full">
+            <button
+              onClick={() => setShowFullscreenGif(false)}
+              className="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl font-bold"
+            >
+              ✕
+            </button>
+            <img 
+              src={outputUrl} 
+              alt="Generated GIF Fullscreen" 
+              className="max-w-full max-h-[90vh] object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
         </div>
       )}
     </div>
