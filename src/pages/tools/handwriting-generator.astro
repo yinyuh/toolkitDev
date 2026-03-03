@@ -12,40 +12,16 @@ order: 24
 <Layout title="在线手写文本生成器 (Handwriting)" description="免费在线手写文本生成器，将打印文字转换为逼真的手写体图片，支持多种字体、纸张背景和墨水颜色，模拟真实手写效果。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
         手写文本生成器
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
         不想手抄？输入文字，一键生成逼真的手写笔记图片。支持多种手写字体、背景纸张和墨水颜色，甚至可以模拟笔迹抖动。
       </p>
     </div>
     
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
       <HandwritingGenerator client:only="react" />
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-tool"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">真实模拟</h3>
-        <p class="text-gray-600 dark:text-gray-400">独有的“扰动”算法，模拟真实手写的字间距不均和行间倾斜，告别死板。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sticky-note"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v6h6"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">丰富背景</h3>
-        <p class="text-gray-600 dark:text-gray-400">提供横线纸、方格纸、白纸等多种背景，满足笔记、手账、信件等不同场景。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">高清导出</h3>
-        <p class="text-gray-600 dark:text-gray-400">一键导出高分辨率 PNG 图片，方便打印或插入到文档中。</p>
-      </div>
     </div>
   </div>
 </Layout>

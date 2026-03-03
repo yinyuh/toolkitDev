@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Download, Type, PenTool } from 'lucide-react';
 import '@fontsource/caveat';
 import '@fontsource/patrick-hand';
+import '@fontsource/indie-flower';
+import '@fontsource/allura';
+import '@fontsource/kalam';
+import '@fontsource/nunito';
 
 const HandwritingGenerator = () => {
   const [text, setText] = useState('This is a handwritten note.\nYou can type anything here.\nHello World!');
@@ -64,29 +68,117 @@ const HandwritingGenerator = () => {
     }
 
     // Draw Text
-    ctx.font = `${fontSize}px "${font}"`;
     ctx.fillStyle = color;
     ctx.textBaseline = 'bottom'; // Align to line
     
     const lines = text.split('\n');
-    let startY = 100; // Top padding
+    let currentY = 100; // Top padding
     const lineSpacing = fontSize * lineHeight;
+    const maxWidth = width - 180; // Maximum width for text (left and right margins)
 
     // Override startY if lined paper to align with lines
     if (paperType === 'lined') {
-        startY = 100; // First line y position
+        currentY = 100; // First line y position
     }
 
     lines.forEach((line, lineIndex) => {
         let x = 90; // Left padding (after margin)
-        let y = startY + (lineIndex * lineSpacing);
+        let y = currentY;
 
         if (variation) {
             // Random line slant
             y += (Math.random() - 0.5) * 2;
         }
 
-        // Character by character for more variation
+        // 自动换行处理
+        let currentLine = '';
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            
+            // 为中文和英文使用不同的字体策略
+            const isChinese = /[\u4e00-\u9fa5]/.test(char);
+            let currentFont = font;
+            
+            // 检查是否选择了中文字体
+            const chineseFonts = ['Ma Shan Zheng', 'STXingkai', 'KaiTi', 'STCaiyun', 'STZhongsong', 'STFangsong', 'ZCOOL QingKe HuangYou', 'ZCOOL XiaoWei', 'ZCOOL KuaiLe', 'ZCOOL QingFeng'];
+            const isChineseFont = chineseFonts.includes(font);
+            
+            // 设置字体以测量宽度
+            if (isChinese || isChineseFont) {
+                switch (font) {
+                    case 'Ma Shan Zheng':
+                        ctx.font = `${fontSize}px "Ma Shan Zheng", cursive`;
+                        break;
+                    case 'STXingkai':
+                        ctx.font = `${fontSize}px "STXingkai", cursive`;
+                        break;
+                    case 'KaiTi':
+                        ctx.font = `${fontSize}px "KaiTi", "STKaiti", serif`;
+                        break;
+                    case 'STCaiyun':
+                        ctx.font = `${fontSize}px "STCaiyun", cursive`;
+                        break;
+                    case 'STZhongsong':
+                        ctx.font = `${fontSize}px "STZhongsong", serif`;
+                        break;
+                    case 'STFangsong':
+                        ctx.font = `${fontSize}px "STFangsong", serif`;
+                        break;
+                    case 'ZCOOL QingKe HuangYou':
+                        ctx.font = `${fontSize}px "ZCOOL QingKe HuangYou", sans-serif`;
+                        break;
+                    case 'ZCOOL XiaoWei':
+                        ctx.font = `${fontSize}px "ZCOOL XiaoWei", serif`;
+                        break;
+                    case 'ZCOOL KuaiLe':
+                        ctx.font = `${fontSize}px "ZCOOL KuaiLe", sans-serif`;
+                        break;
+                    case 'ZCOOL QingFeng':
+                        ctx.font = `${fontSize}px "ZCOOL QingFeng", serif`;
+                        break;
+                    default:
+                        ctx.font = `${fontSize}px "Noto Sans SC", sans-serif`;
+                }
+            } else {
+                ctx.font = `${fontSize}px "${font}"`;
+            }
+            
+            // 测量当前行加上新字符的宽度
+            const testLine = currentLine + char;
+            const testWidth = ctx.measureText(testLine).width;
+            
+            // 如果超出最大宽度，换行
+            if (testWidth > maxWidth) {
+                // 绘制当前行
+                drawLine(currentLine, 90, y);
+                
+                // 重置当前行，换到下一行
+                currentLine = char;
+                y += lineSpacing;
+                if (variation) {
+                    y += (Math.random() - 0.5) * 2;
+                }
+            } else {
+                currentLine += char;
+            }
+        }
+        
+        // 绘制最后一行
+        if (currentLine) {
+            drawLine(currentLine, 90, y);
+            // 更新当前Y坐标，为下一行做准备
+            currentY = y + lineSpacing;
+        } else {
+            // 如果是空行，也需要增加行间距
+            currentY += lineSpacing;
+        }
+    });
+    
+    // 绘制单行文字的函数
+    function drawLine(line, startX, startY) {
+        let x = startX;
+        let y = startY;
+        
         for (let i = 0; i < line.length; i++) {
             const char = line[i];
             
@@ -103,12 +195,115 @@ const HandwritingGenerator = () => {
             ctx.save();
             ctx.translate(charX, charY);
             ctx.rotate(angle);
+            
+            // 为中文和英文使用不同的字体策略
+            const isChinese = /[\u4e00-\u9fa5]/.test(char);
+            
+            // 检查是否选择了中文字体
+            const chineseFonts = ['Ma Shan Zheng', 'STXingkai', 'KaiTi', 'STCaiyun', 'STZhongsong', 'STFangsong', 'ZCOOL QingKe HuangYou', 'ZCOOL XiaoWei', 'ZCOOL KuaiLe', 'ZCOOL QingFeng'];
+            const isChineseFont = chineseFonts.includes(font);
+            
+            if (isChinese || isChineseFont) {
+                // 为中文或选择了中文字体时使用对应的字体
+                switch (font) {
+                    case 'Ma Shan Zheng':
+                        ctx.font = `${fontSize}px "Ma Shan Zheng", cursive`;
+                        break;
+                    case 'STXingkai':
+                        ctx.font = `${fontSize}px "STXingkai", cursive`;
+                        break;
+                    case 'KaiTi':
+                        ctx.font = `${fontSize}px "KaiTi", "STKaiti", serif`;
+                        break;
+                    case 'STCaiyun':
+                        ctx.font = `${fontSize}px "STCaiyun", cursive`;
+                        break;
+                    case 'STZhongsong':
+                        ctx.font = `${fontSize}px "STZhongsong", serif`;
+                        break;
+                    case 'STFangsong':
+                        ctx.font = `${fontSize}px "STFangsong", serif`;
+                        break;
+                    case 'ZCOOL QingKe HuangYou':
+                        ctx.font = `${fontSize}px "ZCOOL QingKe HuangYou", sans-serif`;
+                        break;
+                    case 'ZCOOL XiaoWei':
+                        ctx.font = `${fontSize}px "ZCOOL XiaoWei", serif`;
+                        break;
+                    case 'ZCOOL KuaiLe':
+                        ctx.font = `${fontSize}px "ZCOOL KuaiLe", sans-serif`;
+                        break;
+                    case 'ZCOOL QingFeng':
+                        ctx.font = `${fontSize}px "ZCOOL QingFeng", serif`;
+                        break;
+                    case 'Caveat':
+                    case 'Indie Flower':
+                        ctx.font = `${fontSize}px "Ma Shan Zheng", cursive`;
+                        break;
+                    case 'Patrick Hand':
+                    case 'Kalam':
+                        ctx.font = `${fontSize}px "ZCOOL QingKe HuangYou", sans-serif`;
+                        break;
+                    case 'Allura':
+                        ctx.font = `${fontSize}px "ZCOOL XiaoWei", serif`;
+                        break;
+                    case 'Nunito':
+                        ctx.font = `${fontSize}px "Noto Sans SC", sans-serif`;
+                        break;
+                    default:
+                        ctx.font = `${fontSize}px "Noto Sans SC", sans-serif`;
+                }
+            } else {
+                // 为英文使用选择的字体
+                ctx.font = `${fontSize}px "${font}"`;
+            }
+            
             ctx.fillText(char, 0, 0);
             ctx.restore();
 
+            // 重新设置字体以正确测量宽度
+            if (isChinese || isChineseFont) {
+                // 为中文或选择了中文字体时使用对应的字体测量宽度
+                switch (font) {
+                    case 'Ma Shan Zheng':
+                        ctx.font = `${fontSize}px "Ma Shan Zheng", cursive`;
+                        break;
+                    case 'STXingkai':
+                        ctx.font = `${fontSize}px "STXingkai", cursive`;
+                        break;
+                    case 'KaiTi':
+                        ctx.font = `${fontSize}px "KaiTi", "STKaiti", serif`;
+                        break;
+                    case 'STCaiyun':
+                        ctx.font = `${fontSize}px "STCaiyun", cursive`;
+                        break;
+                    case 'STZhongsong':
+                        ctx.font = `${fontSize}px "STZhongsong", serif`;
+                        break;
+                    case 'STFangsong':
+                        ctx.font = `${fontSize}px "STFangsong", serif`;
+                        break;
+                    case 'ZCOOL QingKe HuangYou':
+                        ctx.font = `${fontSize}px "ZCOOL QingKe HuangYou", sans-serif`;
+                        break;
+                    case 'ZCOOL XiaoWei':
+                        ctx.font = `${fontSize}px "ZCOOL XiaoWei", serif`;
+                        break;
+                    case 'ZCOOL KuaiLe':
+                        ctx.font = `${fontSize}px "ZCOOL KuaiLe", sans-serif`;
+                        break;
+                    case 'ZCOOL QingFeng':
+                        ctx.font = `${fontSize}px "ZCOOL QingFeng", serif`;
+                        break;
+                    default:
+                        ctx.font = `${fontSize}px "Noto Sans SC", sans-serif`;
+                }
+            } else {
+                ctx.font = `${fontSize}px "${font}"`;
+            }
             x += ctx.measureText(char).width;
         }
-    });
+    }
   };
 
   const handleDownload = () => {
@@ -122,6 +317,20 @@ const HandwritingGenerator = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-6">
+       {/* 加载中文字体 */}
+       <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}>
+         <div style={{ fontFamily: 'Ma Shan Zheng, cursive' }}>中文字体</div>
+         <div style={{ fontFamily: 'ZCOOL QingKe HuangYou, sans-serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'ZCOOL XiaoWei, serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'ZCOOL KuaiLe, sans-serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'ZCOOL QingFeng, serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'Noto Sans SC, sans-serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'KaiTi, STKaiti, serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'STCaiyun, cursive' }}>中文字体</div>
+         <div style={{ fontFamily: 'STXingkai, cursive' }}>中文字体</div>
+         <div style={{ fontFamily: 'STZhongsong, serif' }}>中文字体</div>
+         <div style={{ fontFamily: 'STFangsong, serif' }}>中文字体</div>
+       </div>
        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Controls */}
@@ -144,21 +353,129 @@ const HandwritingGenerator = () => {
 
                     <div>
                         <label className="block text-sm font-medium text-text-secondary mb-2">字体风格</label>
-                        <div className="grid grid-cols-2 gap-2">
-                            <button 
-                                onClick={() => setFont('Caveat')}
-                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Caveat' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
-                                style={{ fontFamily: 'Caveat' }}
-                            >
-                                Caveat
-                            </button>
-                            <button 
-                                onClick={() => setFont('Patrick Hand')}
-                                className={`px-3 py-2 rounded-lg border text-lg ${font === 'Patrick Hand' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
-                                style={{ fontFamily: 'Patrick Hand' }}
-                            >
-                                Patrick Hand
-                            </button>
+                        <div className="space-y-4">
+                            <div>
+                                <h4 className="text-sm font-medium text-text-secondary mb-2">英文手写体</h4>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button 
+                                        onClick={() => setFont('Caveat')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Caveat' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Caveat' }}
+                                    >
+                                        Caveat
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('Patrick Hand')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Patrick Hand' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Patrick Hand' }}
+                                    >
+                                        Patrick Hand
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('Indie Flower')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Indie Flower' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Indie Flower' }}
+                                    >
+                                        Indie Flower
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('Allura')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Allura' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Allura' }}
+                                    >
+                                        Allura
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('Kalam')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Kalam' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Kalam' }}
+                                    >
+                                        Kalam
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('Nunito')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Nunito' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Nunito' }}
+                                    >
+                                        Nunito
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-medium text-text-secondary mb-2">中文手写体</h4>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button 
+                                        onClick={() => setFont('Ma Shan Zheng')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'Ma Shan Zheng' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'Ma Shan Zheng, cursive' }}
+                                    >
+                                        马善政 (草书)
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('STXingkai')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'STXingkai' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'STXingkai, cursive' }}
+                                    >
+                                        行楷
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('KaiTi')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'KaiTi' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'KaiTi, STKaiti, serif' }}
+                                    >
+                                        楷体
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('STCaiyun')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'STCaiyun' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'STCaiyun, cursive' }}
+                                    >
+                                        彩云体
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('STZhongsong')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'STZhongsong' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'STZhongsong, serif' }}
+                                    >
+                                        宋体
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('STFangsong')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'STFangsong' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'STFangsong, serif' }}
+                                    >
+                                        仿宋
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('ZCOOL QingKe HuangYou')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'ZCOOL QingKe HuangYou' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'ZCOOL QingKe HuangYou, sans-serif' }}
+                                    >
+                                        黄悠体 (行书)
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('ZCOOL XiaoWei')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'ZCOOL XiaoWei' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'ZCOOL XiaoWei, serif' }}
+                                    >
+                                        小薇体 (楷书)
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('ZCOOL KuaiLe')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'ZCOOL KuaiLe' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'ZCOOL KuaiLe, sans-serif' }}
+                                    >
+                                        快乐体
+                                    </button>
+                                    <button 
+                                        onClick={() => setFont('ZCOOL QingFeng')}
+                                        className={`px-3 py-2 rounded-lg border text-lg ${font === 'ZCOOL QingFeng' ? 'border-accent bg-accent/10 text-accent' : 'border-border-theme'}`}
+                                        style={{ fontFamily: 'ZCOOL QingFeng, serif' }}
+                                    >
+                                        清风体
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
