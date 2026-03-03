@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Copy, Check, Feather, Sparkles } from 'lucide-react';
 
 const WingNicknameGenerator = () => {
-  const [nickname, setNickname] = useState('王者');
+  const [nickname, setNickname] = useState('KING');
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const templates = [
@@ -155,7 +155,7 @@ const WingNicknameGenerator = () => {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className="w-full max-w-lg px-6 py-4 rounded-full border-2 border-border-theme bg-div-secondary text-text-theme text-xl font-bold text-center focus:ring-4 focus:ring-accent/20 focus:border-accent outline-none transition-all"
-                placeholder="例如：王者"
+                placeholder="例如：KING"
              />
           </div>
 
