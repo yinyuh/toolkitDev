@@ -1,237 +1,454 @@
-import React, { useState, useEffect } from 'react';
-import { Copy, Check, Upload, Download, AlertCircle, FileText, ArrowLeftRight } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { 
+  Copy, 
+  Upload, 
+  Download, 
+  Trash2, 
+  FileText, 
+  X, 
+  ArrowRight, 
+  ArrowLeft, 
+  ArrowDown, 
+  ArrowUp, 
+  Clipboard,
+  Check,
+  Image as ImageIcon,
+  File
+} from 'lucide-react';
 
 const Base64EncoderDecoder = () => {
-  const [mode, setMode] = useState('encode'); // 'encode' or 'decode'
+  // State
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
   const [file, setFile] = useState(null);
+  const [previewData, setPreviewData] = useState(null); // { type: 'image' | 'file', src: string, mimeType: string }
+  const [includeDataUri, setIncludeDataUri] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastEdited, setLastEdited] = useState(null); // 'input' or 'output'
+  const [copied, setCopied] = useState(false);
+  
+  // Refs for debouncing
+  const timeoutRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-  // Real-time conversion
-  useEffect(() => {
-    if (mode === 'encode') {
-      encodeText();
-    } else {
-      decodeText();
-    }
-  }, [inputText, mode, file]);
+  // --- Logic Helpers ---
 
-  const encodeText = () => {
+  const processEncode = useCallback((text, currentFile, withUriScheme) => {
     try {
-      if (file) {
-        // Handle file encoding
+      if (currentFile) {
         const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result;
-          setOutputText(base64String.split(',')[1] || base64String);
-          setError('');
+        reader.onload = (e) => {
+          let result = e.target.result;
+          if (!withUriScheme) {
+            result = result.split(',')[1] || result;
+          }
+          setOutputText(result);
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(currentFile);
       } else {
-        // Handle text encoding
-        const encoded = btoa(unescape(encodeURIComponent(inputText)));
+        if (!text) {
+          setOutputText('');
+          return;
+        }
+        // Text encoding: handles UTF-8
+        const encoded = btoa(unescape(encodeURIComponent(text)));
         setOutputText(encoded);
-        setError('');
       }
     } catch (err) {
-      setError('编码失败：' + err.message);
-      setOutputText('');
+      console.error('Encoding error:', err);
+    }
+  }, []);
+
+  const processDecode = useCallback((base64Str) => {
+    try {
+      if (!base64Str) {
+        setInputText('');
+        setPreviewData(null);
+        setFile(null);
+        return;
+      }
+
+      // Check for Data URI scheme to detect files/images
+      // Format: data:[<mediatype>][;base64],<data>
+      const dataUriRegex = /^data:([^;]+);base64,(.+)$/s; // s flag for dotAll match
+      const match = base64Str.match(dataUriRegex);
+
+      if (match) {
+        const mimeType = match[1];
+        
+        // If it's an image, show preview
+        if (mimeType.startsWith('image/')) {
+          setPreviewData({ type: 'image', src: base64Str, mimeType });
+          setInputText('');
+          setFile(null);
+          return;
+        }
+        
+        // If it's a non-text file (e.g. PDF, Zip), show file download card
+        if (!mimeType.startsWith('text/')) {
+          setPreviewData({ type: 'file', src: base64Str, mimeType });
+          setInputText('');
+          setFile(null);
+          return;
+        }
+        
+        // If it is text/*, fall through to text decoding (but strip header first if needed, though match[2] has data)
+      }
+
+      // Handle Data URI scheme removal if present for decoding text
+      let cleanStr = base64Str;
+      if (base64Str.includes(',')) {
+        cleanStr = base64Str.split(',')[1];
+      }
+      
+      // Text decoding: handles UTF-8
+      const decoded = decodeURIComponent(escape(atob(cleanStr)));
+      setInputText(decoded);
+      setPreviewData(null);
+      setFile(null);
+    } catch (err) {
+      console.error('Decoding error:', err);
+      // If decoding fails (likely binary data without header), we can't easily preview it.
+      // We might just show the raw result or keep previous state, but here we just catch.
+    }
+  }, []);
+
+  // --- Effects for Auto-trigger ---
+
+  useEffect(() => {
+    if (lastEdited === 'input') {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        processEncode(inputText, file, includeDataUri);
+      }, 300);
+    }
+    return () => clearTimeout(timeoutRef.current);
+  }, [inputText, file, includeDataUri, lastEdited, processEncode]);
+
+  useEffect(() => {
+    if (lastEdited === 'output') {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        processDecode(outputText);
+      }, 300);
+    }
+    return () => clearTimeout(timeoutRef.current);
+  }, [outputText, lastEdited, processDecode]);
+
+  // --- Handlers ---
+
+  const handleInputChange = (e) => {
+    setInputText(e.target.value);
+    setLastEdited('input');
+    // If user types, we clear the file and preview
+    if (file) setFile(null);
+    if (previewData) setPreviewData(null);
+  };
+
+  const handleOutputChange = (e) => {
+    setOutputText(e.target.value);
+    setLastEdited('output');
+  };
+
+  const handleManualEncode = () => {
+    processEncode(inputText, file, includeDataUri);
+    setLastEdited('input'); // Reset direction focus
+  };
+
+  const handleManualDecode = () => {
+    processDecode(outputText);
+    setLastEdited('output'); // Reset direction focus
+  };
+
+  const handleClear = () => {
+    setInputText('');
+    setFile(null);
+    setPreviewData(null);
+    setOutputText('');
+    setLastEdited(null);
+  };
+
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setInputText(text);
+      setFile(null);
+      setPreviewData(null);
+      setLastEdited('input');
+    } catch (err) {
+      console.error('Failed to read clipboard contents: ', err);
     }
   };
 
-  const decodeText = () => {
-    try {
-      const decoded = decodeURIComponent(escape(atob(inputText)));
-      setOutputText(decoded);
-      setError('');
-    } catch (err) {
-      setError('解码失败：无效的 Base64 编码');
-      setOutputText('');
+  const handleFileUpload = (e) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setInputText(''); // Clear text input
+      setPreviewData(null);
+      setLastEdited('input');
+    }
+  };
+
+  const removeFile = () => {
+    setFile(null);
+    setPreviewData(null);
+    setInputText('');
+    setOutputText('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Drag & Drop
+  const onDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) {
+      setFile(droppedFile);
+      setInputText('');
+      setPreviewData(null);
+      setLastEdited('input');
     }
   };
 
   const handleCopy = () => {
+    if (!outputText) return;
     navigator.clipboard.writeText(outputText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setInputText(''); // Clear text input when file is selected
-    }
-  };
-
   const handleDownload = () => {
-    if (outputText) {
-      const blob = new Blob([outputText], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = mode === 'encode' ? 'encoded-base64.txt' : 'decoded-text.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+    if (!outputText) return;
+    const blob = new Blob([outputText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'base64_output.txt';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
-  const clearAll = () => {
-    setInputText('');
-    setOutputText('');
-    setError('');
-    setFile(null);
+  const handleDownloadDecodedFile = () => {
+    if (!previewData || !previewData.src) return;
+    const a = document.createElement('a');
+    a.href = previewData.src;
+    // Try to guess extension from mime type
+    const ext = previewData.mimeType.split('/')[1] || 'bin';
+    a.download = `decoded_file.${ext}`;
+    a.click();
+  };
+
+  // Format bytes to human readable
+  const formatBytes = (bytes, decimals = 2) => {
+    if (!+bytes) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
-      {/* Mode Toggle */}
-      <div className="flex items-center justify-center mb-8">
-        <div className="inline-flex rounded-md shadow-sm" role="group">
-          <button
-            type="button"
-            onClick={() => setMode('encode')}
-            className={`px-6 py-3 text-sm font-medium ${mode === 'encode' 
-              ? 'bg-accent text-white rounded-l-lg' 
-              : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
-          >
-            <FileText className="inline-block w-4 h-4 mr-2" />
-            编码 (Encode)
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('decode')}
-            className={`px-6 py-3 text-sm font-medium ${mode === 'decode' 
-              ? 'bg-accent text-white rounded-r-lg' 
-              : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
-          >
-            <FileText className="inline-block w-4 h-4 mr-2" />
-            解码 (Decode)
-          </button>
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)] min-h-[600px] gap-4 p-4 max-w-[1600px] mx-auto">
+      
+      {/* Left Pane: Original Text / File */}
+      <div 
+        className={`flex-1 flex flex-col bg-div-theme rounded-xl shadow-sm border ${isDragging ? 'border-accent border-2' : 'border-border-theme'} overflow-hidden transition-colors`}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+      >
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border-theme bg-div-secondary">
+          <h3 className="font-semibold text-text-theme flex items-center gap-2">
+            <FileText size={18} />
+            原文本 / 文件
+          </h3>
+          <div className="flex gap-2">
+            <button onClick={handleClear} className="p-1.5 text-text-secondary hover:text-red-500 rounded hover:bg-div-hover transition-colors cursor-pointer" title="清空">
+              <Trash2 size={16} />
+            </button>
+            <button onClick={handlePaste} className="p-1.5 text-text-secondary hover:text-accent rounded hover:bg-div-hover transition-colors cursor-pointer" title="粘贴">
+              <Clipboard size={16} />
+            </button>
+            <button onClick={() => fileInputRef.current?.click()} className="p-1.5 text-text-secondary hover:text-accent rounded hover:bg-div-hover transition-colors cursor-pointer" title="上传文件">
+              <Upload size={16} />
+            </button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload} 
+              className="hidden" 
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 relative p-0 overflow-auto">
+          {file ? (
+            <div className="absolute inset-0 flex items-center justify-center p-6">
+              <div className="bg-div-secondary border border-border-theme rounded-lg p-6 w-full max-w-sm shadow-sm relative">
+                <button 
+                  onClick={removeFile}
+                  className="absolute top-2 right-2 text-text-secondary hover:text-red-500 cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4 text-accent">
+                    <FileText size={32} />
+                  </div>
+                  <h4 className="font-medium text-text-theme truncate w-full mb-1">{file.name}</h4>
+                  <p className="text-sm text-text-secondary">{formatBytes(file.size)}</p>
+                </div>
+              </div>
+            </div>
+          ) : previewData ? (
+             <div className="absolute inset-0 flex items-center justify-center p-6 overflow-auto">
+               <div className="bg-div-secondary border border-border-theme rounded-lg p-4 w-full max-w-md shadow-sm relative flex flex-col items-center">
+                 <button 
+                    onClick={removeFile}
+                    className="absolute top-2 right-2 text-text-secondary hover:text-red-500 z-10 bg-div-secondary rounded-full p-1 cursor-pointer"
+                  >
+                    <X size={18} />
+                  </button>
+                  
+                 {previewData.type === 'image' ? (
+                   <div className="flex flex-col items-center w-full">
+                     <h4 className="font-medium text-text-theme mb-4 flex items-center gap-2">
+                       <ImageIcon size={18} />
+                       图片预览
+                     </h4>
+                     <img src={previewData.src} alt="Decoded Preview" className="max-w-full max-h-[300px] object-contain rounded border border-border-theme bg-div-theme" />
+                     <div className="mt-4 text-xs text-text-secondary break-all">
+                       {previewData.mimeType}
+                     </div>
+                     <button 
+                        onClick={handleDownloadDecodedFile}
+                        className="mt-4 flex items-center gap-2 px-3 py-1.5 bg-accent text-white rounded text-sm hover:bg-accent/90 transition-colors cursor-pointer"
+                     >
+                        <Download size={14} />
+                        下载图片
+                     </button>
+                   </div>
+                 ) : (
+                   <div className="flex flex-col items-center text-center w-full">
+                      <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4 text-accent">
+                        <File size={32} />
+                      </div>
+                      <h4 className="font-medium text-text-theme mb-1">解码文件</h4>
+                      <p className="text-sm text-text-secondary mb-4">{previewData.mimeType}</p>
+                      <button 
+                        onClick={handleDownloadDecodedFile}
+                        className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded hover:bg-accent/90 transition-colors cursor-pointer"
+                      >
+                        <Download size={16} />
+                        下载文件
+                      </button>
+                   </div>
+                 )}
+               </div>
+             </div>
+          ) : (
+            <textarea
+              className="w-full h-full p-4 bg-transparent border-none outline-none resize-none text-text-theme placeholder:text-text-secondary/50 font-mono text-sm"
+              placeholder="在此输入内容，粘贴文本，或拖拽文件..."
+              value={inputText}
+              onChange={handleInputChange}
+            />
+          )}
+          
+          {isDragging && (
+            <div className="absolute inset-0 bg-accent/10 flex items-center justify-center backdrop-blur-sm z-10">
+              <div className="text-accent font-medium text-lg flex flex-col items-center">
+                <Upload size={48} className="mb-4" />
+                释放以上传文件
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Input Section */}
-        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 h-[700px] flex flex-col overflow-hidden">
-          <div className="flex justify-between items-center mb-4 flex-shrink-0">
-            <h3 className="text-lg font-bold text-text-theme">
-              {mode === 'encode' ? '输入文本或上传文件' : '输入 Base64 编码'}
-            </h3>
-            <button
-              onClick={clearAll}
-              className="text-text-secondary hover:text-accent text-sm"
+      {/* Middle Pane: Controls */}
+      <div className="flex lg:flex-col justify-center items-center gap-4 py-2 lg:py-0 shrink-0">
+        <button
+          onClick={handleManualEncode}
+          className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 shadow-sm transition-colors font-medium text-sm cursor-pointer"
+        >
+          <span className="hidden lg:inline">编码</span>
+          <span className="lg:hidden">编码</span>
+          <ArrowRight className="hidden lg:block" size={16} />
+          <ArrowDown className="lg:hidden" size={16} />
+        </button>
+
+        <button
+          onClick={handleManualDecode}
+          className="flex items-center gap-2 px-4 py-2 bg-div-secondary border border-border-theme text-text-theme rounded-lg hover:bg-div-hover shadow-sm transition-colors font-medium text-sm cursor-pointer"
+        >
+          <ArrowLeft className="hidden lg:block" size={16} />
+          <ArrowUp className="lg:hidden" size={16} />
+          <span className="hidden lg:inline">解码</span>
+          <span className="lg:hidden">解码</span>
+        </button>
+      </div>
+
+      {/* Right Pane: Base64 Output */}
+      <div className="flex-1 flex flex-col bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border-theme bg-div-secondary">
+          <h3 className="font-semibold text-text-theme flex items-center gap-2">
+            Base64 编码结果
+          </h3>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleCopy} 
+              className="p-1.5 text-text-secondary hover:text-accent rounded hover:bg-div-hover transition-colors cursor-pointer" 
+              title="复制"
             >
-              清空
+              {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+            </button>
+            <button 
+              onClick={handleDownload} 
+              className="p-1.5 text-text-secondary hover:text-accent rounded hover:bg-div-hover transition-colors cursor-pointer" 
+              title="下载"
+            >
+              <Download size={16} />
             </button>
           </div>
-
-          {mode === 'encode' && (
-            <div className="mb-4 flex-shrink-0">
-              <label className="block text-sm font-medium text-text-secondary mb-2">
-                或上传文件
-              </label>
-              <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border-theme rounded-lg cursor-pointer bg-div-secondary hover:bg-div-hover transition-colors">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 text-text-secondary" />
-                    <p className="mt-2 text-sm text-text-secondary">
-                      <span className="font-semibold">点击上传</span> 或拖拽文件
-                    </p>
-                    <p className="text-xs text-text-secondary mt-1">
-                      支持图片、文档等文件
-                    </p>
-                  </div>
-                  <input type="file" className="hidden" onChange={handleFileChange} />
-                </label>
-              </div>
-              {file && (
-                <div className="mt-2 text-sm text-text-secondary">
-                  已选择文件: {file.name}
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="flex-1 flex flex-col min-h-0">
-            <label className="block text-sm font-medium text-text-secondary mb-2 flex-shrink-0">
-              {mode === 'encode' ? '输入文本' : '输入 Base64 编码'}
-            </label>
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder={mode === 'encode' ? '输入要编码的文本...' : '输入要解码的 Base64 编码...'}
-              className="w-full flex-1 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none min-h-0"
-            />
-          </div>
         </div>
 
-        {/* Output Section */}
-        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6 h-[700px] flex flex-col overflow-hidden">
-          <div className="flex justify-between items-center mb-4 flex-shrink-0">
-            <h3 className="text-lg font-bold text-text-theme">
-              {mode === 'encode' ? 'Base64 编码结果' : '解码结果'}
-            </h3>
-            <div className="flex gap-2">
-              <button
-                onClick={handleDownload}
-                disabled={!outputText}
-                className="p-2 text-text-secondary hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed"
-                title="下载结果"
-              >
-                <Download size={18} />
-              </button>
-              <button
-                onClick={handleCopy}
-                disabled={!outputText}
-                className="p-2 text-text-secondary hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed"
-                title="复制结果"
-              >
-                {copied ? <Check size={18} className="text-accent" /> : <Copy size={18} />}
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2 flex-shrink-0">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
-            </div>
-          )}
-
-          <div className="flex-1 flex flex-col min-h-0">
-            <label className="block text-sm font-medium text-text-secondary mb-2 flex-shrink-0">
-              结果
-            </label>
-            <textarea
-              value={outputText}
-              readOnly
-              className="w-full flex-1 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none min-h-0"
-              placeholder={mode === 'encode' ? '编码结果将显示在这里...' : '解码结果将显示在这里...'}
-            />
-          </div>
-
-          {outputText && (
-            <div className="mt-4 text-sm text-text-secondary flex-shrink-0">
-              {mode === 'encode' 
-                ? `编码后长度: ${outputText.length} 字符` 
-                : `解码后长度: ${outputText.length} 字符`}
-            </div>
-          )}
+        <div className="flex-1 relative">
+          <textarea
+            className="w-full h-full p-4 bg-transparent border-none outline-none resize-none text-text-theme placeholder:text-text-secondary/50 font-mono text-sm"
+            placeholder="Base64 结果将显示在这里..."
+            value={outputText}
+            onChange={handleOutputChange}
+          />
         </div>
-      </div>
 
-      {/* Tips */}
-      <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg">
-        <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">使用提示</h4>
-        <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
-          <li>• Base64 编码可用于在文本格式中传输二进制数据</li>
-          <li>• 编码后的字符串会比原始数据大约大 33%</li>
-          <li>• 解码时请确保输入的是有效的 Base64 编码</li>
-          <li>• 大文件编码可能会占用较多内存，请谨慎使用</li>
-        </ul>
+        {/* Footer Option */}
+        <div className="px-4 py-3 border-t border-border-theme bg-div-secondary/50">
+          <label className="flex items-center gap-2 text-sm text-text-theme cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              checked={includeDataUri}
+              onChange={(e) => {
+                setIncludeDataUri(e.target.checked);
+                setLastEdited('input'); // Trigger re-encode
+              }}
+              className="rounded border-border-theme text-accent focus:ring-accent"
+            />
+            <span>包含 Data URI 头 (例如 data:image/png;base64,...)</span>
+          </label>
+        </div>
       </div>
     </div>
   );
