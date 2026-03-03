@@ -95,7 +95,7 @@ const Base64EncoderDecoder = () => {
             onClick={() => setMode('encode')}
             className={`px-6 py-3 text-sm font-medium ${mode === 'encode' 
               ? 'bg-theme-primary text-white rounded-l-lg' 
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+              : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
           >
             <FileText className="inline-block w-4 h-4 mr-2" />
             编码 (Encode)
@@ -105,7 +105,7 @@ const Base64EncoderDecoder = () => {
             onClick={() => setMode('decode')}
             className={`px-6 py-3 text-sm font-medium ${mode === 'decode' 
               ? 'bg-theme-primary text-white rounded-r-lg' 
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+              : 'bg-div-theme text-text-theme hover:bg-div-hover'}`}
           >
             <FileText className="inline-block w-4 h-4 mr-2" />
             解码 (Decode)
@@ -115,14 +115,14 @@ const Base64EncoderDecoder = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            <h3 className="text-lg font-bold text-text-theme">
               {mode === 'encode' ? '输入文本或上传文件' : '输入 Base64 编码'}
             </h3>
             <button
               onClick={clearAll}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-sm"
+              className="text-text-secondary hover:text-accent text-sm"
             >
               清空
             </button>
@@ -130,17 +130,17 @@ const Base64EncoderDecoder = () => {
 
           {mode === 'encode' && (
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 或上传文件
               </label>
               <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border-theme rounded-lg cursor-pointer bg-div-secondary hover:bg-div-hover transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    <Upload className="w-8 h-8 text-text-secondary" />
+                    <p className="mt-2 text-sm text-text-secondary">
                       <span className="font-semibold">点击上传</span> 或拖拽文件
                     </p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                    <p className="text-xs text-text-secondary mt-1">
                       支持图片、文档等文件
                     </p>
                   </div>
@@ -148,7 +148,7 @@ const Base64EncoderDecoder = () => {
                 </label>
               </div>
               {file && (
-                <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                <div className="mt-2 text-sm text-text-secondary">
                   已选择文件: {file.name}
                 </div>
               )}
@@ -156,29 +156,29 @@ const Base64EncoderDecoder = () => {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               {mode === 'encode' ? '输入文本' : '输入 Base64 编码'}
             </label>
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={mode === 'encode' ? '输入要编码的文本...' : '输入要解码的 Base64 编码...'}
-              className="w-full h-64 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary focus:border-transparent outline-none resize-none"
+              className="w-full h-64 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none"
             />
           </div>
         </div>
 
         {/* Output Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            <h3 className="text-lg font-bold text-text-theme">
               {mode === 'encode' ? 'Base64 编码结果' : '解码结果'}
             </h3>
             <div className="flex gap-2">
               <button
                 onClick={handleDownload}
                 disabled={!outputText}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2 text-text-secondary hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed"
                 title="下载结果"
               >
                 <Download size={18} />
@@ -186,10 +186,10 @@ const Base64EncoderDecoder = () => {
               <button
                 onClick={handleCopy}
                 disabled={!outputText}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2 text-text-secondary hover:text-accent disabled:opacity-50 disabled:cursor-not-allowed"
                 title="复制结果"
               >
-                {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
+                {copied ? <Check size={18} className="text-accent" /> : <Copy size={18} />}
               </button>
             </div>
           </div>
@@ -202,19 +202,19 @@ const Base64EncoderDecoder = () => {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               结果
             </label>
             <textarea
               value={outputText}
               readOnly
-              className="w-full h-64 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-theme-primary focus:border-transparent outline-none resize-none"
+              className="w-full h-64 px-4 py-3 rounded-lg border border-border-theme bg-div-secondary text-text-theme focus:ring-2 focus:ring-accent outline-none resize-none"
               placeholder={mode === 'encode' ? '编码结果将显示在这里...' : '解码结果将显示在这里...'}
             />
           </div>
 
           {outputText && (
-            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="mt-4 text-sm text-text-secondary">
               {mode === 'encode' 
                 ? `编码后长度: ${outputText.length} 字符` 
                 : `解码后长度: ${outputText.length} 字符`}

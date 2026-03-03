@@ -12,40 +12,16 @@ order: 28
 <Layout title="在线 Base64 编解码工具" description="免费在线 Base64 编码器和解码器，支持文本和文件的 Base64 编码解码，实时转换，一键复制结果。">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
         Base64 编解码工具
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
         轻松将文本或文件编码为 Base64 格式，或解码 Base64 编码为原始文本。支持实时转换、文件上传和结果复制。
       </p>
     </div>
     
     <div class="max-w-6xl mx-auto">
       <Base64EncoderDecoder client:only="react" />
-    </div>
-
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">文本编解码</h3>
-        <p class="text-gray-600 dark:text-gray-400">将普通文本编码为 Base64 格式，或解码 Base64 编码为可读文本。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">文件编码</h3>
-        <p class="text-gray-600 dark:text-gray-400">直接上传文件，自动生成 Base64 编码，方便在文本环境中传输二进制数据。</p>
-      </div>
-      <div class="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-        </div>
-        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">一键复制</h3>
-        <p class="text-gray-600 dark:text-gray-400">生成结果后，点击复制按钮即可将结果复制到剪贴板，方便快捷。</p>
-      </div>
     </div>
   </div>
 </Layout>
