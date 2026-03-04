@@ -21,7 +21,7 @@ category: "text"
       <div class="max-w-4xl mx-auto">
         <div class="text-counter-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
           <textarea 
-              class="text-input w-full min-h-[200px] p-4 bg-theme-secondary border-none rounded-lg text-theme-primary text-base resize-vertical mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="text-input w-full min-h-[200px] p-4 bg-div-secondary border border-border-theme rounded-lg text-text-theme text-base resize-vertical mb-6 focus:outline-none focus:ring-2 focus:ring-accent"
               id="textInput" 
               placeholder="在这里输入或粘贴文本..."
           >这是一个示例文本，用于演示文本计数器的功能。
@@ -35,40 +35,45 @@ category: "text"
 试试输入你自己的文本吧！</textarea>
           
           <div class="stats-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="charCount">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">字符数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="charCount">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">字符数</div>
             </div>
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="charCountNoSpaces">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">不含空格字符数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="charCountNoSpaces">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">不含空格字符数</div>
             </div>
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="wordCount">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">单词数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="wordCount">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">单词数</div>
             </div>
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="sentenceCount">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">句子数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="sentenceCount">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">句子数</div>
             </div>
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="paragraphCount">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">段落数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="paragraphCount">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">段落数</div>
             </div>
-            <div class="stat-card bg-theme-secondary p-4 rounded-lg text-center">
-                <div class="stat-value text-2xl font-bold text-blue-500" id="lineCount">0</div>
-                <div class="stat-label text-theme-primary text-sm mt-1">行数</div>
+            <div class="stat-card bg-div-secondary p-4 rounded-lg text-center">
+                <div class="stat-value text-2xl font-bold text-accent" id="lineCount">0</div>
+                <div class="stat-label text-text-secondary text-sm mt-1">行数</div>
             </div>
           </div>
           
-          <div class="controls flex justify-start flex-wrap gap-3">
-              <button id="clearBtn" class="control-btn clear-btn btn-theme px-5 py-2.5 rounded-lg transition-colors">清空文本</button>
-              <button id="copyBtn" class="control-btn copy-btn btn-theme px-5 py-2.5 rounded-lg transition-colors">复制文本</button>
+          <div class="controls flex justify-center flex-wrap gap-3">
+              <button id="clearBtn" class="control-btn clear-btn bg-accent text-white px-5 py-2.5 rounded-lg transition-colors cursor-pointer hover:opacity-90">清空文本</button>
+              <button id="copyBtn" class="control-btn copy-btn bg-accent text-white px-5 py-2.5 rounded-lg transition-colors cursor-pointer hover:opacity-90">复制文本</button>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 hidden">
+    文本已复制到剪贴板！
+  </div>
 
   <script>
     const textInput = document.getElementById('textInput');
@@ -89,8 +94,18 @@ category: "text"
     document.getElementById('copyBtn').addEventListener('click', () => {
         textInput.select();
         document.execCommand('copy');
-        alert('文本已复制到剪贴板！');
+        showToast();
     });
+
+    // 显示 toast 提示
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('hidden');
+        
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 1000);
+    }
     
     function calculateStats() {
         const text = textInput.value;
