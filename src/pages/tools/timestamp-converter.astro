@@ -1,0 +1,112 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TimestampConverter from "../../components/tools/TimestampConverter.jsx";
+import AdSense from "../../components/ads/AdSense.astro";
+
+title: "在线时间戳转换器 - Unix Timestamp Converter (秒/毫秒互转)"
+description: "免费在线 Unix 时间戳转换工具，支持北京时间、UTC 时间与 Unix 时间戳 (Timestamp) 的双向转换，自动识别秒与毫秒，程序员必备开发助手。"
+technologies: "React, date-fns, Tailwind"
+category: "developer"
+order: 10
+
+const pageTitle = "在线时间戳转换器 - Unix Timestamp Converter (秒/毫秒互转)";
+const pageDescription = "免费在线 Unix 时间戳转换工具，支持北京时间、UTC 时间与 Unix 时间戳 (Timestamp) 的双向转换，自动识别秒与毫秒，程序员必备开发助手。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线时间戳转换器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/timestamp-converter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "实时 Unix 时间戳显示",
+        "秒与毫秒单位自动识别",
+        "时间戳转日期",
+        "日期转时间戳",
+        "多时区支持 (40+ 常用时区)",
+        "常用时间快捷输入"
+      ],
+      "author": {
+          "@type": "Organization",
+          "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "什么是 Unix 时间戳？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unix 时间戳（Unix Timestamp）是从 UTC 1970年1月1日 00:00:00 开始所经过的秒数（不考虑闰秒）。它是计算机系统中广泛使用的时间表示方式。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么时间戳有10位和13位之分？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "10位时间戳单位是秒（Seconds），13位时间戳单位是毫秒（Milliseconds）。本工具支持自动识别这两种格式。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何处理不同时区的时间转换？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unix 时间戳本身是基于 UTC 的，不包含时区信息。转换为日期时，需要指定时区。本工具支持全球 40+ 个常用时区的转换显示。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用在线时间戳转换器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "时间戳转日期",
+          "text": "在输入框中粘贴或输入 Unix 时间戳，工具会自动转换为可读的日期格式。您可以通过下拉菜单切换目标时区。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "日期转时间戳",
+          "text": "输入形如 YYYY-MM-DD HH:mm:ss 的日期时间，工具会自动计算对应的 Unix 时间戳。支持选择生成秒或毫秒单位的结果。"
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-theme-primary">
+      在线时间戳转换器
+    </h1>
+    <p class="text-center text-theme-secondary mb-8 max-w-2xl mx-auto">
+      简单、快速、精准的 Unix 时间戳转换工具。支持秒/毫秒自动识别，提供实时时间对照，助您高效处理时间数据。
+    </p>
+
+    <!-- 核心工具组件 -->
+    <TimestampConverter client:only="react" />
+    
+    <!-- 底部广告位 -->
+    <div class="mt-8">
+      <AdSense slotId="timestamp-bottom" />
+    </div>
+
+    <!-- SEO 结构化数据 -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </div>
+</Layout>

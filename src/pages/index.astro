@@ -113,7 +113,7 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
   <section class="py-4 min-h-screen">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Category Filter Buttons -->
-      <div class="flex flex-wrap justify-start gap-2 mb-8">
+      <div class="flex flex-wrap justify-start gap-2 mb-8" id="filter-container">
         <button 
           class="filter-btn active px-4 py-1.5 rounded-full text-xs font-medium btn-theme border border-theme transition-colors"
           data-filter="all"
@@ -123,7 +123,6 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
         </button>
         {categories.map(category => (
           <button 
-            key={category}
             class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-theme-secondary text-theme-secondary border border-theme-border hover:bg-theme-primary transition-colors"
             data-filter={category}
             aria-label={`显示${categoryNameMap[category] || category}项目`}
@@ -136,7 +135,7 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
       <!-- Tools Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5" id="tools-grid">
         {featuredProjects.map((project) => (
-          <div class="tool-card" data-categoria={project.categoria}>
+          <div class={`tool-card ${project.categoria}`} data-categoria={project.categoria}>
             <ToolCard project={project} />
           </div>
         ))}
@@ -146,86 +145,47 @@ const categories = [...new Set(allProjects.map(project => project.categoria))];
 
   <script>
     // Filter functionality
-    // 使用DOMContentLoaded事件代替astro:page-load，确保DOM完全加载
     document.addEventListener('DOMContentLoaded', function() {
-      // Filter functionality
       const buttons = document.querySelectorAll('.filter-btn');
       const cards = document.querySelectorAll('.tool-card');
-      const HIDDEN_CLASS = 'hidden';
       
-      // 确保元素都存在
-      if (!buttons.length || !cards.length) {
-        console.error('Filter buttons or cards not found');
-      } else {
-        // 简化的显示/隐藏函数
-        function showCard(card) {
-          card.classList.remove(HIDDEN_CLASS);
-          card.style.display = 'block';
-          card.classList.add('opacity-100', 'scale-100');
-          card.classList.remove('opacity-0', 'scale-95');
-        }
+      if (!buttons.length || !cards.length) return;
 
-        function hideCard(card) {
-          card.classList.add('opacity-0', 'scale-95');
-          card.classList.remove('opacity-100', 'scale-100');
-          setTimeout(() => {
-            card.classList.add(HIDDEN_CLASS);
-            card.style.display = 'none';
-          }, 300);
-        }
-
-        function applyFilter(filter) {
-          const normalized = filter.toLowerCase();
-          
-          let visibleCount = 0;
-          for (let i = 0; i < cards.length; i++) {
-            const card = cards[i];
-            const categoria = card.getAttribute("data-categoria") || "";
-            const cardCategory = categoria.toLowerCase();
-            
-            
-            const match = normalized === "all" || cardCategory === normalized;
-            
-            if (match) {
-              showCard(card);
-              visibleCount++;
-            } else {
-              hideCard(card);
-            }
+      function filterProjects(category) {
+        cards.forEach(card => {
+          const cardCategory = card.getAttribute('data-categoria');
+          if (category === 'all' || cardCategory === category) {
+            card.classList.remove('hidden');
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'scale(1)';
+            }, 10);
+          } else {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              card.classList.add('hidden');
+            }, 300);
           }
-          
-        }
-
-        function setActive(btn) {
-          // 移除所有按钮的激活状态
-          buttons.forEach(b => {
-            b.classList.remove("active", "btn-theme");
-            b.classList.add("bg-theme-secondary", "text-theme-secondary");
-          });
-          
-          // 添加当前按钮的激活状态
-          btn.classList.add("active", "btn-theme");
-          btn.classList.remove("bg-theme-secondary", "text-theme-secondary");
-          
-        }
-
-        // 为每个按钮添加单独的事件监听器
-        buttons.forEach(button => {
-          button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const filter = this.dataset.filter || "all";
-            setActive(this);
-            applyFilter(filter);
-          });
         });
-
-        // 初始化默认显示所有项目
-        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-        if (allBtn) {
-          setActive(allBtn);
-          applyFilter("all");
-        }
       }
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Remove active class from all buttons
+          buttons.forEach(b => {
+            b.classList.remove('active', 'btn-theme');
+            b.classList.add('bg-theme-secondary', 'text-theme-secondary');
+          });
+          
+          // Add active class to clicked button
+          btn.classList.add('active', 'btn-theme');
+          btn.classList.remove('bg-theme-secondary', 'text-theme-secondary');
+          
+          const filter = btn.getAttribute('data-filter');
+          filterProjects(filter);
+        });
+      });
     });
   </script>
 
