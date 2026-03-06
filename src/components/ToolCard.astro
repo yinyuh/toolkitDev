@@ -1,27 +1,8 @@
 ---
 import { createAvatar } from '@dicebear/core';
-import { shapes, bottts, avataaars, personas } from '@dicebear/collection';
+import { bottts, avataaars, personas } from '@dicebear/collection';
 
 const { project } = Astro.props;
-
-// 分类标签中英文映射
-const categoryMap = {
-  fullstack: "全栈",
-  frontend: "前端",
-  backend: "后端",
-  tool: "工具"
-};
-
-// 获取中文分类标签
-const getChineseCategory = (category: string) => {
-  return categoryMap[category as keyof typeof categoryMap] || category;
-};
-
-// 生成随机颜色
-const getRandomColor = () => {
-  const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#F44336', '#00BCD4', '#8BC34A', '#FFC107'];
-  return colors[Math.floor(Math.random() * colors.length)];
-};
 
 // 直接生成 SVG
 const generateAvatarSvg = (projectName: string) => {
@@ -29,9 +10,9 @@ const generateAvatarSvg = (projectName: string) => {
   const styleIndex = Math.floor(Math.random() * styles.length);
   const selectedStyle = styles[styleIndex];
 
-  const avatar = createAvatar(selectedStyle, {
+  const avatar = createAvatar(selectedStyle as any, {
     seed: projectName,
-    backgroundColor: 'transparent'
+    backgroundColor: ['transparent']
   });
 
   return avatar.toString();
@@ -82,13 +63,6 @@ const avatarSvg = generateAvatarSvg(project.titulo);
         开始使用
       </a>
     </div>
-  </div>
-  
-  {/* Category badge */}
-  <div class="absolute top-3 right-3">
-    <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
-      {getChineseCategory(project.categoria)}
-    </span>
   </div>
 </div>
 
