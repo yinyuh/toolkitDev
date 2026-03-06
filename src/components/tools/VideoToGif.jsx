@@ -41,41 +41,38 @@ const VideoToGif = () => {
     });
 
     try {
-      const cdnSources = [
-        { name: 'unpkg-umd', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
-        { name: 'unpkg-esm', baseURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
-        { name: 'jsdelivr-umd', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' },
-        { name: 'jsdelivr-esm', baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm', core: '/ffmpeg-core.js', wasm: '/ffmpeg-core.wasm' }
-      ];
+      console.log('尝试加载 FFmpeg (Local ESM)...');
       
-      let lastError = null;
-      for (const source of cdnSources) {
-        try {
-          console.log(`尝试从 ${source.name} 加载 FFmpeg...`);
-          const coreURL = await toBlobURL(`${source.baseURL}${source.core}`, 'text/javascript');
-          const wasmURL = await toBlobURL(`${source.baseURL}${source.wasm}`, 'application/wasm');
-          
-          await ffmpeg.load({
-            coreURL: coreURL,
-            wasmURL: wasmURL,
-          });
-          console.log(`成功从 ${source.name} 加载 FFmpeg`);
-          setLoaded(true);
-          setStatus('idle');
-          setFfmpeg(ffmpeg);
-          return;
-        } catch (err) {
-          console.warn(`从 ${source.name} 加载失败:`, err);
-          lastError = err;
-        }
-      }
+      const baseURL = '/ffmpeg';
       
-      console.error('所有 CDN 源加载失败:', lastError);
-      setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
-      setStatus('error');
+      await ffmpeg.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      });
+      
+      console.log('成功加载 FFmpeg (Local)');
+      setLoaded(true);
+      setStatus('idle');
+      setFfmpeg(ffmpeg);
+      return;
     } catch (err) {
-      console.error(err);
-      setError("无法加载转换引擎。请确保使用最新版 Chrome/Edge 浏览器，并支持 SharedArrayBuffer。");
+      console.error('加载本地 FFmpeg 失败:', err);
+      // 本地加载失败时不再回退到 CDN，而是直接报错，避免重复下载
+      // 如果确实需要 CDN 回退，请取消注释以下代码
+      /*
+      try {
+        console.log('本地加载失败，尝试 CDN...');
+        await ffmpeg.load();
+        setLoaded(true);
+        setStatus('idle');
+        setFfmpeg(ffmpeg);
+      } catch (cdnErr) {
+        console.error('CDN 加载失败:', cdnErr);
+        setError(`无法加载转换引擎: ${err?.message || '未知错误'}。请确保：1. 网络连接正常 2. 使用最新版 Chrome/Edge 浏览器 3. 浏览器支持 SharedArrayBuffer`);
+        setStatus('error');
+      }
+      */
+      setError(`无法加载本地转换引擎: ${err?.message || '未知错误'}。请检查 public/ffmpeg/ 目录下是否存在 ffmpeg-core.js 和 ffmpeg-core.wasm 文件。`);
       setStatus('error');
     }
   };
@@ -206,7 +203,24 @@ const VideoToGif = () => {
          <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-center">
             <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
             <h3 className="text-lg font-bold text-red-700 dark:text-red-400 mb-2">组件加载失败</h3>
-            <p className="text-red-600 dark:text-red-300">{error}</p>
+            <p className="text-red-600 dark:text-red-300 mb-4">{error}</p>
+            <div className="mt-6">
+              <h4 className="font-bold text-text-theme mb-2">推荐替代方案：</h4>
+              <ul className="text-text-secondary text-left space-y-2">
+                <li className="flex items-start gap-2">
+                  <Check size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>使用在线工具：<a href="https://ezgif.com/video-to-gif" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">EZGIF</a></span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>使用本地工具：<a href="https://ffmpeg.org/download.html" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">FFmpeg</a></span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>尝试使用 Chrome 或 Edge 浏览器</span>
+                </li>
+              </ul>
+            </div>
          </div>
       ) : (
         <div className="bg-div-theme rounded-xl shadow-sm border border-border-theme overflow-hidden">
