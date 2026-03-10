@@ -1,27 +1,272 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import VideoToGif from '../../components/tools/VideoToGif';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线视频转 GIF 工具"
-description: "免费在线视频转 GIF 工具，支持截取片段、调整帧率和尺寸，使用 FFmpeg WASM 技术，保护隐私。"
+title: "在线视频转 GIF 工具 - 免费高质量 Video to GIF Converter"
+description: "免费在线视频转 GIF 工具，支持 MP4, MOV, AVI 等格式。浏览器本地 FFmpeg 处理，无需上传服务器，保护隐私。支持截取片段、自定义帧率 FPS、调整尺寸，生成高质量 GIF 动图。"
 technologies: "FFmpeg WASM, React, TailwindCSS"
 category: "video"
 order: 5
+
+const pageTitle = "在线视频转 GIF 工具 - 免费高质量 Video to GIF Converter";
+const pageDescription = "免费在线视频转 GIF 工具，支持 MP4, MOV, AVI 等格式。浏览器本地 FFmpeg 处理，无需上传服务器，保护隐私。支持截取片段、自定义帧率 FPS、调整尺寸，生成高质量 GIF 动图。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线视频转 GIF 工具",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/video-to-gif",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "浏览器本地转换，无需上传",
+        "支持 MP4, WEBM, MOV 等多种格式",
+        "自定义截取视频片段",
+        "调节 GIF 帧率 (FPS)",
+        "自定义输出尺寸",
+        "实时预览"
+      ],
+      "author": {
+          "@type": "Organization",
+          "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "视频转 GIF 需要上传文件到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不需要。本工具使用 WebAssembly (FFmpeg.wasm) 技术，所有转换过程完全在您的浏览器本地完成。您的视频文件不会离开您的设备，绝对安全隐私。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持哪些视频格式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持大多数常见的视频格式，包括 MP4, MOV, AVI, WEBM, MKV 等。只要您的浏览器能读取该文件，通常都能进行转换。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "转换速度慢怎么办？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "转换速度取决于您的设备性能（CPU）和视频的复杂度（分辨率、时长、帧率）。建议先截取较短的片段（如 3-5 秒）进行试转换，或适当降低输出尺寸和帧率。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何将视频转换为 GIF",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传视频",
+          "text": "点击上传区域选择您的视频文件，或直接将文件拖拽到页面中。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置参数",
+          "text": "使用滑块选择要转换的视频片段（开始和结束时间）。根据需要调整帧率（FPS）和输出宽度。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "开始转换",
+          "text": "点击“开始转换”按钮，等待处理完成。完成后可预览并下载生成的 GIF 图片。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线视频转 GIF 工具" description="免费在线视频转 GIF 工具，支持截取片段、调整帧率和尺寸，使用 FFmpeg WASM 技术，保护隐私。">
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="text-center mb-12">
       <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        视频转 GIF 工具
+        在线视频转 GIF 工具
       </h1>
       <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        将视频转换为高质量 GIF 动图。支持截取片段、自定义帧率和尺寸，完全在浏览器本地处理，无需上传服务器。
+        将视频转换为高质量 GIF 动图。支持截取片段、自定义帧率和尺寸，<span class="text-accent font-semibold">完全在浏览器本地处理</span>，无需上传服务器，安全隐私。
       </p>
     </div>
     
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+    <!-- Tool Component -->
+    <div class="bg-theme-surface rounded-2xl shadow-xl overflow-hidden mb-16 border border-theme-border">
       <VideoToGif client:only="react" />
+    </div>
+
+    <div class="my-8">
+      <AdSense />
+    </div>
+
+    <!-- SEO Content Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-12">
+        
+        <!-- Introduction -->
+        <section class="prose dark:prose-invert max-w-none">
+          <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+            <span class="text-accent">#</span> 为什么选择我们的视频转 GIF 工具？
+          </h2>
+          <p class="text-lg leading-relaxed text-theme-secondary">
+            在社交媒体分享、制作表情包或撰写技术文档时，GIF 动图往往比视频更具传播力。虽然市面上有许多转换工具，但大多数要求您将私密视频上传到远程服务器，这不仅耗时，还存在隐私泄露风险。
+          </p>
+          <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+            <strong>Toolkit.ren 的视频转 GIF 工具</strong> 采用最先进的 WebAssembly (FFmpeg) 技术，直接在您的浏览器中运行转换引擎。这意味着您的视频文件<span class="font-bold text-accent">永远不会离开您的电脑</span>，实现了真正的零上传、零等待、零风险。
+          </p>
+        </section>
+
+        <!-- Features Grid -->
+        <section>
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🔒</div>
+              <h3 class="text-xl font-semibold mb-2">100% 隐私安全</h3>
+              <p class="text-theme-secondary">基于浏览器端计算，无需上传文件到云端，特别适合处理个人生活视频或公司内部演示资料。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">⚡</div>
+              <h3 class="text-xl font-semibold mb-2">极速转换体验</h3>
+              <p class="text-theme-secondary">省去了大文件的上传和下载时间。利用本地 CPU 性能，小文件转换几乎是瞬间完成。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">✂️</div>
+              <h3 class="text-xl font-semibold mb-2">精准片段截取</h3>
+              <p class="text-theme-secondary">内置视频裁剪器，拖动滑块即可精确选择想要转换的精彩瞬间，去除多余片头片尾。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🎛️</div>
+              <h3 class="text-xl font-semibold mb-2">专业参数控制</h3>
+              <p class="text-theme-secondary">自由调整 GIF 帧率 (FPS) 和分辨率宽度，平衡画质与文件体积，满足不同平台的上传限制。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- How to Use -->
+        <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">如何将 MP4 转换为 GIF？</h2>
+          <ol class="space-y-6">
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">导入视频文件</h3>
+                <p class="text-theme-secondary">点击上方的上传区域，选择您电脑中的 MP4, MOV, AVI 或其他视频文件。也可以直接将文件拖拽到虚线框内。</p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">调整转换设置</h3>
+                <p class="text-theme-secondary">
+                  <strong>时间范围：</strong>拖动时间轴滑块，选中视频中最精彩的片段。<br>
+                  <strong>帧率与尺寸：</strong>默认 10 FPS 和 480px 宽度通常能获得较好的体积/画质平衡。如果需要更流畅的动画，可调高 FPS。
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">生成与下载</h3>
+                <p class="text-theme-secondary">点击“开始转换”按钮。稍等片刻，预览生成的 GIF。满意后点击下载按钮保存到本地。</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 space-y-8">
+        
+        <!-- FAQ Widget -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+          <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+          <div class="space-y-4">
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>转换后的 GIF 文件太大怎么办？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                GIF 格式本身压缩率较低。建议：1. 缩短截取时间；2. 将宽度调整为 300-400px；3. 将帧率降低到 8-10 FPS。这些操作能显著减小体积。
+              </p>
+            </details>
+            
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>支持手机浏览器使用吗？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                支持。但由于手机浏览器内存限制，建议转换较短、分辨率较低的视频，否则可能会因为内存不足导致崩溃。
+              </p>
+            </details>
+
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>为什么转换过程卡在 0%？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                这通常是因为转换引擎（FFmpeg）正在初始化。首次使用需要加载组件，请耐心等待几秒。如果长时间无反应，请尝试刷新页面。
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <!-- Related Tools (Placeholder) -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+          <h3 class="text-lg font-bold text-theme-primary mb-4">相关多媒体工具</h3>
+          <ul class="space-y-3">
+            <li>
+              <a href="/tools/video-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">视频压缩工具</div>
+                <div class="text-xs text-theme-secondary">减小视频体积，方便传输</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/video-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">视频格式转换</div>
+                <div class="text-xs text-theme-secondary">MP4, AVI, MKV 互转</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩</div>
+                <div class="text-xs text-theme-secondary">支持 PNG, JPG, WebP</div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
   </div>
 </Layout>

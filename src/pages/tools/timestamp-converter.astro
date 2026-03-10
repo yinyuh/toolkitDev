@@ -98,12 +98,184 @@ const structuredData = {
       简单、快速、精准的 Unix 时间戳转换工具。支持秒/毫秒自动识别，提供实时时间对照，助您高效处理时间数据。
     </p>
 
-    <!-- 核心工具组件 -->
-    <TimestampConverter client:only="react" />
-    
-    <!-- 底部广告位 -->
-    <div class="mt-8">
+    <div class="max-w-4xl mx-auto">
+      <TimestampConverter client:only="react" />
+    </div>
+
+    <div class="my-8 max-w-4xl mx-auto">
       <AdSense slotId="timestamp-bottom" />
+    </div>
+
+    <!-- SEO Content Section -->
+    <div class="max-w-4xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-12">
+        
+        <!-- Introduction -->
+        <section class="prose dark:prose-invert max-w-none">
+          <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+            <span class="text-accent">#</span> 深入理解 Unix 时间戳
+          </h2>
+          <p class="text-lg leading-relaxed text-theme-secondary">
+            在软件开发、数据库管理和系统日志分析中，时间戳（Timestamp）是不可或缺的概念。它提供了一种统一、精确且跨时区的时间记录方式。
+          </p>
+          <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+            <strong>Unix 时间戳</strong> 定义为从 1970 年 1 月 1 日 00:00:00 UTC（协调世界时）起至现在的总秒数。这种表示方法简单高效，不受夏令时或地理位置的影响，因此被广泛应用于 Linux、Unix、MySQL、PHP、Java 等各类系统和编程语言中。
+          </p>
+        </section>
+
+        <!-- Use Cases -->
+        <section>
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">典型应用场景</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">💾</div>
+              <h3 class="text-xl font-semibold mb-2">数据库存储</h3>
+              <p class="text-theme-secondary">使用整数型时间戳存储时间，比字符串更节省空间，且排序和索引效率更高。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🌍</div>
+              <h3 class="text-xl font-semibold mb-2">跨时区同步</h3>
+              <p class="text-theme-secondary">无论服务器在纽约还是北京，时间戳值是唯一的。客户端可根据本地时区将其还原为可读时间。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">📊</div>
+              <h3 class="text-xl font-semibold mb-2">日志分析</h3>
+              <p class="text-theme-secondary">在分析分布式系统日志时，统一的时间戳是排查故障、关联事件的关键线索。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">⏱️</div>
+              <h3 class="text-xl font-semibold mb-2">倒计时与定时任务</h3>
+              <p class="text-theme-secondary">计算两个时间点的时间差只需简单的减法运算，非常适合实现定时逻辑。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Programming Examples -->
+        <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">各语言获取当前时间戳的方法</h2>
+          <div class="space-y-4">
+            <div class="group">
+              <h3 class="font-semibold text-lg mb-2 text-theme-primary">JavaScript / Node.js</h3>
+              <pre class="bg-theme-background p-4 rounded-lg overflow-x-auto text-sm text-theme-secondary font-mono"><code>// 获取秒级时间戳
+Math.floor(Date.now() / 1000);
+
+// 获取毫秒级时间戳
+Date.now();</code></pre>
+            </div>
+            <div class="group">
+              <h3 class="font-semibold text-lg mb-2 text-theme-primary">Python</h3>
+              <pre class="bg-theme-background p-4 rounded-lg overflow-x-auto text-sm text-theme-secondary font-mono"><code>import time
+
+# 获取秒级时间戳
+int(time.time())
+
+# 获取毫秒级时间戳
+int(time.time() * 1000)</code></pre>
+            </div>
+            <div class="group">
+              <h3 class="font-semibold text-lg mb-2 text-theme-primary">PHP</h3>
+              <pre class="bg-theme-background p-4 rounded-lg overflow-x-auto text-sm text-theme-secondary font-mono"><code>// 获取秒级时间戳
+time();
+
+// 获取毫秒级时间戳
+round(microtime(true) * 1000);</code></pre>
+            </div>
+            <div class="group">
+              <h3 class="font-semibold text-lg mb-2 text-theme-primary">Java</h3>
+              <pre class="bg-theme-background p-4 rounded-lg overflow-x-auto text-sm text-theme-secondary font-mono"><code>// 获取毫秒级时间戳
+System.currentTimeMillis();
+
+// 获取秒级时间戳
+System.currentTimeMillis() / 1000;</code></pre>
+            </div>
+            <div class="group">
+              <h3 class="font-semibold text-lg mb-2 text-theme-primary">Go</h3>
+              <pre class="bg-theme-background p-4 rounded-lg overflow-x-auto text-sm text-theme-secondary font-mono"><code>import "time"
+
+// 获取秒级时间戳
+time.Now().Unix()
+
+// 获取毫秒级时间戳 (纳秒转毫秒)
+time.Now().UnixNano() / 1e6</code></pre>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 space-y-8">
+        
+        <!-- FAQ Widget -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+          <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+          <div class="space-y-4">
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>什么是 2038 年问题？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                使用 32 位有符号整数存储时间戳的系统，在 2038 年 1 月 19 日 03:14:07 UTC 之后无法再表示时间（会溢出变为负数）。现在的 64 位系统已解决此问题。
+              </p>
+            </details>
+            
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>为什么我的时间戳是负数？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                负数时间戳表示 1970 年 1 月 1 日之前的时间。例如，-1 表示 1969 年 12 月 31 日 23:59:59 UTC。
+              </p>
+            </details>
+
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>北京时间与 UTC 的关系？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                北京时间属于东八区 (UTC+8)。北京时间 = UTC 时间 + 8 小时。时间戳本身是 UTC 标准，不含时区偏移。
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <!-- Related Tools -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+          <h3 class="text-lg font-bold text-theme-primary mb-4">推荐开发工具</h3>
+          <ul class="space-y-3">
+            <li>
+              <a href="/tools/base64" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码/解码</div>
+                <div class="text-xs text-theme-secondary">文本与图片的 Base64 转换</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/json-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">JSON 格式化</div>
+                <div class="text-xs text-theme-secondary">JSON 校验、美化与压缩</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/uuid-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">UUID 生成器</div>
+                <div class="text-xs text-theme-secondary">批量生成 UUID/GUID</div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
 
     <!-- SEO 结构化数据 -->
