@@ -1,103 +1,198 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-title: "多格式文本格式化工具"
-description: "一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验"
-technologies: "文本格式化"
+import AdSense from "../../components/ads/AdSense.astro";
+
+// 页面元数据，供 index.astro 读取
+title: "多格式文本格式化工具 - JSON/XML/YAML/SQL在线格式化"
+description: "免费在线多格式文本格式化工具，支持JSON、XML、YAML、SQL等多种格式的代码美化、压缩、语法校验和转换。纯前端处理，数据不上传服务器，安全高效。"
+technologies: "JSON, XML, YAML, SQL, JavaScript"
 category: "text"
 order: 7
+
+const pageTitle = "多格式文本格式化工具 - JSON/XML/YAML/SQL在线格式化";
+const pageDescription = "免费在线多格式文本格式化工具，支持JSON、XML、YAML、SQL等多种格式的代码美化、压缩、语法校验和转换。纯前端处理，数据不上传服务器，安全高效。";
+const keywords = "JSON格式化, XML格式化, YAML格式化, SQL格式化, 代码美化, 语法校验, 在线工具, 文本处理";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "多格式文本格式化工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/text-formatter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "JSON/XML/YAML/SQL 多格式支持",
+        "语法高亮与实时校验",
+        "代码美化与压缩",
+        "文件导入导出",
+        "纯前端本地处理，隐私安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "我的代码会被上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。本工具完全基于浏览器技术开发，所有的格式化、压缩和校验操作都在您的设备本地完成，代码数据不会上传到任何服务器，确保您的数据隐私安全。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持哪些文本格式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "目前支持 JSON, XML, YAML, SQL 四种主流数据交换和查询语言的格式化与校验。未来将根据用户需求添加更多格式支持。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "处理大文件会卡顿吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "工具的性能主要取决于您的浏览器和设备性能。对于 1MB 以内的文本，处理通常是瞬时的。对于超过 10MB 的大文件，可能会有短暂的卡顿，建议避免一次性处理过大的文件。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用多格式文本格式化工具",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入文本",
+          "text": "将您的 JSON、XML、YAML 或 SQL 代码粘贴到左侧输入框，或点击'导入文件'按钮上传文件。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "选择格式",
+          "text": "在下拉菜单中选择对应的语言格式，通常工具会自动识别。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "格式化或压缩",
+          "text": "点击'格式化'按钮美化代码，或点击'压缩'按钮去除空格和换行。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "获取结果",
+          "text": "在右侧预览区查看结果，支持一键复制或下载为文件。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="多格式文本格式化工具" description="一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验">
+<Layout title={pageTitle} description={pageDescription} structuredData={structuredData}>
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">多格式文本格式化工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一个功能强大的纯前端多格式文本格式化工具，支持JSON、XML、YAML、SQL等格式的格式化、压缩和语法校验，所有操作均在本地完成。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          功能强大的纯前端文本处理工具，支持 <span class="text-accent font-medium">JSON/XML/YAML/SQL</span> 等格式。<br class="hidden md:inline" />
+          提供代码美化、压缩、语法校验和转换功能，<span class="text-accent font-medium">所有操作本地完成</span>。
         </p>
       </div>
 
-      <!-- Tool Content -->
       <div class="max-w-6xl mx-auto">
-        <div class="text-formatter-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
-          <!-- Main Content Area -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <!-- Input Section -->
-            <div class="input-section flex flex-col min-w-0">
-              <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
-                <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
-              </div>
-              <div class="mb-4" style="height: 40px; min-height: 40px;">
-                <div class="flex gap-2 h-full flex-wrap">
-                  <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary cursor-pointer w-32">
-                    <option value="auto">自动识别</option>
-                    <option value="json">JSON</option>
-                    <option value="xml">XML</option>
-                    <option value="yaml">YAML</option>
-                    <option value="sql">SQL</option>
-                  </select>
-                  <button id="validateBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    校验语法
-                  </button>
-                  <label for="fileInput" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    导入文件
-                  </label>
-                  <input type="file" id="fileInput" accept=".txt,.json,.xml,.yaml,.yml,.sql" class="hidden">
-                  <button id="clearInputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                    清空
-                  </button>
+        <!-- Main Content Area -->
+        <div class="w-full">
+          <!-- Tool Content -->
+          <div class="text-formatter-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme mb-8">
+            <!-- Main Content Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <!-- Input Section -->
+              <div class="input-section flex flex-col min-w-0">
+                <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
+                  <h2 class="text-xl font-semibold text-theme-primary">文本输入</h2>
                 </div>
-              </div>
-              <div class="flex-1 flex flex-col" style="min-height: 400px;">
-                <textarea 
-                  id="textInput" 
-                  class="w-full h-[600px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono resize-none overflow-x-auto"
-                  placeholder="请输入/粘贴需要格式化的文本..."
-                ></textarea>
-              </div>
-              <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary" style="height: 20px; min-height: 20px;">
-                <span id="charCount">字符数: 0</span>
-                <span id="fileSize">大小: 0 KB</span>
-              </div>
-            </div>
-
-            <!-- Output Section -->
-            <div class="output-section flex flex-col min-w-0">
-              <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
-                <h2 class="text-xl font-semibold text-theme-primary">文本预览</h2>
-                <div class="flex gap-2">
-                  <div class="flex gap-1">
-                    <button id="decreaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                <div class="mb-4" style="height: 40px; min-height: 40px;">
+                  <div class="flex gap-2 h-full flex-wrap">
+                    <select id="formatSelect" class="bg-div-theme border border-theme-primary rounded-lg px-4 py-2 text-theme-primary cursor-pointer w-32">
+                      <option value="auto">自动识别</option>
+                      <option value="json">JSON</option>
+                      <option value="xml">XML</option>
+                      <option value="yaml">YAML</option>
+                      <option value="sql">SQL</option>
+                    </select>
+                    <button id="validateBtn" class="btn-theme px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
+                      校验语法
                     </button>
-                    <span id="fontSizeDisplay" class="btn-theme px-2 py-1 rounded text-xs">14px</span>
-                    <button id="increaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    <label for="fileInput" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1 cursor-pointer">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                       </svg>
+                      导入文件
+                    </label>
+                    <input type="file" id="fileInput" accept=".txt,.json,.xml,.yaml,.yml,.sql" class="hidden">
+                    <button id="clearInputBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                      清空
                     </button>
                   </div>
-                  <button id="toggleWordWrapBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                    </svg>
-                    换行
-                  </button>
+                </div>
+                <div class="flex-1 flex flex-col" style="min-height: 400px;">
+                  <textarea 
+                    id="textInput" 
+                    class="w-full h-[600px] p-4 border border-theme-border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-div-theme dark:text-theme-primary font-mono resize-none overflow-x-auto"
+                    placeholder="请输入/粘贴需要格式化的文本..."
+                  ></textarea>
+                </div>
+                <div class="flex justify-between items-center mt-2 text-xs text-theme-secondary" style="height: 20px; min-height: 20px;">
+                  <span id="charCount">字符数: 0</span>
+                  <span id="fileSize">大小: 0 KB</span>
                 </div>
               </div>
-              <div class="mb-4" style="height: 40px; min-height: 40px;">
+  
+              <!-- Output Section -->
+              <div class="output-section flex flex-col min-w-0">
+                <div class="flex justify-between items-center mb-4" style="height: 32px; min-height: 32px;">
+                  <h2 class="text-xl font-semibold text-theme-primary">文本预览</h2>
+                  <div class="flex gap-2">
+                    <div class="flex gap-1">
+                      <button id="decreaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </button>
+                      <span id="fontSizeDisplay" class="btn-theme px-2 py-1 rounded text-xs">14px</span>
+                      <button id="increaseFontBtn" class="btn-theme px-2 py-1 rounded text-xs transition-colors">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <button id="toggleWordWrapBtn" class="btn-theme px-3 py-1 rounded-lg text-sm transition-colors flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                      </svg>
+                      换行
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-4" style="height: 40px; min-height: 40px;">
                 <div class="flex gap-1 h-full flex-wrap">
                   <button id="formatBtnSmall" class="btn-theme px-2 py-2 rounded-lg text-sm transition-colors flex items-center gap-1 flex-1 whitespace-nowrap justify-center">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -362,8 +457,182 @@ order: 7
           </div>
         </div>
       </div>
-    </div>
-  </section>
+
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <!-- SEO Content Section -->
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-12">
+          
+          <!-- Intro -->
+          <div class="bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+            <h2 class="text-2xl font-bold text-theme-primary mb-4">关于多格式文本格式化工具</h2>
+            <p class="text-theme-secondary leading-relaxed">
+              在现代软件开发和数据处理中，经常需要处理各种格式的文本数据。无论是调试API接口返回的JSON数据，还是配置服务器的YAML文件，亦或是数据库查询的SQL语句，良好的格式化都能极大地提高可读性和维护效率。
+            </p>
+            <p class="text-theme-secondary leading-relaxed mt-4">
+              Toolkit.ren 提供的多格式文本格式化工具，集成了 JSON、XML、YAML、SQL 等多种常用格式的处理能力。它不仅支持代码的美化（Pretty Print），还支持代码压缩（Minify）、语法校验（Validation）和格式转换。最重要的是，这是一个纯前端工具，利用浏览器的计算能力在本地处理数据，无需将您的敏感代码上传到服务器，确保了数据的绝对安全。
+            </p>
+          </div>
+
+          <!-- Features -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-div-theme rounded-xl p-6 shadow-lg border border-div-theme">
+              <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-theme-primary mb-2">多语言支持</h3>
+              <p class="text-theme-secondary">
+                一站式支持 JSON、XML、YAML、SQL 等多种主流开发语言，自动识别格式，无需频繁切换工具。
+              </p>
+            </div>
+            <div class="bg-div-theme rounded-xl p-6 shadow-lg border border-div-theme">
+              <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-theme-primary mb-2">语法校验</h3>
+              <p class="text-theme-secondary">
+                实时检测代码语法错误，精确定位问题行号，帮助您快速修复 JSON 或 SQL 中的语法问题。
+              </p>
+            </div>
+            <div class="bg-div-theme rounded-xl p-6 shadow-lg border border-div-theme">
+              <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-theme-primary mb-2">隐私安全</h3>
+              <p class="text-theme-secondary">
+                采用 WebAssembly 和 JavaScript 纯前端技术，数据处理完全在本地进行，不上传云端，杜绝泄密风险。
+              </p>
+            </div>
+          </div>
+
+          <!-- How to Use -->
+          <div class="bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">使用指南</h2>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <div class="flex-none w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">1</div>
+                <div>
+                  <h3 class="text-lg font-bold text-theme-primary mb-2">输入或导入文本</h3>
+                  <p class="text-theme-secondary">
+                    您可以直接将代码粘贴到左侧编辑区，也可以点击上方的"导入文件"按钮上传本地的 .json, .xml, .sql 等文件。
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex-none w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">2</div>
+                <div>
+                  <h3 class="text-lg font-bold text-theme-primary mb-2">配置格式化选项</h3>
+                  <p class="text-theme-secondary">
+                    在右侧面板（或移动端下方的折叠面板）中，您可以设置缩进大小（2空格/4空格/Tab）、是否保留注释、SQL关键字大小写等个性化选项。
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex-none w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">3</div>
+                <div>
+                  <h3 class="text-lg font-bold text-theme-primary mb-2">查看与导出</h3>
+                  <p class="text-theme-secondary">
+                    点击"格式化"或"压缩"按钮后，结果将立即显示在右侧预览区。您可以一键复制结果，或将其下载为文件保存。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-8">
+          
+          <div class="bg-div-theme rounded-xl p-6 shadow-lg border border-div-theme">
+            <h3 class="text-xl font-bold text-theme-primary mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              常见问题
+            </h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                  <span>我的代码安全吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 group-open:animate-fadeIn">
+                  绝对安全。本工具是纯前端应用，所有代码处理均在您的浏览器本地完成，不会上传到任何服务器。
+                </p>
+              </details>
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                  <span>支持哪些格式？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 group-open:animate-fadeIn">
+                  目前支持 JSON、XML、YAML 和 SQL。我们正在持续添加更多格式支持。
+                </p>
+              </details>
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                  <span>如何压缩代码？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 group-open:animate-fadeIn">
+                  点击工具栏下方的"压缩文本"按钮，或者使用底部的快捷按钮，即可移除代码中的空格和换行，减小体积。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-div-theme rounded-xl p-6 shadow-lg border border-div-theme">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">相关工具</h3>
+            <div class="space-y-4">
+              <a href="/tools/base64-encoder-decoder" class="block p-4 rounded-lg bg-theme-primary hover:bg-theme-secondary transition-colors border border-theme-border group">
+                <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">Base64 编码/解码</div>
+                <div class="text-sm text-theme-secondary mt-1">文本和文件的Base64转换工具</div>
+              </a>
+              <a href="/tools/html-to-markdown" class="block p-4 rounded-lg bg-theme-primary hover:bg-theme-secondary transition-colors border border-theme-border group">
+                <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">HTML转Markdown</div>
+                <div class="text-sm text-theme-secondary mt-1">将网页内容转换为Markdown格式</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <style>
+      details > summary {
+        list-style: none;
+      }
+      details > summary::-webkit-details-marker {
+        display: none;
+      }
+      details[open] summary ~ * {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-5px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </div>
 
   <!-- Toast Notification -->
   <div id="toastNotification" class="fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
