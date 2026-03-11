@@ -1,13 +1,102 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-title: "图片背景去除工具"
-description: "本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。"
-technologies: "图片背景去除工具"
+import AdSense from "../../components/ads/AdSense.astro";
+
+title: "免费在线图片去底工具 - AI 智能一键抠图 (Image Background Remover)"
+description: "免费在线图片背景去除工具，采用 AI 智能识别技术，一键自动扣除人物、商品、动物等图片背景。浏览器本地离线处理，无需上传服务器，100% 保护隐私。"
+technologies: "Transformers.js, WebGL, React"
 category: "image"
 order: 1
+
+const pageTitle = "免费在线图片去底工具 - AI 智能一键抠图 (Image Background Remover)";
+const pageDescription = "免费在线图片背景去除工具，采用 AI 智能识别技术，一键自动扣除人物、商品、动物等图片背景。浏览器本地离线处理，无需上传服务器，100% 保护隐私。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线图片去底工具",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/image-background-remover",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "AI 智能自动识别前景",
+        "浏览器本地离线处理",
+        "100% 隐私保护，无需上传",
+        "支持 JPG, PNG, WebP 格式",
+        "透明背景 PNG 导出",
+        "完全免费，无次数限制"
+      ],
+      "author": {
+          "@type": "Organization",
+          "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "图片需要上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不需要。本工具使用先进的 WebAssembly 和 WebGL 技术，直接在您的浏览器中运行 AI 模型。所有图片处理过程完全在本地进行，您的隐私绝对安全。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持哪些图片格式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持常见的图片格式，包括 JPG, JPEG, PNG, WebP 等。输出格式为带有透明背景的 PNG 图片。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么第一次使用加载较慢？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "因为工具需要下载 AI 模型文件（约几十 MB）到您的浏览器缓存中。第一次加载完成后，模型会保存在本地，下次访问时即可秒开使用。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何去除图片背景",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传图片",
+          "text": "点击“选择文件”按钮，从您的设备中选择需要处理的图片。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "执行抠图",
+          "text": "点击“一键去背景”按钮，AI 模型将自动分析图片并移除背景。首次使用可能需要等待模型加载。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "下载结果",
+          "text": "处理完成后，预览效果。点击“下载”按钮即可保存透明背景的 PNG 图片。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="图片背景去除工具" description="本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。">
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <style>
     @reference "tailwindcss";
     /* 基础样式 */
@@ -65,10 +154,9 @@ order: 1
       <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">图片背景去除工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          本地离线模型去除图片背景工具。所有处理均在本地浏览器完成，无需上传服务器，保护您的隐私。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          本地离线模型去除图片背景工具。所有处理<span class="text-accent font-semibold">完全在本地浏览器完成</span>，无需上传服务器，保护您的隐私。首次使用需要加载模型，可能需要一些时间。
         </p>
-        <p class="text-theme-secondary max-w-3xl mx-auto">首次使用需要加载模型，可能需要一些时间。</p>
       </div>
 
       <!-- Main Content -->
@@ -192,6 +280,161 @@ order: 1
                 </div>
         </div>
 
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <!-- SEO Content Section -->
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-12">
+          
+          <!-- Introduction -->
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么选择在线 AI 抠图？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在电商设计、个人证件照制作或日常图片处理中，去除图片背景（抠图）通常是一项耗时且繁琐的工作。传统 Photoshop 钢笔工具抠图需要极大的耐心和技巧。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 的在线图片去底工具</strong> 引入了最先进的 AI 视觉识别模型，能够在几秒钟内精准识别人物、动物、商品等主体，并自动将背景分离。更重要的是，我们采用了 <span class="font-bold text-accent">WebAssembly + WebGL</span> 技术，让庞大的 AI 模型直接在您的浏览器中运行，实现了真正的<strong>离线处理</strong>，无需担心照片隐私泄露。
+            </p>
+          </section>
+
+          <!-- Features Grid -->
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">100% 隐私安全</h3>
+                <p class="text-theme-secondary">不同于其他在线工具，您的图片数据完全在本地处理，绝不会上传到任何服务器，安全无忧。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">AI 智能识别</h3>
+                <p class="text-theme-secondary">采用 RMBG 等高性能分割模型，发丝级抠图精度，自动处理复杂边缘。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🆓</div>
+                <h3 class="text-xl font-semibold mb-2">完全免费使用</h3>
+                <p class="text-theme-secondary">没有积分限制，不需要注册登录，打开网页即可无限次免费使用。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🖼️</div>
+                <h3 class="text-xl font-semibold mb-2">高清无损导出</h3>
+                <p class="text-theme-secondary">支持原分辨率导出透明背景的 PNG 图片，保持画质清晰。</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- How to Use -->
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">如何使用 AI 一键抠图？</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择图片</h3>
+                  <p class="text-theme-secondary">点击“选择文件”按钮，上传您想要处理的 JPG, PNG 或 WebP 图片。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">等待处理</h3>
+                  <p class="text-theme-secondary">
+                    点击“一键去背景”按钮。首次使用时会自动下载 AI 模型（约需几秒至半分钟），之后即可瞬间完成。
+                  </p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">下载保存</h3>
+                  <p class="text-theme-secondary">处理完成后，您可以对比原图和效果图。满意后点击“下载”按钮保存透明背景图片。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 space-y-8">
+          
+          <!-- FAQ Widget -->
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>处理速度为什么有时候很慢？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  本工具完全依赖您的本地设备性能（CPU/GPU）。如果您的电脑配置较低，或者处理的是超高分辨率的大图，速度可能会变慢。此外，首次加载模型需要下载数据，受网络环境影响。
+                </p>
+              </details>
+              
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>支持批量处理吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  目前的版本仅支持单张图片处理。我们正在开发批量处理功能，敬请期待。
+                </p>
+              </details>
+
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>抠图效果不理想怎么办？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  AI 模型对主体清晰、背景简单的图片效果最好。如果背景非常复杂或与主体颜色相近，可能会出现识别偏差。建议尝试更换背景较干净的图片。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <!-- Related Tools -->
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关图像工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩工具</div>
+                  <div class="text-xs text-theme-secondary">智能压缩 PNG/JPG，减小体积</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/video-to-gif" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">视频转 GIF</div>
+                  <div class="text-xs text-theme-secondary">视频截取并转换为动态 GIF</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 转换</div>
+                  <div class="text-xs text-theme-secondary">图片转 Base64 编码</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
