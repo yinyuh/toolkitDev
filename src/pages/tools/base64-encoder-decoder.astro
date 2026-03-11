@@ -1,27 +1,294 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Base64EncoderDecoder from '../../components/tools/Base64EncoderDecoder';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线 Base64 编解码工具"
-description: "免费在线 Base64 编码器和解码器，支持文本和文件的 Base64 编码解码，实时转换，一键复制结果。"
-technologies: "React, TailwindCSS"
+title: "在线 Base64 编码/解码工具 - 文本与图片互转 (Base64 Encoder/Decoder)"
+description: "免费在线 Base64 转换工具，支持文本字符串和图片文件的 Base64 编码与解码。所有处理完全在浏览器本地进行，数据不上传服务器，安全高效。支持一键复制和文件下载。"
+technologies: "React, TailwindCSS, JavaScript"
 category: "developer"
 order: 2
+
+const pageTitle = "在线 Base64 编码/解码工具 - 文本与图片互转 (Base64 Encoder/Decoder)";
+const pageDescription = "免费在线 Base64 转换工具，支持文本字符串和图片文件的 Base64 编码与解码。所有处理完全在浏览器本地进行，数据不上传服务器，安全高效。支持一键复制和文件下载。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线 Base64 编解码工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/base64-encoder-decoder",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "文本与 Base64 互转",
+        "图片/文件转 Base64",
+        "Base64 转图片/文件下载",
+        "浏览器本地处理，隐私安全",
+        "实时转换预览",
+        "一键复制结果"
+      ],
+      "author": {
+          "@type": "Organization",
+          "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Base64 编码是加密吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不是。Base64 是一种编码方式，用于将二进制数据转换为 ASCII 字符串格式，以便在网络传输（如邮件、网页）中使用。它不包含密钥，任何人都可以将 Base64 字符串解码回原始数据，因此不能用于保护敏感信息。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么要将图片转换为 Base64？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "将图片转换为 Base64 编码可以直接嵌入到 HTML 或 CSS 代码中（Data URI），减少 HTTP 请求数量，从而加快网页加载速度。适合用于图标、小背景图等小型资源。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "我的数据会被上传吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。本工具完全在您的浏览器本地运行（Client-side），无论是文本还是文件，都在您的设备上进行处理，绝不会上传到我们的服务器，确保您的隐私和数据安全。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用 Base64 工具",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "选择模式",
+          "text": "根据需要选择“文本处理”或“文件处理”模式。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "输入内容",
+          "text": "在文本模式下，输入或粘贴您的文本；在文件模式下，点击上传或拖拽文件到指定区域。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "获取结果",
+          "text": "工具会自动进行编码或解码。您可以直接复制结果，或者在文件模式下预览并下载解码后的文件。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线 Base64 编解码工具" description="免费在线 Base64 编码器和解码器，支持文本和文件的 Base64 编码解码，实时转换，一键复制结果。">
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <style>
+    @reference "tailwindcss";
+    
+    /* FAQ 详情动画 */
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
     <div class="text-center mb-12">
       <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        Base64 编解码工具
+        在线 Base64 编解码工具
       </h1>
       <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        轻松将文本、图片或文件编码为 Base64 格式，或解码 Base64 编码为原始文本。支持实时转换、文件上传和结果复制。
+        轻松将文本、图片或文件编码为 Base64 格式，或解码 Base64 编码为原始文本。支持实时转换，所有数据<span class="text-accent font-semibold">完全在本地浏览器处理</span>，安全高效。
       </p>
     </div>
     
-    <div class="max-w-6xl mx-auto">
-      <Base64EncoderDecoder client:only="react" />
+    <!-- Tool Component -->
+    <div class="bg-theme-surface rounded-2xl shadow-xl overflow-hidden mb-16 border border-theme-border">
+      <div class="max-w-6xl mx-auto">
+        <Base64EncoderDecoder client:only="react" />
+      </div>
+    </div>
+
+    <div class="my-8 max-w-6xl mx-auto">
+      <AdSense />
+    </div>
+
+    <!-- SEO Content Section -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-12">
+        
+        <!-- Introduction -->
+        <section class="prose dark:prose-invert max-w-none">
+          <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+            <span class="text-accent">#</span> 什么是 Base64 编码？
+          </h2>
+          <p class="text-lg leading-relaxed text-theme-secondary">
+            Base64 是一种基于 64 个可打印字符来表示二进制数据的表示方法。它常用于在处理文本数据的场合，表示、传输、存储一些二进制数据，包括 MIME 的电子邮件及 XML 的一些复杂数据。
+          </p>
+          <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+            <strong>Toolkit.ren 的 Base64 工具</strong> 提供了简单易用的界面，让您能够快速地在 Text（文本）和 Base64 之间，或者 File（文件/图片）和 Base64 字符串之间进行转换。最重要的是，我们坚持<span class="font-bold text-accent">客户端优先</span>的原则，您的数据不会离开您的设备。
+          </p>
+        </section>
+
+        <!-- Features Grid -->
+        <section>
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🔒</div>
+              <h3 class="text-xl font-semibold mb-2">隐私安全</h3>
+              <p class="text-theme-secondary">纯前端 JavaScript 实现，无需上传服务器，绝无数据泄露风险。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">⚡</div>
+              <h3 class="text-xl font-semibold mb-2">实时转换</h3>
+              <p class="text-theme-secondary">输入即转换，毫秒级响应，无需点击按钮等待页面刷新。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🖼️</div>
+              <h3 class="text-xl font-semibold mb-2">图片/文件支持</h3>
+              <p class="text-theme-secondary">不仅支持文本，还支持将图片、PDF 等文件转换为 Base64 Data URI。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">📋</div>
+              <h3 class="text-xl font-semibold mb-2">便捷操作</h3>
+              <p class="text-theme-secondary">一键复制结果，一键下载解码后的文件，提升开发效率。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- How to Use -->
+        <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">使用指南</h2>
+          <ol class="space-y-6">
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">文本处理</h3>
+                <p class="text-theme-secondary">在左侧输入框输入文本，右侧将自动显示 Base64 编码结果；反之亦然。</p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">图片/文件转换</h3>
+                <p class="text-theme-secondary">
+                  切换到“文件处理”标签，上传您的图片或文件。工具会生成对应的 Data URI 字符串，可直接用于 CSS 或 HTML `img` 标签。
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">复制或下载</h3>
+                <p class="text-theme-secondary">点击“复制”按钮获取结果字符串，或在文件解码完成后点击下载链接保存文件。</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1 space-y-8">
+        
+        <!-- FAQ Widget -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+          <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+          <div class="space-y-4">
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>Base64 是加密吗？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                不，Base64 只是编码，不是加密。它没有任何安全性，任何人都可以解码。请勿用它来“隐藏”密码或敏感信息。
+              </p>
+            </details>
+
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>图片转 Base64 有什么好处？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                可以减少 HTTP 请求数，提升页面加载性能。特别适合用于网页中的小图标、背景图或邮件签名中的图片。
+              </p>
+            </details>
+
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>支持中文吗？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                完美支持。我们的工具使用 UTF-8 编码处理字符，因此支持中文、Emoji 表情符号以及其他多语言字符的正确编解码。
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <!-- Related Tools (Sticky) -->
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+          <h3 class="text-lg font-bold text-theme-primary mb-4">相关开发者工具</h3>
+          <ul class="space-y-3">
+            <li>
+              <a href="/tools/image-background-remover" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">AI 图片去底</div>
+                <div class="text-xs text-theme-secondary">智能识别并移除图片背景</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/video-to-gif" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">视频转 GIF</div>
+                <div class="text-xs text-theme-secondary">视频截取并转换为动态 GIF</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/timestamp-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">时间戳转换</div>
+                <div class="text-xs text-theme-secondary">Unix 时间戳与日期互转</div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
   </div>
 </Layout>
