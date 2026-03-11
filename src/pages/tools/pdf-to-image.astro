@@ -1,20 +1,109 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-title: "PDF转图片"
-description: "一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出"
-technologies: "PDF转图片"
-category: "encoding"
+import AdSense from "../../components/ads/AdSense.astro";
+
+// 页面元数据，供 index.astro 读取
+title: "PDF转图片 - 免费在线PDF转换器"
+description: "一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出。所有操作均在浏览器本地完成，无需上传文件，确保您的文档隐私安全。"
+technologies: "PDF.js, JavaScript, Canvas"
+category: "image"
 order: 6
+
+const pageTitle = "PDF转图片 - 免费在线PDF转换器";
+const description = "一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出。所有操作均在浏览器本地完成，无需上传文件，确保您的文档隐私安全。";
+const keywords = "PDF转图片, PDF转JPG, PDF转PNG, PDF转换器, 免费PDF工具, 在线PDF转换";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF转图片",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "description": description,
+      "url": "https://www.toolkit.ren/tools/pdf-to-image",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "PDF转单张图片",
+        "PDF转长图合并",
+        "自定义页面范围导出",
+        "支持PNG和JPEG格式",
+        "自定义压缩质量",
+        "浏览器本地处理，隐私安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "我的PDF文件会被上传吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。本工具完全基于浏览器技术（PDF.js）开发，所有转换过程都在您的设备本地完成，文件不会上传到任何服务器，绝对保障您的隐私安全。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持多大的PDF文件？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "理论上支持任意大小的PDF文件，但受限于浏览器内存。建议文件大小在 200MB 以内，页数在 100 页以内，以获得最佳的转换速度和体验。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何导出高质量图片？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "在导出选项中，选择 'PNG' 格式可以获得无损的高清图片。如果选择 'JPEG' 格式，可以将压缩比例调整为 100% 以获得最高画质。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何将PDF转换为图片",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传PDF",
+          "text": "点击上传区域选择您的PDF文件，或直接将文件拖入框内。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览与设置",
+          "text": "在预览区确认文件内容，选择转换模式（单页/合并/范围）和输出格式。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "转换与下载",
+          "text": "点击'开始转换'按钮，等待处理完成后下载生成的图片。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="PDF转图片" description="一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出">
+<Layout title={pageTitle} description={description} structuredData={structuredData}>
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">PDF转图片</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一个功能强大的纯前端PDF转图片工具，支持单页导出、合并导出、指定页数范围导出，所有操作均在本地完成，保护您的隐私安全。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          功能强大的纯前端PDF转图片工具，支持单页、合并及范围导出。<br class="hidden md:inline" />
+          <span class="text-accent font-medium">所有操作均在本地完成</span>，无需上传服务器，保护您的隐私安全。
         </p>
       </div>
 
@@ -242,10 +331,176 @@ order: 6
               </div>
             </div>
           </div>
+          
+          <div class="mt-12 mb-12">
+            <AdSense />
+          </div>
+
+          <!-- SEO Content Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-16">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-12">
+              <!-- Introduction -->
+              <section>
+                <h2 class="text-2xl md:text-3xl font-bold text-theme-primary mb-6">为什么选择我们的 PDF 转图片工具？</h2>
+                <div class="prose prose-lg text-theme-secondary max-w-none">
+                  <p class="mb-4">
+                    在日常办公和学习中，我们经常需要将 PDF 文件转换为图片，以便于在社交媒体分享、插入到演示文稿或在不支持 PDF 预览的设备上查看。传统的转换方式往往需要安装庞大的软件，或者将敏感文件上传到云端服务器，这不仅麻烦，还存在隐私泄露的风险。
+                  </p>
+                  <p>
+                    Toolkit.ren 推出的<strong>在线 PDF 转图片工具</strong>，完美解决了这些痛点。它采用先进的浏览器端渲染技术（PDF.js），直接在您的设备本地进行解析和转换。这意味着您的文件<strong>从未离开过您的电脑</strong>，实现了真正的零上传、零风险。
+                  </p>
+                </div>
+              </section>
+
+              <!-- Features -->
+              <section>
+                <h2 class="text-2xl md:text-3xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="bg-theme-secondary p-6 rounded-xl border border-theme-secondary">
+                    <div class="text-3xl mb-4">🔒</div>
+                    <h3 class="text-xl font-semibold text-theme-primary mb-2">隐私安全第一</h3>
+                    <p class="text-theme-secondary">纯前端技术实现，文件不上传服务器，所有处理均在本地完成，银行级安全保障。</p>
+                  </div>
+                  <div class="bg-theme-secondary p-6 rounded-xl border border-theme-secondary">
+                    <div class="text-3xl mb-4">🖼️</div>
+                    <h3 class="text-xl font-semibold text-theme-primary mb-2">多种导出模式</h3>
+                    <p class="text-theme-secondary">支持单页导出、多页合并长图、指定页数范围导出，满足各种场景需求。</p>
+                  </div>
+                  <div class="bg-theme-secondary p-6 rounded-xl border border-theme-secondary">
+                    <div class="text-3xl mb-4">⚡</div>
+                    <h3 class="text-xl font-semibold text-theme-primary mb-2">极速转换体验</h3>
+                    <p class="text-theme-secondary">基于 WebAssembly 技术，解析速度快，即拖即转，无需等待漫长的上传下载。</p>
+                  </div>
+                  <div class="bg-theme-secondary p-6 rounded-xl border border-theme-secondary">
+                    <div class="text-3xl mb-4">🎨</div>
+                    <h3 class="text-xl font-semibold text-theme-primary mb-2">自定义输出</h3>
+                    <p class="text-theme-secondary">支持 JPG/PNG 格式，可调节图片质量和压缩比，平衡画质与体积。</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- How to Use -->
+              <section>
+                <h2 class="text-2xl md:text-3xl font-bold text-theme-primary mb-6">如何使用</h2>
+                <div class="space-y-6">
+                  <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">1</div>
+                    <div>
+                      <h3 class="text-xl font-semibold text-theme-primary mb-2">上传 PDF 文件</h3>
+                      <p class="text-theme-secondary">点击上传区域选择文件，或直接将 PDF 拖拽到页面中。支持大文件预览。</p>
+                    </div>
+                  </div>
+                  <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">2</div>
+                    <div>
+                      <h3 class="text-xl font-semibold text-theme-primary mb-2">选择转换模式</h3>
+                      <p class="text-theme-secondary">
+                        <strong>单页导出：</strong>将每页保存为单独图片。<br/>
+                        <strong>合并导出：</strong>将所有页面拼接为一张长图。<br/>
+                        <strong>指定范围：</strong>仅导出需要的页码范围。
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold">3</div>
+                    <div>
+                      <h3 class="text-xl font-semibold text-theme-primary mb-2">开始转换并下载</h3>
+                      <p class="text-theme-secondary">点击“开始转换”，完成后可批量打包下载或单独保存图片。</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-8">
+              <!-- FAQ Section -->
+              <div class="bg-theme-secondary rounded-xl p-6 border border-theme-secondary sticky top-24">
+                <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+                <div class="space-y-4">
+                  <details class="group">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                      <span>支持加密的 PDF 吗？</span>
+                      <span class="transition group-open:rotate-180">
+                        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                      </span>
+                    </summary>
+                    <p class="text-theme-secondary mt-3 group-open:animate-fadeIn text-sm">
+                      目前暂不支持加密 PDF。如果文件有密码，请先移除密码后再进行转换。
+                    </p>
+                  </details>
+                  <details class="group">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                      <span>转换后的图片清晰吗？</span>
+                      <span class="transition group-open:rotate-180">
+                        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                      </span>
+                    </summary>
+                    <p class="text-theme-secondary mt-3 group-open:animate-fadeIn text-sm">
+                      非常清晰。默认输出高分辨率图片。如果是文字类 PDF，建议选择 PNG 格式以获得最佳锐度；如果是扫描件或图片类，JPG 格式更加节省空间。
+                    </p>
+                  </details>
+                  <details class="group">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary">
+                      <span>为什么转换速度有时会变慢？</span>
+                      <span class="transition group-open:rotate-180">
+                        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                      </span>
+                    </summary>
+                    <p class="text-theme-secondary mt-3 group-open:animate-fadeIn text-sm">
+                      转换速度取决于您的电脑性能和 PDF 文件的复杂度。高清图片较多或矢量图形复杂的 PDF 需要更多的计算资源。建议关闭不需要的浏览器标签页以释放内存。
+                    </p>
+                  </details>
+                </div>
+
+                <div class="mt-8">
+                  <h3 class="text-xl font-bold text-theme-primary mb-4">推荐工具</h3>
+                  <ul class="space-y-3">
+                     <li>
+                      <a href="/tools/image-stitcher" class="block p-3 rounded-lg bg-div-theme hover:bg-theme-primary transition-colors border border-theme-secondary group">
+                        <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">在线拼接长图</div>
+                        <div class="text-sm text-theme-secondary">将多张图片拼接成一张长图</div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/tools/video-to-gif" class="block p-3 rounded-lg bg-div-theme hover:bg-theme-primary transition-colors border border-theme-secondary group">
+                        <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">视频转 GIF</div>
+                        <div class="text-sm text-theme-secondary">本地转换视频为 GIF 动图</div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/tools/image-background-remover" class="block p-3 rounded-lg bg-div-theme hover:bg-theme-primary transition-colors border border-theme-secondary group">
+                        <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">AI 智能抠图</div>
+                        <div class="text-sm text-theme-secondary">一键自动去除图片背景</div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+  
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 
   <!-- External Script -->
   <script src="../../scripts/pdf-to-image.js"></script>
