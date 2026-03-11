@@ -1,13 +1,102 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-title: "在线拼接长图"
-description: "一个功能强大的在线图片拼接工具，支持多张图片合并、格式转换、压缩和编辑"
-technologies: "在线拼接长图"
+import AdSense from "../../components/ads/AdSense.astro";
+
+// 页面元数据，供 index.astro 读取
+title: "在线拼接长图 - 免费图片合并工具 (Image Stitcher)"
+description: "一个功能强大的在线图片拼接工具，支持多张图片纵向或横向合并、格式转换、压缩和编辑，所有操作均在本地完成，保护隐私。"
+technologies: "Canvas, JavaScript, TailwindCSS"
 category: "image"
 order: 4
+
+const pageTitle = "在线拼接长图 - 免费图片合并工具 (Image Stitcher)";
+const pageDescription = "一个功能强大的在线图片拼接工具，支持多张图片纵向或横向合并、格式转换、压缩和编辑，所有操作均在本地完成，保护隐私。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线拼接长图",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/image-stitcher",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "多张图片纵向/横向拼接",
+        "图片旋转与翻转编辑",
+        "自定义输出格式 (JPEG/PNG/WebP)",
+        "自定义压缩质量",
+        "浏览器本地处理，隐私安全",
+        "一键复制与下载"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "拼接图片会降低画质吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "本工具支持自定义压缩级别。如果您选择“无损 (100%)”，则会尽可能保留原始画质。选择 JPEG 或 WebP 格式时，可以通过调整压缩比来平衡画质和文件大小。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持哪些图片格式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持常见的图片格式，包括 JPG, PNG, WebP, GIF, BMP 等。输出格式支持 JPEG, PNG 和 WebP。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "我的图片会上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。所有图片处理逻辑完全在您的浏览器本地（Client-side）执行，图片数据不会上传到任何服务器，确保您的隐私安全。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用在线拼接长图工具",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传图片",
+          "text": "点击上传区域或直接拖拽多张图片到页面中。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "调整顺序与编辑",
+          "text": "您可以拖动图片调整拼接顺序，或选中单张图片进行旋转、翻转操作。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置参数并生成",
+          "text": "选择拼接方向（横向/纵向）、输出格式和质量，点击“合并图片”即可生成长图。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线拼接长图" description="一个功能强大的在线图片拼接工具，支持多张图片合并、格式转换、压缩和编辑">
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <style>
     /* 基础样式 */
     #imageList .image-item {
@@ -48,8 +137,8 @@ order: 4
       <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线拼接长图</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一个功能强大的在线图片拼接工具，支持多张图片合并、格式转换、压缩和编辑，所有操作均在本地完成。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          一个功能强大的在线图片拼接工具，支持多张图片合并、格式转换、压缩和编辑，<span class="text-accent font-semibold">所有操作均在本地完成</span>，保护隐私。
         </p>
       </div>
 
@@ -197,20 +286,12 @@ order: 4
               </svg>
               下载图片
             </button>
-            <!-- 方案1：带有向外箭头的窗口图标 -->
             <button id="openNewBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium opacity-50 pointer-events-none transition-all duration-200 flex items-center justify-center gap-2 min-w-[160px]">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
               </svg>
               新窗口打开
             </button>
-            <!-- 方案2：带有加号的窗口图标 (备选) -->
-            <!-- <button id="openNewBtn" class="btn-theme px-8 py-4 rounded-lg text-lg font-medium opacity-50 pointer-events-none transition-all duration-200 flex items-center justify-center gap-2 min-w-[160px]">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m-6 12h6M12 6v6m0 0v6m0-6h6"></path>
-              </svg>
-              新窗口打开
-            </button> -->
           </div>
 
           <!-- Preview Section -->
@@ -225,9 +306,172 @@ order: 4
             </div>
           </div>
         </div>
+
+        <div class="my-8">
+          <AdSense />
+        </div>
+
+        <!-- SEO Content Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary">
+          
+          <!-- Main Content -->
+          <div class="lg:col-span-2 space-y-12">
+            
+            <!-- Introduction -->
+            <section class="prose dark:prose-invert max-w-none">
+              <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+                <span class="text-accent">#</span> 为什么选择我们的在线拼图工具？
+              </h2>
+              <p class="text-lg leading-relaxed text-theme-secondary">
+                在分享聊天记录、制作长图文、或整理项目截图时，我们经常需要将多张图片合并为一张。虽然手机 App 和 Photoshop 都能做到，但前者操作繁琐，后者对设备要求高。
+              </p>
+              <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+                <strong>Toolkit.ren 的在线拼接长图工具</strong> 专为效率而生。它直接在浏览器中运行，无需下载安装任何软件，支持拖拽上传、自由排序、旋转编辑，并且提供专业的无损输出选项。最重要的是，所有图片数据<span class="font-bold text-accent">完全在本地处理</span>，充分保护您的隐私安全。
+              </p>
+            </section>
+    
+            <!-- Features Grid -->
+            <section>
+              <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                  <div class="text-3xl mb-3">🛡️</div>
+                  <h3 class="text-xl font-semibold mb-2">隐私优先设计</h3>
+                  <p class="text-theme-secondary">不同于传统在线工具，我们采用 Client-side 技术，您的照片从未离开过您的设备，杜绝隐私泄露风险。</p>
+                </div>
+                <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                  <div class="text-3xl mb-3">🧩</div>
+                  <h3 class="text-xl font-semibold mb-2">灵活的拼接模式</h3>
+                  <p class="text-theme-secondary">支持纵向（长图）和横向（全景）两种拼接方向，满足聊天记录、电影台词、全景照片等多种场景需求。</p>
+                </div>
+                <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                  <div class="text-3xl mb-3">🎨</div>
+                  <h3 class="text-xl font-semibold mb-2">内置简易编辑</h3>
+                  <p class="text-theme-secondary">上传后发现图片方向不对？无需重新处理，直接在工具内旋转、翻转图片，所见即所得。</p>
+                </div>
+                <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                  <div class="text-3xl mb-3">💾</div>
+                  <h3 class="text-xl font-semibold mb-2">多种格式输出</h3>
+                  <p class="text-theme-secondary">支持导出为通用的 JPEG、透明背景的 PNG 以及高压缩率的 WebP 格式，并可自定义压缩质量。</p>
+                </div>
+              </div>
+            </section>
+    
+            <!-- How to Use -->
+            <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+              <h2 class="text-2xl font-bold text-theme-primary mb-6">如何快速制作长图？</h2>
+              <ol class="space-y-6">
+                <li class="flex gap-4">
+                  <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">批量导入图片</h3>
+                    <p class="text-theme-secondary">点击上传区域选择图片，或直接将多张图片拖拽到网页中。支持 JPG, PNG, GIF 等主流格式。</p>
+                  </div>
+                </li>
+                <li class="flex gap-4">
+                  <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">调整顺序与参数</h3>
+                    <p class="text-theme-secondary">在列表中拖拽图片调整拼接顺序。在下方设置栏选择“纵向”或“横向”拼接，并设定输出格式。</p>
+                  </div>
+                </li>
+                <li class="flex gap-4">
+                  <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">一键生成下载</h3>
+                    <p class="text-theme-secondary">点击“合并图片”按钮，预览效果满意后，点击“下载图片”保存到本地，或直接复制分享。</p>
+                  </div>
+                </li>
+              </ol>
+            </section>
+          </div>
+    
+          <!-- Sidebar -->
+          <div class="lg:col-span-1 space-y-8">
+            
+            <!-- Sticky Container -->
+            <div class="sticky top-24 space-y-8">
+              
+              <!-- FAQ Section -->
+              <section class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm">
+                <h2 class="text-xl font-bold text-theme-primary mb-4 flex items-center gap-2">
+                  <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  常见问题 (FAQ)
+                </h2>
+                <div class="space-y-4">
+                  <details class="group">
+                    <summary class="flex justify-between items-center cursor-pointer list-none text-theme-primary font-medium hover:text-accent transition-colors">
+                      <span>支持哪些图片格式？</span>
+                      <span class="transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="mt-2 text-sm text-theme-secondary leading-relaxed pl-2 border-l-2 border-theme-border">
+                      输入支持 JPG, PNG, GIF, BMP, WebP 等常见格式。输出支持 JPG, PNG 和 WebP。
+                    </div>
+                  </details>
+                  
+                  <details class="group">
+                    <summary class="flex justify-between items-center cursor-pointer list-none text-theme-primary font-medium hover:text-accent transition-colors">
+                      <span>拼接后的图片体积太大怎么办？</span>
+                      <span class="transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="mt-2 text-sm text-theme-secondary leading-relaxed pl-2 border-l-2 border-theme-border">
+                      您可以尝试在“压缩级别”中选择较低的数值（如 80%），或者选择 WebP 格式，这通常能在保持画质的同时显著减小体积。
+                    </div>
+                  </details>
+    
+                  <details class="group">
+                    <summary class="flex justify-between items-center cursor-pointer list-none text-theme-primary font-medium hover:text-accent transition-colors">
+                      <span>如何调整图片顺序？</span>
+                      <span class="transition-transform group-open:rotate-180">▼</span>
+                    </summary>
+                    <div class="mt-2 text-sm text-theme-secondary leading-relaxed pl-2 border-l-2 border-theme-border">
+                      在“图片列表”区域，您可以通过鼠标直接拖拽图片条目来上下移动，从而改变拼接时的先后顺序。
+                    </div>
+                  </details>
+                </div>
+              </section>
+    
+              <!-- Related Tools -->
+              <section class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm">
+                <h3 class="text-lg font-semibold text-theme-primary mb-4">推荐工具</h3>
+                <div class="space-y-3">
+                  <a href="/tools/image-background-remover" class="block p-3 rounded-lg hover:bg-theme-bg transition-colors group">
+                    <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">图片去底工具</div>
+                    <div class="text-sm text-theme-secondary">AI 智能一键抠图，自动去除背景</div>
+                  </a>
+                  <a href="/tools/video-to-gif" class="block p-3 rounded-lg hover:bg-theme-bg transition-colors group">
+                    <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">视频转 GIF</div>
+                    <div class="text-sm text-theme-secondary">视频片段转高质量 GIF 动图</div>
+                  </a>
+                  <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-bg transition-colors group">
+                    <div class="font-medium text-theme-primary group-hover:text-accent transition-colors">Base64 编解码</div>
+                    <div class="text-sm text-theme-secondary">图片与 Base64 编码互转</div>
+                  </a>
+                </div>
+              </section>
+    
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 
   <script src="/src/scripts/image-stitcher.js"></script>
 </Layout>
