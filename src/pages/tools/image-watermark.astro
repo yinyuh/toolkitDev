@@ -1,20 +1,108 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import AdSense from "../../components/ads/AdSense.astro";
+
 title: "图片水印处理工具"
 description: "一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数"
 technologies: "图片水印处理"
 category: "image"
 order: 100
+
+const pageTitle = "图片水印处理工具";
+const pageDescription = "一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线图片水印处理工具",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/image-watermark",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "自定义文字水印内容",
+        "水印颜色、透明度、角度可调",
+        "单点或重复平铺水印模式",
+        "多方位位置选择与间距控制",
+        "实时预览并下载处理结果",
+        "浏览器本地处理，隐私安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "水印处理后会覆盖原图吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。工具会生成新的带水印图片供你下载，原始图片文件不会被修改。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何避免水印过于抢眼？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "建议降低透明度、减小字体并适度增加间距。对于主图展示场景，可优先放置在边缘区域以减少内容遮挡。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "是否支持批量加水印？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "当前页面更适合单图精细处理。如果你需要批量操作，建议分次处理并统一参数，保持视觉一致性。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何给图片添加文字水印",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传原图",
+          "text": "选择本地图片并加载到预览区域。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "配置水印样式",
+          "text": "输入水印文字，设置颜色、透明度、角度、字号和位置。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "下载结果",
+          "text": "确认预览效果后下载带水印图片，用于发布或存档。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="图片水印处理工具" description="一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">图片水印处理工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一个功能强大的在线图片水印处理工具，支持自定义水印文字、颜色、透明度、角度、位置等参数，所有操作均在本地完成。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          为图片快速添加文字版权标识。<span class="text-accent font-semibold">位置、透明度和重复密度灵活可调</span>，发布与存档更安心。
         </p>
       </div>
 
@@ -218,8 +306,162 @@ order: 100
           </div>
         </div>
       </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么图片发布前建议加水印？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在社交平台、电商详情页和内容社区中，原创图片被二次搬运的情况很常见。加水印能够有效提升来源识别度，减少未经授权的传播风险。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 图片水印处理工具</strong> 提供可视化参数调整能力，你可以在本地浏览器中快速完成水印文字设置、位置布局和透明度控制，兼顾版权保护与画面美观。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🏷️</div>
+                <h3 class="text-xl font-semibold mb-2">自定义文字水印</h3>
+                <p class="text-theme-secondary">支持自由输入品牌名、账号名或版权声明，快速建立内容标识。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎛️</div>
+                <h3 class="text-xl font-semibold mb-2">样式参数可控</h3>
+                <p class="text-theme-secondary">颜色、透明度、旋转角度、字号和间距均可调，满足多场景需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧩</div>
+                <h3 class="text-xl font-semibold mb-2">单点与平铺模式</h3>
+                <p class="text-theme-secondary">可选择单个水印强调品牌，也可重复平铺提升防搬运能力。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地处理隐私安全</h3>
+                <p class="text-theme-secondary">图片全程在浏览器端处理，不上传服务器，敏感素材也可安心使用。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成水印处理</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">上传图片</h3>
+                  <p class="text-theme-secondary">导入待处理图片并在画布中预览原始效果。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">设置水印参数</h3>
+                  <p class="text-theme-secondary">输入水印文字并调整位置、透明度、角度、字号和重复密度。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">导出结果</h3>
+                  <p class="text-theme-secondary">确认效果后下载带水印图片，直接用于发布、授权或归档。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>水印放在中间还是边角更好？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  如果强调版权保护可放在中心偏透明区域；若更重视观感，建议放在边角并适当降低透明度。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>平铺水印会影响阅读吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可通过增大间距和降低透明度减少遮挡。建议先预览并以目标平台实际展示效果为准。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>导出后颜色会变化吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  一般不会明显变化。若在不同设备显示差异较大，通常与屏幕色彩管理和平台压缩策略有关。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关图像工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/image-cropper" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片裁剪工具</div>
+                  <div class="text-xs text-theme-secondary">自由裁剪并支持比例预设</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-background-remover" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片背景去除工具</div>
+                  <div class="text-xs text-theme-secondary">AI 一键去背景并导出透明图</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩工具</div>
+                  <div class="text-xs text-theme-secondary">降低图片体积并保持清晰度</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 
   <script>
     // Image Watermark Tool functionality
