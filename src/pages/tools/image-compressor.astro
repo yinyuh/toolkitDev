@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ImageCompressor from '../../components/tools/ImageCompressor';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线图片压缩工具"
-description: "免费在线批量压缩 JPG, PNG, WEBP 图片，支持画质对比和打包下载，纯本地处理，保护隐私。"
+title: "在线图片压缩工具 - 免费批量压缩 JPG/PNG/WebP"
+description: "免费在线图片压缩工具，支持 JPG、PNG、WebP 批量压缩与画质对比。无需上传服务器，浏览器本地处理，保障隐私并显著减小图片体积。"
 technologies: "Browser-image-compression, React, TailwindCSS"
 category: "image"
 order: 14
+
+const pageTitle = "在线图片压缩工具 - 免费批量压缩 JPG/PNG/WebP";
+const pageDescription = "免费在线图片压缩工具，支持 JPG、PNG、WebP 批量压缩与画质对比。无需上传服务器，浏览器本地处理，保障隐私并显著减小图片体积。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线图片压缩工具",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/image-compressor",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "支持 JPG、PNG、WebP 批量压缩",
+        "压缩前后体积与画质对比",
+        "浏览器本地处理，隐私安全",
+        "支持打包下载压缩结果",
+        "适配电商、博客和社媒发布场景",
+        "免费使用，无需注册"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "压缩图片会上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。所有压缩和导出过程都在浏览器本地完成，图片数据不会上传到服务器，适合处理敏感素材。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何在清晰度和体积之间平衡？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "建议先从中等压缩率开始，结合压缩前后预览对比细节，再逐步调整参数。对展示图可适度压缩，对印刷图建议保留更高质量。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么某些 PNG 压缩幅度不明显？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PNG 常用于无损图像，若原图本身已较优化或包含透明通道，进一步压缩空间会受限。可在可接受范围内尝试转为 WebP 以获得更高压缩率。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何在线压缩图片",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传图片文件",
+          "text": "选择一张或多张图片文件，支持 JPG、PNG、WebP 等常见格式。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置压缩参数",
+          "text": "根据用途调整压缩质量和输出选项，兼顾清晰度与体积。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览并下载",
+          "text": "查看压缩前后效果与体积变化，确认后单张或批量下载结果。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线图片压缩工具" description="免费在线批量压缩 JPG, PNG, WEBP 图片，支持画质对比和打包下载，纯本地处理，保护隐私。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线图片压缩工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          无需上传服务器，直接在浏览器本地批量压缩图片。支持 JPG、PNG、WebP 格式，提供压缩前后画质对比。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          批量压缩 JPG、PNG、WebP 图片，显著降低文件体积并保留视觉质量。<span class="text-accent font-semibold">本地处理更安全</span>，无需上传服务器。
         </p>
       </div>
       
       <div class="max-w-6xl mx-auto">
         <ImageCompressor client:only="react" />
       </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么需要在线图片压缩工具？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              图片体积直接影响网页加载速度、SEO 表现和用户留存。无论是电商详情图、博客配图还是社交媒体素材，过大的图片都会增加访问等待时间，影响整体体验和转化效果。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线图片压缩工具</strong> 让你在浏览器内完成批量压缩与质量对比，无需安装软件。你可以根据不同用途灵活控制画质和体积，在视觉观感与传输效率之间找到平衡，同时保证图片数据留在本地设备中。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🖼️</div>
+                <h3 class="text-xl font-semibold mb-2">批量压缩高效率</h3>
+                <p class="text-theme-secondary">支持一次处理多张图片，显著减少重复导出和逐张优化的时间成本。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚖️</div>
+                <h3 class="text-xl font-semibold mb-2">画质体积可平衡</h3>
+                <p class="text-theme-secondary">压缩前后可视化对比，帮助你快速找到合适参数，兼顾清晰度与加载性能。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地处理更隐私</h3>
+                <p class="text-theme-secondary">全部处理流程在浏览器端完成，不需要上传文件到服务器，敏感素材更安心。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📦</div>
+                <h3 class="text-xl font-semibold mb-2">结果下载更便捷</h3>
+                <p class="text-theme-secondary">支持单张下载与批量打包下载，便于快速回传设计、运营或开发流程中复用。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成图片压缩</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">上传一张或多张图片</h3>
+                  <p class="text-theme-secondary">导入待压缩素材，工具自动识别格式与文件大小，准备进入压缩流程。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">调整压缩参数</h3>
+                  <p class="text-theme-secondary">根据使用场景设置合适质量等级，优先保证关键区域清晰度和整体展示效果。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">预览结果并下载</h3>
+                  <p class="text-theme-secondary">对比压缩前后画质与体积变化，确认后下载单图或打包结果用于发布。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>压缩后图片会明显模糊吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不会。建议先使用中等压缩强度并观察对比预览，通常可以在不明显损失画质的情况下显著降低体积。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>JPG、PNG、WebP 哪个更省体积？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  一般 WebP 在相近画质下体积更小。JPG 兼容性最广，PNG 适合透明背景和无损需求，可按场景选择。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>支持移动端批量压缩吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  支持。若单次图片数量较多或分辨率很高，建议分批处理，以获得更稳定顺畅的转换体验。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关图像工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/image-background-remover" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片背景去除工具</div>
+                  <div class="text-xs text-theme-secondary">AI 一键抠图，导出透明背景</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-stitcher" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">在线拼接长图</div>
+                  <div class="text-xs text-theme-secondary">多张图片快速合并并导出</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-watermark" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片水印工具</div>
+                  <div class="text-xs text-theme-secondary">添加文字或图像水印，保护版权</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
