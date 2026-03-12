@@ -71,8 +71,13 @@ const socialImageURL = new URL(image, Astro.url);
         }
       })();
     </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2594166946464616" 
-      crossorigin="anonymous"></script>
+    {import.meta.env.PROD && (
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2594166946464616"
+        crossorigin="anonymous"
+      />
+    )}
   </head>
   <body class="text-theme-primary transition-colors duration-300">
     <!-- Animated background -->
