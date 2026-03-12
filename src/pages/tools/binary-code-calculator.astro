@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BinaryCodeCalculator from '../../components/tools/BinaryCodeCalculator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线原码/反码/补码计算器"
-description: "免费在线原码、反码、补码计算器，支持 8位/16位/32位 二进制转换，帮助学习计算机组成原理和数字逻辑。"
+title: "在线原码/反码/补码计算器 - 二进制编码学习工具"
+description: "免费在线原码、反码、补码计算器，支持 8 位/16 位/32 位字长转换，清晰展示符号位与数值位变化，适用于计算机组成原理学习与编程调试。"
 technologies: "React, TailwindCSS"
 category: "calculator"
 order: 100
+
+const pageTitle = "在线原码/反码/补码计算器 - 二进制编码学习工具";
+const pageDescription = "免费在线原码、反码、补码计算器，支持 8 位/16 位/32 位字长转换，清晰展示符号位与数值位变化，适用于计算机组成原理学习与编程调试。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线原码/反码/补码计算器",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/binary-code-calculator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "十进制到二进制编码转换",
+        "原码、反码、补码同步展示",
+        "支持 8 位、16 位、32 位字长",
+        "符号位与数值位可视化理解",
+        "适合课程学习与笔试面试准备",
+        "无需安装，浏览器直接使用"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "原码、反码、补码有什么区别？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "原码直接表示符号和数值；反码在负数时对数值位按位取反；补码是在反码基础上加一。补码是现代计算机中最常用的有符号整数表示方式。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么需要选择 8 位、16 位或 32 位？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "位宽决定可表示的数值范围和编码结果。相同十进制数在不同位宽下，符号扩展和补码表现会不同，因此学习和调试时需要明确字长。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "这个工具适合哪些人使用？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "适合计算机专业学生、编程初学者、备考人员和需要处理底层数值表示的开发者，用于理解与验证原码、反码、补码计算。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用原码反码补码计算器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入十进制整数",
+          "text": "在输入框中填写需要计算的十进制整数。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "选择位宽",
+          "text": "根据学习或开发场景切换 8 位、16 位或 32 位字长。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "查看编码结果",
+          "text": "对比原码、反码、补码的二进制结果，观察符号位与数值位变化。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线原码/反码/补码计算器" description="免费在线原码、反码、补码计算器，支持 8位/16位/32位 二进制转换，帮助学习计算机组成原理和数字逻辑。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        原码/反码/补码计算器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        输入十进制整数，自动计算其在计算机中的二进制表示形式。支持 8 位、16 位和 32 位字长，清晰展示符号位与数值位。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">原码/反码/补码计算器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          输入整数即可快速得到原码、反码、补码结果。<span class="text-accent font-semibold">位宽切换更清晰</span>，帮助你理解二进制编码规则。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <BinaryCodeCalculator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么要学习原码、反码和补码？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              原码、反码、补码是计算机底层数值表示的核心概念，尤其在理解有符号整数、溢出行为、位运算和底层存储时至关重要。很多算法题、系统面试和底层调试问题都离不开这三种编码规则。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 原码/反码/补码计算器</strong> 提供即时计算和位宽切换能力，帮助你在同一页面快速对比编码差异，降低手算出错率，提升学习效率和调试准确性。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧮</div>
+                <h3 class="text-xl font-semibold mb-2">一键计算三种编码</h3>
+                <p class="text-theme-secondary">输入十进制数后自动输出原码、反码、补码，避免反复手工推导。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📏</div>
+                <h3 class="text-xl font-semibold mb-2">多位宽灵活切换</h3>
+                <p class="text-theme-secondary">支持 8/16/32 位场景，对比不同字长下的编码结果变化。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔍</div>
+                <h3 class="text-xl font-semibold mb-2">结果结构清晰</h3>
+                <p class="text-theme-secondary">符号位与数值位展示直观，便于课堂讲解、笔记整理和复习理解。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎯</div>
+                <h3 class="text-xl font-semibold mb-2">学习调试双场景</h3>
+                <p class="text-theme-secondary">既适合基础学习，也可用于位运算代码和边界数值的快速验证。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成编码换算</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入十进制值</h3>
+                  <p class="text-theme-secondary">填入需要转换的整数，系统会自动识别并准备计算。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择字长位宽</h3>
+                  <p class="text-theme-secondary">切换 8 位、16 位或 32 位，观察同一数值在不同位宽下的编码差异。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">对比三类结果</h3>
+                  <p class="text-theme-secondary">直接查看并对比原码、反码、补码输出，快速定位理解难点。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>补码为什么更常用？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  补码能统一加减法电路设计，避免正负零双表示问题，并简化硬件实现，因此被现代计算机广泛采用。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>负数编码如何理解更快？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  建议先掌握“正数原码”规则，再用“反码取反、补码加一”的步骤推导负数，配合位宽切换对比更容易建立直觉。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>这个工具适合面试复习吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  很适合。可用于快速验证典型题目中的编码结果，复习位运算、补码范围和溢出边界等高频考点。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关开发工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/base-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">在线进制转换器</div>
+                  <div class="text-xs text-theme-secondary">2-36 进制实时互转</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/timestamp-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">时间戳转换工具</div>
+                  <div class="text-xs text-theme-secondary">Unix 时间与日期双向转换</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一键格式化</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <BinaryCodeCalculator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
