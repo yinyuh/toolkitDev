@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import FaviconGenerator from '../../components/tools/FaviconGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "Favicon图标生成器"
-description: "一键生成网站Favicon图标，支持ICO和PNG格式，自动生成多尺寸图标包，提供HTML引用代码。"
+title: "Favicon 图标生成器 - 一键生成网站多尺寸图标包"
+description: "免费在线 Favicon 图标生成器，支持 ICO 与 PNG 多尺寸导出，自动生成常用网站图标包与 HTML 引用代码，适用于个人站点与企业官网。"
 technologies: "Canvas, JSZip, FileSaver, React"
 category: "image"
 order: 100
+
+const pageTitle = "Favicon 图标生成器 - 一键生成网站多尺寸图标包";
+const pageDescription = "免费在线 Favicon 图标生成器，支持 ICO 与 PNG 多尺寸导出，自动生成常用网站图标包与 HTML 引用代码，适用于个人站点与企业官网。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Favicon 图标生成器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/favicon-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "上传图片后自动裁剪图标",
+        "一键生成 ICO 与 PNG 多尺寸文件",
+        "自动打包网站图标资源",
+        "提供 HTML favicon 引用代码",
+        "浏览器端处理，使用便捷",
+        "免费在线，无需安装"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "网站 favicon 需要哪些尺寸？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "常见站点至少建议包含 16x16、32x32、48x48 的 favicon，以及 180x180 的 Apple Touch Icon。工具会自动生成多尺寸资源，减少手动处理成本。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ICO 和 PNG 图标有什么区别？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ICO 更适配传统浏览器标签页图标场景，PNG 在现代浏览器和移动端图标中更常见。实际部署通常会同时提供两种格式以兼容更多设备。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "生成后如何在网站中引用？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "将生成的图标文件放入站点根目录或静态资源目录，在页面 head 中添加对应 link 标签即可。工具已提供可直接复制的引用代码。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用 Favicon 图标生成器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传并裁剪图片",
+          "text": "选择清晰的方形或接近方形图片，调整裁剪区域确保核心元素居中。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "生成并下载图标包",
+          "text": "点击生成后自动输出多个尺寸和格式，下载压缩包即可获取完整 favicon 资源。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制代码并部署",
+          "text": "将工具给出的 HTML 引用代码粘贴到页面 head 中，上传图标文件并完成站点配置。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="Favicon图标生成器" description="一键生成网站Favicon图标，支持ICO和PNG格式，自动生成多尺寸图标包，提供HTML引用代码。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">Favicon 图标生成器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一键生成网站 Favicon 图标，支持 ICO 和 PNG 格式，自动生成多尺寸图标包，提供 HTML 引用代码。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          上传一张图片即可快速生成网站图标资源。<span class="text-accent font-semibold">多尺寸一次搞定</span>，部署 favicon 更规范、更高效。
         </p>
       </div>
       
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <FaviconGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么网站必须配置 Favicon？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              Favicon 是浏览器标签页、收藏夹和历史记录中识别网站品牌的重要标识。一个清晰统一的站点图标不仅提升专业度，还能帮助用户在多标签场景中快速找到你的页面。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren Favicon 图标生成器</strong> 可自动输出常用尺寸和格式，避免手工缩放导致的模糊与失真。无论你是搭建个人博客、企业官网还是产品后台，都能快速完成规范的 favicon 部署。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧩</div>
+                <h3 class="text-xl font-semibold mb-2">多尺寸自动生成</h3>
+                <p class="text-theme-secondary">自动输出 favicon 常用尺寸，覆盖桌面浏览器和移动端场景。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🗂️</div>
+                <h3 class="text-xl font-semibold mb-2">图标包一键下载</h3>
+                <p class="text-theme-secondary">自动打包图标资源，减少逐个导出与命名的重复操作。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📎</div>
+                <h3 class="text-xl font-semibold mb-2">HTML 代码即取即用</h3>
+                <p class="text-theme-secondary">生成可复制的 link 引用片段，集成到页面 head 更省心。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">在线处理效率高</h3>
+                <p class="text-theme-secondary">无需安装设计软件，打开网页即可完成站点图标生产流程。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成 Favicon 配置</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">上传品牌图形</h3>
+                  <p class="text-theme-secondary">选择 logo 或图标源图，确保主体清晰、边缘对比明显。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">生成并下载资源</h3>
+                  <p class="text-theme-secondary">工具自动输出多尺寸 ICO/PNG，下载图标包即可开始部署。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">粘贴引用代码</h3>
+                  <p class="text-theme-secondary">将生成代码添加到 head 标签中，刷新后即可在标签页查看效果。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>为什么浏览器里图标不更新？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  这通常是浏览器缓存导致的。可尝试强制刷新、清理缓存或更换图标文件名后重新部署。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>源图尺寸有推荐吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  建议使用至少 512x512 的清晰源图，缩小到 16x16 时仍能保持较好的识别度和边缘清晰度。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>可以用于 PWA 或移动端图标吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以，建议结合站点 manifest 配置额外图标尺寸，以满足 Android 和 iOS 主屏图标需求。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关图像工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩工具</div>
+                  <div class="text-xs text-theme-secondary">批量压缩 PNG/JPG，减小体积</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-cropper" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片裁剪工具</div>
+                  <div class="text-xs text-theme-secondary">裁剪图标主体，优化显示区域</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编解码工具</div>
+                  <div class="text-xs text-theme-secondary">图片与 Base64 文本互转</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
