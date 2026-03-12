@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CronGenerator from '../../components/tools/CronGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线 Cron 表达式生成器"
-description: "免费在线 Cron 表达式生成器，可视化配置定时任务，实时解析并翻译为自然语言，支持预览最近 5 次执行时间。"
+title: "在线 Cron 表达式生成器 - 可视化定时任务规则配置工具"
+description: "免费在线 Cron 表达式生成器，通过可视化方式配置分钟、小时、日期、月份和星期规则，实时生成表达式并翻译为中文说明，支持预览执行时间。"
 technologies: "Cronstrue, Cron-parser, React, TailwindCSS"
 category: "generator"
 order: 11
+
+const pageTitle = "在线 Cron 表达式生成器 - 可视化定时任务规则配置工具";
+const pageDescription = "免费在线 Cron 表达式生成器，通过可视化方式配置分钟、小时、日期、月份和星期规则，实时生成表达式并翻译为中文说明，支持预览执行时间。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线 Cron 表达式生成器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/cron-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "可视化配置 Cron 各字段",
+        "实时生成标准 Cron 表达式",
+        "中文自然语言解释",
+        "预览最近执行时间",
+        "预设模板快速套用",
+        "浏览器本地处理，安全高效"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Cron 表达式是 5 位还是 6 位？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "大多数 Linux 系统 crontab 使用 5 位格式：分钟、小时、日期、月份、星期。部分框架（如 Quartz）会使用 6 位或 7 位格式，增加“秒”和“年”字段。使用前请确认目标平台规范。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么我的表达式在系统中不生效？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "通常与时区配置、字段范围、星期定义差异或系统 Cron 实现不一致有关。建议先用工具预览执行时间，再对照目标平台文档逐项核对。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以用这个工具生成复杂周期任务吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。通过步长、范围、列表和通配符组合，能够覆盖大多数运维与业务调度场景，例如每 15 分钟、每周一早上 8 点或每月 1 号执行。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何生成 Cron 表达式",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "选择调度周期",
+          "text": "先确定任务频率，例如每小时、每天、每周或每月执行一次。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "配置字段参数",
+          "text": "按分钟、小时、日期、月份、星期依次设置取值，必要时使用范围、列表和步长。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "校验并复制表达式",
+          "text": "查看中文解释和最近执行时间，确认无误后复制到服务器、容器或任务平台。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线 Cron 表达式生成器" description="免费在线 Cron 表达式生成器，可视化配置定时任务，实时解析并翻译为自然语言，支持预览最近 5 次执行时间。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线 Cron 表达式生成器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          告别晦涩难记的 Cron 语法。通过可视化界面轻松构建定时任务表达式，支持实时翻译为中文说明，并准确预测执行时间。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          用可视化方式快速生成 Cron 规则，实时查看中文释义与执行计划。<span class="text-accent font-semibold">无需死记硬背语法</span>，调度配置更准确更高效。
         </p>
       </div>
       
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-6xl mx-auto">
         <CronGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么需要 Cron 表达式生成器？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在后端开发、系统运维和自动化流程中，定时任务是最常见的基础能力之一。无论是数据库备份、日志清理、报表生成，还是定时通知，都依赖稳定的调度规则。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              但 Cron 语法对初学者并不友好，尤其在涉及范围、步长和星期字段时，容易因一个字符写错而导致任务执行异常。<strong>Toolkit.ren 在线 Cron 表达式生成器</strong> 提供可视化配置、中文解释和执行时间预览，帮助你快速输出可落地的调度表达式，显著降低出错率。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧭</div>
+                <h3 class="text-xl font-semibold mb-2">可视化字段配置</h3>
+                <p class="text-theme-secondary">分钟、小时、日期、月份、星期逐项设置，减少手写语法时的字段错位问题。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🈶</div>
+                <h3 class="text-xl font-semibold mb-2">中文语义实时翻译</h3>
+                <p class="text-theme-secondary">表达式变更后立即输出自然语言说明，快速确认任务触发逻辑是否符合预期。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📅</div>
+                <h3 class="text-xl font-semibold mb-2">执行时间预览</h3>
+                <p class="text-theme-secondary">实时预估最近触发时刻，提前发现边界日期、星期配置和周期偏差问题。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚙️</div>
+                <h3 class="text-xl font-semibold mb-2">预设模板快速套用</h3>
+                <p class="text-theme-secondary">内置常用任务模板，一键生成高频表达式，适合开发、测试与生产环境复用。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步配置 Cron 定时任务</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">明确任务执行频率</h3>
+                  <p class="text-theme-secondary">先定义是按分钟、按天、按周还是按月执行，避免后续字段配置与业务目标不一致。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">按字段设置时间规则</h3>
+                  <p class="text-theme-secondary">根据业务需求组合通配符、范围、列表与步长，完成表达式生成并检查中文解释。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">预览执行时间后部署</h3>
+                  <p class="text-theme-secondary">确认最近触发记录符合预期，再复制到 crontab、任务中心或云平台定时器中使用。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>* 和 ? 有什么区别？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  在常见 5 位 Cron 中，* 表示“任意值”。? 多见于 Quartz 扩展语法，表示“该字段不指定”，通常用于日期和星期二选一的场景。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>星期字段 0 和 7 都代表周日吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  在多数实现中，0 和 7 都可表示周日，但不同平台存在差异。建议部署前查阅目标系统文档并实际验证一次。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>如何避免跨时区导致任务错点？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  统一服务器和应用时区设置，优先使用 UTC 或固定时区策略，并在灰度环境中先验证一轮真实触发时间。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关开发工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一站式处理</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码/解码</div>
+                  <div class="text-xs text-theme-secondary">文本与图片 Base64 快速互转</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/password-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">随机密码生成器</div>
+                  <div class="text-xs text-theme-secondary">一键生成高强度安全密码</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

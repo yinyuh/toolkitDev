@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AudioConverter from '../../components/tools/AudioConverter';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线音频格式转换器"
-description: "免费在线音频格式转换工具，支持 MP3, WAV, AAC, OGG, M4A 等格式互转，基于 WebAssembly 本地处理，保护隐私。"
+title: "在线音频格式转换器 - 免费 MP3/WAV/AAC/OGG 互转"
+description: "免费在线音频格式转换工具，支持 MP3、WAV、AAC、OGG、FLAC、M4A 等常见格式互转。基于 WebAssembly 本地处理，无需上传文件，兼顾隐私、安全与效率。"
 technologies: "FFmpeg WASM, React, TailwindCSS"
 category: "audio"
 order: 13
+
+const pageTitle = "在线音频格式转换器 - 免费 MP3/WAV/AAC/OGG 互转";
+const pageDescription = "免费在线音频格式转换工具，支持 MP3、WAV、AAC、OGG、FLAC、M4A 等常见格式互转。基于 WebAssembly 本地处理，无需上传文件，兼顾隐私、安全与效率。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线音频格式转换器",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/audio-converter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "支持 MP3、WAV、AAC、OGG、FLAC、M4A 互转",
+        "浏览器本地转换，隐私更安全",
+        "无需安装软件，打开即用",
+        "适配播客、配音、课程和短视频音频处理",
+        "跨平台可用，Windows/Mac/移动端皆可访问",
+        "免费使用，无转换次数限制"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "音频文件会上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。工具基于 WebAssembly 在浏览器本地运行，转换过程在您的设备端完成，音频数据不会上传到服务器。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何选择合适的输出格式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "若追求兼容性和体积平衡，推荐 MP3；若强调无损音质可选 WAV 或 FLAC；若面向移动端与流媒体，AAC 通常更合适。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么有些文件转换较慢？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "速度受音频时长、采样率、编码复杂度和设备性能影响。首次使用还需要加载转换引擎，通常会比后续转换稍慢。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何在线转换音频格式",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "上传音频文件",
+          "text": "选择本地音频文件并等待工具识别文件信息。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置目标格式",
+          "text": "根据播放场景和音质需求选择 MP3、WAV、AAC、OGG 或其他目标格式。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "开始转换并下载",
+          "text": "执行转换，完成后试听并下载输出文件。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线音频格式转换器" description="免费在线音频格式转换工具，支持 MP3, WAV, AAC, OGG, M4A 等格式互转，基于 WebAssembly 本地处理，保护隐私。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线音频格式转换器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          无需安装软件，直接在浏览器中转换音频格式。支持 MP3、WAV、AAC、OGG、FLAC 等主流格式互转，本地处理文件，安全快速。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          浏览器内一键完成音频格式互转，兼容 MP3、WAV、AAC、OGG、FLAC、M4A 等主流类型。<span class="text-accent font-semibold">全程本地处理更安心</span>，无需上传文件。
         </p>
       </div>
       
-      <div class="max-w-3xl mx-auto">
+      <div class="max-w-6xl mx-auto">
         <AudioConverter client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么需要在线音频格式转换器？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在播客剪辑、课程录制、短视频配音、音乐采样和语音归档等场景中，音频格式兼容性决定了文件是否能顺利播放、上传或继续编辑。不同平台对编码和封装支持不同，常常需要在多种格式之间转换。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线音频格式转换器</strong> 通过浏览器端转码能力，帮助你快速完成格式切换，无需安装重型桌面软件。你可以在同一个页面中完成上传、转换和下载流程，并将音频安全保留在本地设备中。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地转换更安全</h3>
+                <p class="text-theme-secondary">音频处理在浏览器本地执行，不经过第三方服务器，适合隐私内容和内部素材处理。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎧</div>
+                <h3 class="text-xl font-semibold mb-2">主流格式全覆盖</h3>
+                <p class="text-theme-secondary">支持 MP3、WAV、AAC、OGG、FLAC、M4A 等常见格式，满足播放、分发与编辑需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">免安装快速上手</h3>
+                <p class="text-theme-secondary">打开网页即可使用，省去安装和环境配置时间，适合临时处理与高频转换任务。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧰</div>
+                <h3 class="text-xl font-semibold mb-2">多场景音频适配</h3>
+                <p class="text-theme-secondary">可用于播客发布、课程上传、短视频配音、素材归档等场景，格式切换更灵活。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成音频格式转换</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">上传源音频文件</h3>
+                  <p class="text-theme-secondary">选择待转换的本地音频，工具会自动读取文件并准备转码环境。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择目标输出格式</h3>
+                  <p class="text-theme-secondary">根据用途选择更合适的格式，例如通用分发用 MP3，高保真存档可选 WAV/FLAC。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">执行转换并试听下载</h3>
+                  <p class="text-theme-secondary">转换完成后可先试听确认效果，再下载结果文件并用于发布或后续编辑。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>MP3、WAV、FLAC 该怎么选？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  MP3 兼容性最好且体积小；WAV 为无损但体积较大；FLAC 兼顾无损与压缩，适合高音质存档。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>转换后音质会变差吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  从有损格式再次转为有损格式可能产生质量损失。若重视音质，建议优先保留无损母带并减少重复转码。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>手机端可以稳定使用吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  支持，但长时音频或高采样率文件对内存要求更高。移动端建议优先处理中短时长文件以获得更稳定体验。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关音频工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/audio-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">音频格式转换器</div>
+                  <div class="text-xs text-theme-secondary">多格式互转，快速导出目标音频</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/video-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">视频格式转换工具</div>
+                  <div class="text-xs text-theme-secondary">视频编码容器互转，适配多平台</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/video-to-gif" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">视频转 GIF</div>
+                  <div class="text-xs text-theme-secondary">截取片段输出动图，便于传播展示</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
