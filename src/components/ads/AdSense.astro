@@ -1,6 +1,6 @@
 ---
 interface Props {
-  slotId: string;
+  slotId?: string;
   format?: 'auto' | 'fluid' | 'rectangle' | 'horizontal' | 'vertical';
   style?: string;
   responsive?: boolean;
@@ -14,7 +14,7 @@ const {
 } = Astro.props;
 ---
 
-<div class="adsense-container my-6 text-center overflow-hidden">
+<div class="adsense-container my-6 text-center overflow-hidden hidden">
   <!-- AdSense Unit -->
   <ins class="adsbygoogle"
      style={style}
@@ -23,6 +23,47 @@ const {
      data-ad-format={format}
      data-full-width-responsive={responsive ? "true" : "false"}></ins>
   <script is:inline>
-     (adsbygoogle = window.adsbygoogle || []).push({});
+    (() => {
+      const scriptElement = document.currentScript;
+      const wrapper = scriptElement?.closest('.adsense-container');
+      const adElement = wrapper?.querySelector('.adsbygoogle');
+      if (!wrapper || !adElement) return;
+
+      const showAd = () => wrapper.classList.remove('hidden');
+      const hideAd = () => wrapper.classList.add('hidden');
+
+      hideAd();
+
+      let finalized = false;
+      const finalizeByStatus = () => {
+        if (finalized) return;
+        const status = adElement.getAttribute('data-ad-status');
+        if (status === 'filled') {
+          showAd();
+          finalized = true;
+        } else if (status === 'unfilled') {
+          hideAd();
+          finalized = true;
+        }
+      };
+
+      const observer = new MutationObserver(() => finalizeByStatus());
+      observer.observe(adElement, { attributes: true, attributeFilter: ['data-ad-status'] });
+
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (_error) {
+        hideAd();
+        observer.disconnect();
+        return;
+      }
+
+      setTimeout(() => {
+        finalizeByStatus();
+        if (!finalized) hideAd();
+      }, 4000);
+
+      setTimeout(() => observer.disconnect(), 10000);
+    })();
   </script>
 </div>
