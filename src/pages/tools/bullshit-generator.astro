@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BullshitGenerator from '../../components/tools/BullshitGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "狗屁不通文章生成器"
-description: "在线狗屁不通文章生成器，输入主题即可一键生成万字长文，废话连篇，仅供娱乐。"
+title: "狗屁不通文章生成器 - 一键生成搞笑长文段落"
+description: "在线狗屁不通文章生成器，输入主题即可自动生成看似严谨、实则离谱的趣味长文。适合整活娱乐、文案灵感和社交内容创作。"
 technologies: "React, TailwindCSS"
 category: "text"
 order: 100
+
+const pageTitle = "狗屁不通文章生成器 - 一键生成搞笑长文段落";
+const pageDescription = "在线狗屁不通文章生成器，输入主题即可自动生成看似严谨、实则离谱的趣味长文。适合整活娱乐、文案灵感和社交内容创作。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "狗屁不通文章生成器",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/bullshit-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "输入主题一键生成段落",
+        "多风格废话文学自动扩写",
+        "适合整活、玩梗与文案灵感",
+        "支持快速复制生成内容",
+        "无需安装，浏览器直接使用",
+        "完全免费，无需注册"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "这个工具是做什么的？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "它会围绕你输入的主题自动拼接出一篇看似逻辑完整、实则内容空泛的趣味文章，常用于娱乐、整活和创意启发。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "生成内容可以直接商用吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "建议仅用于娱乐或草稿灵感，不建议直接用于正式商业文案。若用于发布，请先人工润色并核实内容准确性。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以生成更长或更短的文章吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以通过多次生成、调整主题关键词和筛选段落来控制长度与风格，快速得到你想要的文本效果。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用狗屁不通文章生成器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入主题关键词",
+          "text": "填写你想围绕展开的主题，例如学习、职场、减肥或热点话题。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "点击生成文章",
+          "text": "系统会自动组合段落并输出完整文本，形成具有“似是而非”风格的趣味内容。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制并二次创作",
+          "text": "选择喜欢的句段进行改写、拼接或发布，打造更有个人风格的内容表达。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="狗屁不通文章生成器" description="在线狗屁不通文章生成器，输入主题即可一键生成万字长文，废话连篇，仅供娱乐。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        狗屁不通文章生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        输入一个主题，瞬间生成一篇看似有理实则废话连篇的文章。用于形式主义应付、凑字数或纯粹娱乐。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">狗屁不通文章生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          只要输入一个主题，即可生成“像那么回事”的趣味长文。<span class="text-accent font-semibold">整活创作更省事</span>，灵感枯竭时也能快速开写。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <BullshitGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么狗屁不通生成器这么受欢迎？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在社交媒体时代，趣味表达和内容整活越来越重要。很多人需要快速产出段子、调侃文案或“看起来很努力”的长文，这类文本不追求信息密度，而强调节奏感和戏剧效果。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 狗屁不通文章生成器</strong> 能根据你的主题自动扩写句段，生成风格夸张、结构完整的趣味内容。你可以把它当作创作起点，用于短视频脚本、朋友圈文案、活动整活和灵感热身。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📝</div>
+                <h3 class="text-xl font-semibold mb-2">主题驱动生成</h3>
+                <p class="text-theme-secondary">输入任意关键词，即可快速生成围绕主题展开的趣味文章段落。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎭</div>
+                <h3 class="text-xl font-semibold mb-2">废话文学风格</h3>
+                <p class="text-theme-secondary">自动生成“似懂非懂”的表达方式，适合搞笑吐槽与形式感内容。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">秒级产出文本</h3>
+                <p class="text-theme-secondary">无需等待和复杂配置，点击即可出稿，适合高频灵感场景。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧠</div>
+                <h3 class="text-xl font-semibold mb-2">二次创作友好</h3>
+                <p class="text-theme-secondary">可将生成段落打散重组，快速改写为更具个人风格的内容。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成趣味长文</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入主题词</h3>
+                  <p class="text-theme-secondary">写下你想吐槽或扩写的话题，例如“早起”“开会”或“职场内卷”。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">点击一键生成</h3>
+                  <p class="text-theme-secondary">系统自动拼接出完整段落，形成具备“严肃外观”的搞笑文本。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制并再加工</h3>
+                  <p class="text-theme-secondary">挑选高能句子进行润色，快速用于发帖、脚本、评论或朋友间互动。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>生成内容会重复吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可能出现部分句式相似，但围绕不同主题会生成不同组合。可多次生成并手动筛选最佳段落。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>适合做正式论文或公文吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不建议。该工具定位为娱乐和创意启发，正式场景仍需使用严谨、可核实的信息表达。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>如何让结果更有梗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  主题尽量具体，比如“周一早会”“甲方需求变更”，再结合个人语气改写，效果通常更好。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/scrambled-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">乱序文字生成器</div>
+                  <div class="text-xs text-theme-secondary">生成可读但打乱顺序的趣味文本</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/glitch-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">故障文字生成器</div>
+                  <div class="text-xs text-theme-secondary">一键生成 Zalgo 故障效果文本</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一键美化</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <BullshitGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
