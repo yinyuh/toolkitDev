@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ChartGenerator from '../../components/tools/ChartGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线柱状图生成器"
-description: "免费在线柱状图生成器，支持自定义数据、颜色、标题和轴标签，一键生成精美图表并下载为图片。"
+title: "在线柱状图生成器 - 免费图表制作与导出工具"
+description: "免费在线柱状图生成器，支持自定义分类数据、颜色、标题与坐标轴标签，实时预览并导出高清图片。纯浏览器本地处理，简单高效。"
 technologies: "Chart.js, React, TailwindCSS"
 category: "generator"
 order: 100
+
+const pageTitle = "在线柱状图生成器 - 免费图表制作与导出工具";
+const pageDescription = "免费在线柱状图生成器，支持自定义分类数据、颜色、标题与坐标轴标签，实时预览并导出高清图片。纯浏览器本地处理，简单高效。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线柱状图生成器",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/bar-chart-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "输入数据实时生成柱状图",
+        "支持自定义图表标题与轴标签",
+        "支持颜色与样式快速调整",
+        "一键导出高清图表图片",
+        "无需安装软件，浏览器直接使用",
+        "免费在线图表制作"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "柱状图适合展示哪些数据？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "柱状图最适合对比不同类别之间的数值差异，例如月度销售额、部门绩效、渠道流量和预算执行情况。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以导出用于 PPT 或报告吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。您可以在生成后直接下载图表图片，适合插入演示文稿、商业报告、课程作业和社交媒体内容。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "需要登录或安装软件吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不需要。打开网页即可使用，所有操作在浏览器中完成，适合快速制作和临时数据可视化需求。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用在线柱状图生成器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "录入分类与数值",
+          "text": "输入每个类别名称和对应数值，构建基础数据集。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "调整图表样式",
+          "text": "设置标题、颜色和坐标轴标签，让图表更符合展示场景。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览并下载图片",
+          "text": "确认图表效果后导出高清图片，用于汇报、教学或内容发布。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线柱状图生成器" description="免费在线柱状图生成器，支持自定义数据、颜色、标题和轴标签，一键生成精美图表并下载为图片。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        柱状图生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        简单易用的在线图表制作工具。输入数据，实时预览，支持导出高清图片，适用于报告、演示文稿等场景。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">柱状图生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          输入分类数据即可生成专业柱状图。<span class="text-accent font-semibold">实时预览更高效</span>，支持下载高清图用于报告与演示。
+        </p>
+      </div>
+
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <ChartGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么选择在线柱状图生成器？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              柱状图是最常用的数据可视化图表之一，特别适用于展示不同类别之间的数值对比。在业务分析、课堂作业、项目复盘和团队汇报中，清晰直观的柱状图可以帮助读者快速理解核心结论。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              使用 <strong>Toolkit.ren 柱状图生成器</strong>，无需复杂软件和学习成本，只要输入数据即可实时生成图表。你可以灵活调整标题、颜色和轴标签，让图表更符合你的品牌风格和表达目标，并快速导出用于各类场景。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📊</div>
+                <h3 class="text-xl font-semibold mb-2">快速生成图表</h3>
+                <p class="text-theme-secondary">输入数据后立即可视化，适合快速验证分析结果和制作展示素材。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎨</div>
+                <h3 class="text-xl font-semibold mb-2">样式自由调整</h3>
+                <p class="text-theme-secondary">可配置颜色、标题与坐标轴信息，让图表更美观并贴合业务主题。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🖼️</div>
+                <h3 class="text-xl font-semibold mb-2">高清导出图片</h3>
+                <p class="text-theme-secondary">一键下载图表成图，便于嵌入 PPT、报告文档、海报或社媒内容中。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">开箱即用免安装</h3>
+                <p class="text-theme-secondary">基于浏览器运行，不依赖本地安装环境，随时打开即可编辑和导出。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成柱状图制作</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入分类数据</h3>
+                  <p class="text-theme-secondary">填写分类名称与对应数值，构建完整数据集并即时查看可视化结果。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">优化图表样式</h3>
+                  <p class="text-theme-secondary">设置图表标题、颜色和坐标轴标签，增强可读性与专业表达效果。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">导出并应用</h3>
+                  <p class="text-theme-secondary">确认图表后下载图片，快速用于汇报演示、教学资料或运营复盘。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>柱状图和折线图怎么选？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  若重点是比较不同类别的数值差异，优先使用柱状图；若强调随时间变化趋势，折线图通常更直观。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>可以做多组数据对比吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以。建议为不同数据组设置对比明显的颜色，并保持统一刻度，便于读者快速理解差异。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>导出的图片清晰吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  清晰。图表导出后可直接用于常规屏幕展示与文档排版，建议在演示场景下使用较大画布尺寸以获得更佳效果。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关效率工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/unit-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">单位换算工具</div>
+                  <div class="text-xs text-theme-secondary">快速转换常见计量单位</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一键美化</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/timestamp-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">时间戳转换工具</div>
+                  <div class="text-xs text-theme-secondary">Unix 时间与日期双向转换</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <ChartGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
