@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import GlitchTextGenerator from '../../components/tools/GlitchTextGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线故障文字生成器 (Glitch Text)"
-description: "免费在线故障文字生成器，一键生成带有故障效果的 Zalgo 文本，支持自定义混乱度和方向，适用于社交媒体和个性化设计。"
+title: "在线故障文字生成器 - Glitch Text 风格特效文本工具"
+description: "免费在线故障文字生成器，一键生成 Zalgo/Glitch 风格特效文本，支持混乱度与方向调节，适用于社交媒体昵称、海报文案与创意排版。"
 technologies: "React, TailwindCSS"
 category: "text"
 order: 100
+
+const pageTitle = "在线故障文字生成器 - Glitch Text 风格特效文本工具";
+const pageDescription = "免费在线故障文字生成器，一键生成 Zalgo/Glitch 风格特效文本，支持混乱度与方向调节，适用于社交媒体昵称、海报文案与创意排版。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线故障文字生成器",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/glitch-text-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "普通文本一键转故障风格",
+        "支持混乱度与方向调节",
+        "适配 Zalgo 与赛博视觉效果",
+        "结果实时预览与复制",
+        "适合昵称、标题和海报文案",
+        "免费在线使用"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "故障文字生成器是做什么的？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "它可以把普通文本转换为带有故障、扭曲和噪点视觉感的特效文字，常用于社交昵称、活动标题和创意设计素材。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么有些平台显示效果不同？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "故障文字依赖 Unicode 组合字符，不同平台和字体的渲染规则不同，显示密度与排版会有差异，建议在目标平台先预览再发布。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "生成内容可以直接复制使用吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。你可以直接复制生成结果粘贴到社交媒体、聊天工具或设计文案中，若出现乱码可适当降低混乱度后再试。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用故障文字生成器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入原始文本",
+          "text": "在输入框写入要转换的词句，建议先从短文本开始测试效果。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "调节故障参数",
+          "text": "根据需求调整混乱度和方向，观察不同视觉风格下的文本变化。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制并发布",
+          "text": "选择满意结果后直接复制，粘贴到目标平台并检查最终显示效果。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线故障文字生成器 (Glitch Text)" description="免费在线故障文字生成器，一键生成带有故障效果的 Zalgo 文本，支持自定义混乱度和方向，适用于社交媒体和个性化设计。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        故障文字生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        将普通文本转换为具有"故障"或"诅咒"效果的 Zalgo 文本。通过添加 Unicode 组合字符，让文字看起来混乱、破碎。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">故障文字生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          把普通文本快速变成赛博感故障字效。<span class="text-accent font-semibold">风格参数更灵活</span>，适合标题设计与社交内容整活。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <GlitchTextGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么故障文字在社交平台很流行？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在信息密度极高的社交平台中，具有强视觉冲击的文本更容易吸引注意力。故障文字通过特殊字符叠加，能快速营造神秘、赛博、暗黑或实验艺术氛围，常用于昵称、封面标题和活动宣传。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 故障文字生成器</strong> 提供实时预览和参数调节能力，让你无需手动拼接 Unicode 字符，也能高效产出风格化文本，快速用于内容创作和品牌视觉表达。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">一键故障化文本</h3>
+                <p class="text-theme-secondary">输入普通文字即可快速生成 Glitch/Zalgo 特效文本。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎚️</div>
+                <h3 class="text-xl font-semibold mb-2">参数可控更灵活</h3>
+                <p class="text-theme-secondary">支持混乱度与方向调节，轻松得到轻度到重度的视觉效果。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">👁️</div>
+                <h3 class="text-xl font-semibold mb-2">结果实时预览</h3>
+                <p class="text-theme-secondary">边调边看效果变化，减少反复试错，提升创作效率。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📋</div>
+                <h3 class="text-xl font-semibold mb-2">复制即用</h3>
+                <p class="text-theme-secondary">生成后可直接复制粘贴到社媒、聊天工具和设计文案中。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成故障文本</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入原始内容</h3>
+                  <p class="text-theme-secondary">输入昵称、标题或短句，优先使用简洁文本便于观察风格。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">调节故障强度</h3>
+                  <p class="text-theme-secondary">根据场景调整参数，平衡可读性和视觉冲击力。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制并发布</h3>
+                  <p class="text-theme-secondary">选择最满意版本复制到目标平台，发布前建议先做跨端预览。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>为什么有时会看起来像乱码？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  故障效果本质就是通过叠加特殊字符制造“破碎感”。若可读性不足，可降低混乱度或减少文本长度。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>适合用于正式场景吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  更适合创意和娱乐场景。正式公文、简历或商务沟通建议使用标准文本，避免影响阅读理解。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>手机和电脑显示不一致怎么办？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不同系统字体和渲染引擎存在差异。建议在目标设备上预览后再发布，并根据效果微调参数。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/scrambled-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">乱序文字生成器</div>
+                  <div class="text-xs text-theme-secondary">生成可读但打乱顺序的趣味文本</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/bullshit-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">狗屁不通文章生成器</div>
+                  <div class="text-xs text-theme-secondary">主题驱动生成趣味长文</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一键美化</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <GlitchTextGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
