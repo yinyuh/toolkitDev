@@ -1,27 +1,268 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BaseConverter from '../../components/tools/BaseConverter';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线进制转换器"
-description: "免费在线进制转换工具，支持2-36进制之间的实时互转，包括二进制、四进制、八进制、十进制、十六进制、三十二进制等，支持自定义添加进制，提供8位可视化编辑功能。"
+title: "在线进制转换器 - 2到36进制实时互转工具"
+description: "免费在线进制转换器，支持 2 到 36 进制实时互转，涵盖二进制、八进制、十进制、十六进制等常见场景。支持自定义进制与可视化位操作，开发学习更高效。"
 technologies: "React, TailwindCSS"
 category: "encoding"
 order: 100
+
+const pageTitle = "在线进制转换器 - 2到36进制实时互转工具";
+const pageDescription = "免费在线进制转换器，支持 2 到 36 进制实时互转，涵盖二进制、八进制、十进制、十六进制等常见场景。支持自定义进制与可视化位操作，开发学习更高效。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线进制转换器",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/base-converter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "支持 2-36 进制互转",
+        "常见进制实时同步计算",
+        "支持自定义添加进制",
+        "位操作可视化辅助理解",
+        "无需安装，浏览器直接使用",
+        "免费在线开发工具"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "进制转换器支持哪些进制？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持 2 到 36 进制之间互转，包含二进制、八进制、十进制、十六进制等常见进制，也支持按需添加自定义进制。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以用于编程和算法学习吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。该工具适合用于位运算调试、进制计算验证、算法题演算和计算机组成原理学习。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "输入超大数值会失真吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "工具针对常见开发使用场景进行了优化。建议在极大数字场景下结合目标语言的高精度类型进行复核。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用在线进制转换器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入原始数值",
+          "text": "选择当前数值的进制并输入待转换内容。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "查看实时转换结果",
+          "text": "系统会同步显示不同进制下的结果，便于快速对比。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制并用于开发场景",
+          "text": "将目标进制结果复制到代码、文档或测试用例中。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线进制转换器" description="免费在线进制转换工具，支持2-36进制之间的实时互转，包括二进制、四进制、八进制、十进制、十六进制、三十二进制等，支持自定义添加进制，提供8位可视化编辑功能。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线进制转换器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          程序员必备工具。支持2-36进制实时同步转换，包括二进制、四进制、八进制、十进制、十六进制、三十二进制等常用进制，更可自定义添加任意进制。所有进制数值实时互转，支持位操作可视化，让数据处理更高效。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          支持 2 到 36 进制实时互转，覆盖常见开发计算场景。<span class="text-accent font-semibold">实时同步更直观</span>，自定义进制与位操作辅助学习和调试。
         </p>
       </div>
       
       <div class="max-w-4xl mx-auto">
         <BaseConverter client:only="react" />
       </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么需要在线进制转换器？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在开发调试、协议解析、嵌入式编程和算法练习中，进制转换是高频操作。手动换算不仅耗时，还容易出错，特别是在多进制结果需要快速比对的场景下。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线进制转换器</strong> 提供多进制同步展示、可视化位操作和自定义进制能力，帮助你更高效完成计算验证与数据分析，减少反复切换工具的成本。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔢</div>
+                <h3 class="text-xl font-semibold mb-2">2-36 进制全覆盖</h3>
+                <p class="text-theme-secondary">支持常见和扩展进制互转，满足开发、竞赛和教学中的多样需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">实时同步结果</h3>
+                <p class="text-theme-secondary">输入后即时更新各进制结果，减少手动计算步骤，提升调试效率。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧩</div>
+                <h3 class="text-xl font-semibold mb-2">自定义进制支持</h3>
+                <p class="text-theme-secondary">可按场景添加目标进制，灵活适配特殊协议与算法实验需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧠</div>
+                <h3 class="text-xl font-semibold mb-2">位操作可视化</h3>
+                <p class="text-theme-secondary">辅助理解二进制位变化，适合学习补码、掩码和常见位运算逻辑。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成进制换算</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入原始数值并选择进制</h3>
+                  <p class="text-theme-secondary">填写待转换数值并确认输入进制，工具会自动校验输入合法性。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">查看多进制实时结果</h3>
+                  <p class="text-theme-secondary">系统同步输出多种进制表示，便于你快速定位目标值并对比差异。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制结果用于代码或文档</h3>
+                  <p class="text-theme-secondary">直接复制目标进制数值，应用到程序调试、接口文档或算法笔记中。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>支持负数和小数转换吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  常见整数场景支持最佳。若涉及小数或特殊精度要求，建议结合目标语言的数值处理规则进一步校验。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>为什么某些输入会提示无效？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  每种进制允许的字符集合不同。例如二进制仅允许 0 和 1，十六进制支持 0-9 与 A-F。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>这个工具适合初学者吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  非常适合。实时结果与位操作可视化可以帮助你快速建立进制概念，理解常见开发中的数值表示方式。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关开发工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/timestamp-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">时间戳转换工具</div>
+                  <div class="text-xs text-theme-secondary">Unix 时间与日期双向转换</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码/解码</div>
+                  <div class="text-xs text-theme-secondary">文本与文件 Base64 转换</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一键格式化</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
