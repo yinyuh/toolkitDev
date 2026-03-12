@@ -1,27 +1,269 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import QRCodeGenerator from '../../components/tools/QRCodeGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线二维码生成器"
-description: "免费在线二维码生成器，支持网址、WiFi、名片等多种类型，可自定义颜色、Logo 和尺寸，实时预览并下载。"
+title: "在线二维码生成器 - 免费生成网址/WiFi/名片二维码"
+description: "免费在线二维码生成器，支持网址、WiFi、电子名片等多种类型，自定义颜色、Logo、尺寸与纠错等级。浏览器本地生成，实时预览，安全下载。"
 technologies: "QRCode.react, React, TailwindCSS"
 category: "image"
 order: 10
+
+const pageTitle = "在线二维码生成器 - 免费生成网址/WiFi/名片二维码";
+const pageDescription = "免费在线二维码生成器，支持网址、WiFi、电子名片等多种类型，自定义颜色、Logo、尺寸与纠错等级。浏览器本地生成，实时预览，安全下载。";
+const keywords = "二维码生成器,在线二维码,WiFi二维码,名片二维码,QR Code,自定义二维码,本地生成";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线二维码生成器",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/qrcode-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "支持网址、WiFi、名片二维码",
+        "自定义前景色和背景色",
+        "支持 Logo 嵌入",
+        "可调尺寸和纠错等级",
+        "浏览器本地生成，隐私安全",
+        "实时预览与 PNG 下载"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "二维码内容会上传到服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。二维码内容在浏览器本地生成，数据不会发送到服务器，适合处理包含隐私信息的链接或名片内容。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么有时扫描识别率不高？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "通常与颜色对比度不足、Logo 占比过大或尺寸过小有关。建议使用深色前景配浅色背景，并将纠错等级提升到 Q 或 H。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "WiFi 二维码如何填写更准确？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "请确保 SSID、密码和加密方式填写正确，且与路由器设置一致。若有特殊字符，建议复制粘贴避免输入错误。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何在线生成二维码",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "选择二维码类型",
+          "text": "在网址、WiFi、名片等类型中选择目标场景，并输入对应内容。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置样式参数",
+          "text": "调整颜色、尺寸、纠错等级，并按需上传 Logo。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览并下载",
+          "text": "确认扫描效果后下载 PNG 图片，用于打印、分享或嵌入网页。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线二维码生成器" description="免费在线二维码生成器，支持网址、WiFi、名片等多种类型，可自定义颜色、Logo 和尺寸，实时预览并下载。">
-  <section class="bg-theme-primary min-h-screen py-12">
-    <div class="container mx-auto px-4 max-w-7xl">
-      <div class="mb-12 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线二维码生成器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          快速生成个性化二维码。支持网址链接、WiFi 连接信息、电子名片等多种内容，可嵌入 Logo、调整颜色和纠错等级。
-        </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
+        在线二维码生成器
+      </h1>
+      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+        支持网址、WiFi、名片等多种二维码类型，一键生成并实时预览。<span class="text-accent font-semibold">本地处理更安全</span>，可自定义颜色、尺寸与 Logo。
+      </p>
+    </div>
+    
+    <div class="bg-theme-surface rounded-2xl shadow-xl overflow-hidden mb-16 border border-theme-border">
+      <QRCodeGenerator client:only="react" />
+    </div>
+
+    <div class="my-8">
+      <AdSense />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary">
+      <div class="lg:col-span-2 space-y-12">
+        <section class="prose dark:prose-invert max-w-none">
+          <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+            <span class="text-accent">#</span> 为什么选择在线二维码生成工具？
+          </h2>
+          <p class="text-lg leading-relaxed text-theme-secondary">
+            二维码已成为链接分发、活动引流、门店展示和设备连接的标准入口。一个质量稳定、识别率高的二维码，能够显著提升用户触达效率，减少手动输入错误。
+          </p>
+          <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+            <strong>Toolkit.ren 在线二维码生成器</strong> 支持多场景内容生成，并提供颜色、尺寸、Logo 与纠错等级自定义能力。借助浏览器本地渲染，您可在不上传敏感内容的前提下，快速得到可分享、可打印的高质量二维码图片。
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🔐</div>
+              <h3 class="text-xl font-semibold mb-2">本地生成更私密</h3>
+              <p class="text-theme-secondary">二维码数据在浏览器中直接生成，无需上传服务器，敏感内容不出本机。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">🎨</div>
+              <h3 class="text-xl font-semibold mb-2">高自由度样式定制</h3>
+              <p class="text-theme-secondary">支持前景色、背景色、尺寸与 Logo 设置，便于与品牌视觉统一。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">📶</div>
+              <h3 class="text-xl font-semibold mb-2">多场景内容模板</h3>
+              <p class="text-theme-secondary">可快速生成网址、WiFi 和电子名片二维码，减少格式拼接和输入错误。</p>
+            </div>
+            <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+              <div class="text-3xl mb-3">✅</div>
+              <h3 class="text-xl font-semibold mb-2">扫码友好识别率高</h3>
+              <p class="text-theme-secondary">结合纠错等级和尺寸调优，兼顾视觉个性与手机扫码识别稳定性。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+          <h2 class="text-2xl font-bold text-theme-primary mb-6">如何生成可用二维码？</h2>
+          <ol class="space-y-6">
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">选择类型并输入内容</h3>
+                <p class="text-theme-secondary">根据用途选择网址、WiFi 或名片，填写准确内容并检查字符是否完整。</p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">调整样式与参数</h3>
+                <p class="text-theme-secondary">设置颜色、尺寸、纠错等级和 Logo。若追求识别率，建议提高对比度并控制 Logo 占比。</p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">预览扫码并下载</h3>
+                <p class="text-theme-secondary">先用手机测试扫码效果，再下载 PNG 用于海报、网页、菜单或设备配网场景。</p>
+              </div>
+            </li>
+          </ol>
+        </section>
       </div>
-      
-      <div class="max-w-5xl mx-auto">
-        <QRCodeGenerator client:only="react" />
+
+      <div class="lg:col-span-1 space-y-8">
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+          <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+          <div class="space-y-4">
+            <details class="group">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>Logo 加进去后扫不出来怎么办？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                请减小 Logo 尺寸并提高纠错等级（Q/H），同时保证二维码主体与背景颜色有足够对比度。
+              </p>
+            </details>
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>二维码打印后识别率下降怎么处理？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                建议提高导出尺寸并避免低对比度配色。打印介质过于反光或过小，也会影响扫码性能。
+              </p>
+            </details>
+            <details class="group pt-4 border-t border-theme-border">
+              <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                <span>不同手机扫码结果不一致正常吗？</span>
+                <span class="transition group-open:rotate-180">
+                  <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                正常。不同相机与扫码算法差异较大，建议在发布前用多机型测试，确保兼容性。
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+          <h3 class="text-lg font-bold text-theme-primary mb-4">相关图像工具</h3>
+          <ul class="space-y-3">
+            <li>
+              <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩工具</div>
+                <div class="text-xs text-theme-secondary">降低图片体积，便于发布与分享</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码/解码</div>
+                <div class="text-xs text-theme-secondary">文本与图片 Base64 转换</div>
+              </a>
+            </li>
+            <li>
+              <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化</div>
+                <div class="text-xs text-theme-secondary">JSON/XML/YAML/SQL 一站式处理</div>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </section>
+
+    <style>
+      details > summary {
+        list-style: none;
+      }
+      details > summary::-webkit-details-marker {
+        display: none;
+      }
+      details[open] summary ~ * {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-5px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </div>
 </Layout>

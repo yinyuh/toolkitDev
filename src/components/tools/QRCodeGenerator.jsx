@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
 import { Download, Share2, Link, Wifi, Contact, Smartphone, Mail, FileText, Image as ImageIcon, Settings, Check } from 'lucide-react';
 import { saveAs } from 'file-saver';
-import html2canvas from 'html2canvas';
 
 const QRCodeGenerator = () => {
   const [content, setContent] = useState('https://example.com');
@@ -11,6 +9,8 @@ const QRCodeGenerator = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalSize, setModalSize] = useState(256);
   const [isContentValid, setIsContentValid] = useState(true);
+  const [QRCodeCanvasComponent, setQRCodeCanvasComponent] = useState(null);
+  const [dependencyError, setDependencyError] = useState('');
   
   // 不同类型内容的最大长度限制
   const MAX_LENGTHS = {
@@ -117,6 +117,24 @@ const QRCodeGenerator = () => {
     validateContent(content);
   }, [activeTab]);
 
+  useEffect(() => {
+    let isMounted = true;
+    import('qrcode.react')
+      .then((module) => {
+        if (!isMounted) return;
+        setQRCodeCanvasComponent(() => module.QRCodeCanvas);
+        setDependencyError('');
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setDependencyError('二维码渲染模块加载失败，请刷新页面重试');
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleDownload = (format, useModal = false) => {
     if (!isContentValid) {
       alert('内容过长，无法生成二维码');
@@ -133,28 +151,28 @@ const QRCodeGenerator = () => {
         
         // 等待DOM更新后再生成图片
         setTimeout(() => {
-          html2canvas(qrElement, {
-            scale: 2, // 提高分辨率
-            useCORS: true,
-            logging: false,
-            backgroundColor: bgColor
-          }).then((canvas) => {
-            // 恢复原始尺寸
-            setSize(originalSize);
-            
-            canvas.toBlob((blob) => {
-              if (blob) {
-                saveAs(blob, 'qrcode.png');
-              } else {
-                alert('生成二维码图片失败，请重试');
-              }
+          import('html2canvas')
+            .then(({ default: html2canvas }) => html2canvas(qrElement, {
+              scale: 2,
+              useCORS: true,
+              logging: false,
+              backgroundColor: bgColor
+            }))
+            .then((canvas) => {
+              setSize(originalSize);
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  saveAs(blob, 'qrcode.png');
+                } else {
+                  alert('生成二维码图片失败，请重试');
+                }
+              });
+            })
+            .catch((error) => {
+              setSize(originalSize);
+              console.error('生成二维码时出错:', error);
+              alert('生成二维码时出错，请重试');
             });
-          }).catch((error) => {
-            // 恢复原始尺寸
-            setSize(originalSize);
-            console.error('生成二维码时出错:', error);
-            alert('生成二维码时出错，请重试');
-          });
         }, 100);
       } else {
         alert('无法找到二维码元素，请重试');
@@ -434,8 +452,8 @@ const QRCodeGenerator = () => {
                    className="p-4 bg-div-secondary rounded-xl shadow-sm border border-border-theme mb-8 cursor-pointer"
                    onClick={() => setShowModal(true)}
                  >
-                    {isContentValid && (
-                      <QRCodeCanvas
+                    {isContentValid && QRCodeCanvasComponent && (
+                      <QRCodeCanvasComponent
                          value={content}
                          size={size}
                          bgColor={bgColor}
@@ -456,6 +474,13 @@ const QRCodeGenerator = () => {
                       <div className="w-64 h-64 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
                         <p className="text-text-secondary text-sm text-center">
                           内容过长，无法生成二维码
+                        </p>
+                      </div>
+                    )}
+                    {isContentValid && !QRCodeCanvasComponent && (
+                      <div className="w-64 h-64 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
+                        <p className="text-text-secondary text-sm text-center px-4">
+                          {dependencyError || '二维码模块加载中...'}
                         </p>
                       </div>
                     )}
@@ -498,8 +523,8 @@ const QRCodeGenerator = () => {
                   className="p-4 bg-div-secondary rounded-xl shadow-sm border border-border-theme mb-6 overflow-auto max-w-full"
                   onWheel={handleWheel}
                 >
-                  {isContentValid && (
-                    <QRCodeCanvas
+                  {isContentValid && QRCodeCanvasComponent && (
+                    <QRCodeCanvasComponent
                        value={content}
                        size={modalSize}
                        bgColor={bgColor}
@@ -520,6 +545,13 @@ const QRCodeGenerator = () => {
                     <div className="w-64 h-64 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
                       <p className="text-text-secondary text-sm text-center">
                         内容过长，无法生成二维码
+                      </p>
+                    </div>
+                  )}
+                  {isContentValid && !QRCodeCanvasComponent && (
+                    <div className="w-64 h-64 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
+                      <p className="text-text-secondary text-sm text-center px-4">
+                        {dependencyError || '二维码模块加载中...'}
                       </p>
                     </div>
                   )}
