@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TextDiffTool from '../../components/tools/TextDiffTool';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "文本差异对比工具"
 description: "在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护隐私。"
 technologies: "Diff算法, React, TailwindCSS"
 category: "text"
 order: 100
+
+const pageTitle = "文本差异对比工具";
+const pageDescription = "在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护隐私。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "文本差异对比工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/text-diff",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "并排高亮显示文本差异",
+        "支持代码、文档和结构化文本对比",
+        "快速定位新增、删除与修改内容",
+        "适合评审、校对与版本检查",
+        "浏览器本地处理，数据安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "支持超长文本对比吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持较长文本。为获得更流畅体验，建议先按章节分段对比。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "能用来比对 JSON 配置吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。建议先格式化 JSON 再对比，差异会更清晰易读。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "内容会被上传服务器吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。文本对比在浏览器端执行，数据不会主动上传。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用文本差异对比工具",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "粘贴两段文本",
+          "text": "将旧版本与新版本分别粘贴到左右输入区。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "执行差异比对",
+          "text": "运行对比并查看新增、删除和修改高亮。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "定位并修订",
+          "text": "根据差异结果回到源文档修正内容或确认变更。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="文本差异对比工具" description="在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护隐私。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">文本差异对比工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          在线文本差异对比工具，支持代码、文档、JSON等格式的差异高亮显示，纯前端处理，保护您的隐私。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          快速找出文本改动位置。<span class="text-accent font-semibold">新增、删除与修改高亮呈现</span>，适合代码评审、文档校对与配置审查。
         </p>
       </div>
       
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <TextDiffTool client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 文本对比工具在什么场景最有价值？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在多人协作和高频迭代中，变更追踪常常成为效率瓶颈。通过直观的差异高亮，你可以快速确认改动范围，降低漏改和误改风险。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 文本差异对比工具</strong> 适用于需求文档、合同条款、配置文件和代码片段的版本比对。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🆚</div>
+                <h3 class="text-xl font-semibold mb-2">并排差异展示</h3>
+                <p class="text-theme-secondary">左右版本同步查看，快速理解改动上下文。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎯</div>
+                <h3 class="text-xl font-semibold mb-2">变更类型清晰</h3>
+                <p class="text-theme-secondary">新增、删除、修改分别标记，减少审阅认知负担。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧾</div>
+                <h3 class="text-xl font-semibold mb-2">多文本类型适配</h3>
+                <p class="text-theme-secondary">代码、文档和结构化数据均可进行差异校验。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地比对更安全</h3>
+                <p class="text-theme-secondary">敏感文本无需上传，适合内网配置与合同内容比对。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成文本比对</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">准备两个版本</h3>
+                  <p class="text-theme-secondary">将旧版本与新版本内容分别粘贴到输入区域。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">执行差异分析</h3>
+                  <p class="text-theme-secondary">运行对比后查看颜色高亮与行级变更位置。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">确认并回填</h3>
+                  <p class="text-theme-secondary">根据差异结果修订目标文档并完成变更确认。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>换行不同会被当成差异吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  会。换行与空白变化在文本层面属于改动，建议统一格式后再比对。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>适合合同条款比对吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  适合做快速初筛，关键法律文本仍建议结合专业审核流程。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>是否支持撤销历史记录？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  当前以即时比对为主，如需版本管理建议配合 Git 等工具使用。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">先格式化再比对可读性更高</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-counter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本计数器</div>
+                  <div class="text-xs text-theme-secondary">统计版本长度变化和结构差异</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码解码工具</div>
+                  <div class="text-xs text-theme-secondary">处理编码内容后再做文本对比</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

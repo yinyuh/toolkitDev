@@ -1,25 +1,88 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import AdSense from "../../components/ads/AdSense.astro";
 title: "文本计数器"
 description: "统计文本中的字符数、单词数、句子数等信息的工具"
 technologies: "HTML, CSS, JavaScript"
 category: "text"
 order: 100
+
+const pageTitle = "文本计数器";
+const pageDescription = "统计文本中的字符数、单词数、句子数等信息的工具";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "文本计数器",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/text-counter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "实时统计字符数与词数",
+        "支持句子、段落与行数分析",
+        "可统计不含空格字符数量",
+        "一键清空与复制文本",
+        "浏览器本地处理，隐私安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "中文和英文词数统计规则一样吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不完全一样。英文按空格分词更准确，中文更适合结合字符数和句段统计综合判断。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "统计结果会自动更新吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "会。输入文本时会实时重新计算各项指标。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以用于论文与投稿字数检查吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以用于快速预估，正式提交前建议仍按目标平台的具体字数规则复核。"
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="文本计数器" description="统计文本中的字符数、单词数、句子数等信息的工具">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
-      <!-- Tool Header -->
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">文本计数器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          统计文本中的字符数、单词数、句子数等信息的工具。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          快速了解文本结构与篇幅。<span class="text-accent font-semibold">字符、词数、句子与段落一屏可见</span>，适合写作、运营与学术场景。
         </p>
       </div>
 
-      <!-- Tool Content -->
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-4xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <div class="text-counter-container bg-div-theme rounded-xl p-8 shadow-lg border border-div-theme">
           <textarea 
               class="text-input w-full min-h-[200px] p-4 bg-div-secondary border border-border-theme rounded-lg text-text-theme text-base resize-vertical mb-6 focus:outline-none focus:ring-2 focus:ring-accent"
@@ -68,10 +131,163 @@ order: 100
           </div>
         </div>
       </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么文本计数是高频基础能力？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              在新媒体排版、论文写作、产品文案和运营发布中，字数限制与结构完整性都会直接影响内容质量和投放效果。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 文本计数器</strong> 提供实时统计能力，帮助你快速把控篇幅、密度和段落组织，提高编辑效率。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔢</div>
+                <h3 class="text-xl font-semibold mb-2">多维统计实时更新</h3>
+                <p class="text-theme-secondary">字符、词数、句子、段落和行数同步刷新，编辑反馈更及时。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">✂️</div>
+                <h3 class="text-xl font-semibold mb-2">不含空格字符统计</h3>
+                <p class="text-theme-secondary">适配部分平台按净字符计费或限额的统计规则。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📋</div>
+                <h3 class="text-xl font-semibold mb-2">复制与清空操作便捷</h3>
+                <p class="text-theme-secondary">快速切换文稿版本，提高校对和发布流程效率。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地处理保护内容</h3>
+                <p class="text-theme-secondary">数据在浏览器端完成统计，敏感文本无需上传外部系统。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成字数统计</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入或粘贴文本</h3>
+                  <p class="text-theme-secondary">把文稿放入输入框，统计将自动开始。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">查看多项指标</h3>
+                  <p class="text-theme-secondary">确认字符、句段和词数，评估是否符合发布要求。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制并继续编辑</h3>
+                  <p class="text-theme-secondary">一键复制当前文本并进入下一轮修改或发布。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>空行会影响段落统计吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  会。工具按空行分段，连续空行会改变段落计数结果。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>英文缩写会影响句子统计吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可能会有轻微误差，正式稿件建议结合人工复核句子边界。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>支持超大文本吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  支持较长内容，若出现卡顿建议分章节统计以获得更流畅体验。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/text-diff" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本差异对比工具</div>
+                  <div class="text-xs text-theme-secondary">比较改稿前后的内容变化</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">统一文本结构与格式输出</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/rainbow-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">彩虹文字生成器</div>
+                  <div class="text-xs text-theme-secondary">字数确认后生成视觉化文案</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Toast Notification -->
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
   <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 hidden">
     文本已复制到剪贴板！
   </div>

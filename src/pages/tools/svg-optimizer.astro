@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import SvgOptimizer from '../../components/tools/SvgOptimizer';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线 SVG 优化压缩工具"
 description: "免费在线 SVG 压缩优化工具，移除冗余代码、注释和元数据，大幅减小 SVG 文件体积，支持代码对比和实时预览。"
 technologies: "SVGO, React, TailwindCSS"
 category: "developer"
 order: 100
+
+const pageTitle = "在线 SVG 优化压缩工具";
+const pageDescription = "免费在线 SVG 压缩优化工具，移除冗余代码、注释和元数据，大幅减小 SVG 文件体积，支持代码对比和实时预览。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线 SVG 优化压缩工具",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/svg-optimizer",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "基于 SVGO 深度优化 SVG 代码",
+        "移除冗余属性、注释与元数据",
+        "压缩前后代码和体积对比",
+        "保持可视化预览一致性",
+        "浏览器本地处理，代码安全"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "SVG 优化会影响图形显示吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "通常不会。优化会移除冗余信息并保留绘制语义，但建议发布前在目标环境复核。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么优化后体积差异不明显？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "若原文件已较精简，压缩空间会有限；复杂路径和内联样式越多，优化收益通常越高。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持批量优化吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "当前页面更适合单文件精细处理，批量场景建议按统一策略分次操作。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何在线优化 SVG 文件",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "导入 SVG",
+          "text": "粘贴 SVG 代码或上传文件。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "执行优化",
+          "text": "运行 SVGO 优化并观察代码与体积变化。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "预览并导出",
+          "text": "确认视觉无误后复制代码或下载优化结果。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线 SVG 优化压缩工具" description="免费在线 SVG 压缩优化工具，移除冗余代码、注释和元数据，大幅减小 SVG 文件体积，支持代码对比和实时预览。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线 SVG 优化压缩工具</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          使用 SVGO 引擎在浏览器本地深度优化 SVG 代码，移除冗余信息，最高可减少 80% 体积。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          精简 SVG 代码并降低传输体积。<span class="text-accent font-semibold">压缩前后对比清晰可见</span>，提升网页加载性能与前端交付效率。
         </p>
       </div>
       
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <SvgOptimizer client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么前端项目要优化 SVG？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              SVG 常用于图标、插画和品牌视觉。未经处理的文件往往包含冗余节点、注释和编辑器元数据，会增加资源体积并影响首屏加载。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren SVG 优化工具</strong> 基于 SVGO 引擎，帮助你在保证显示效果的同时压缩代码，提升性能和可维护性。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧹</div>
+                <h3 class="text-xl font-semibold mb-2">冗余代码清理</h3>
+                <p class="text-theme-secondary">移除无效属性、注释和元数据，输出更干净的 SVG 代码。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📉</div>
+                <h3 class="text-xl font-semibold mb-2">体积显著降低</h3>
+                <p class="text-theme-secondary">减少网络传输成本，提升页面加载与渲染效率。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🪞</div>
+                <h3 class="text-xl font-semibold mb-2">前后差异可比对</h3>
+                <p class="text-theme-secondary">便于代码审核与质量把控，降低上线风险。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地处理更可靠</h3>
+                <p class="text-theme-secondary">代码在浏览器内处理，不上传服务器，适合私有项目。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成 SVG 优化</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">导入代码或文件</h3>
+                  <p class="text-theme-secondary">粘贴原始 SVG 或直接上传文件开始处理。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">运行优化</h3>
+                  <p class="text-theme-secondary">执行压缩并查看代码、体积和预览变化。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">导出上线</h3>
+                  <p class="text-theme-secondary">复制优化代码并用于网站、组件库或图标系统。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>是否会影响动画 SVG？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  常见动画通常可保留，复杂交互场景建议在目标页面进行一次完整回归测试。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>能直接替换线上资源吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  建议先在预发布环境验证显示无偏差，再替换线上资源更稳妥。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>图标库也适合压缩吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  适合。批量优化图标资源能有效减少前端静态资源体积与加载时间。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关开发工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/image-compressor" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片压缩工具</div>
+                  <div class="text-xs text-theme-secondary">同步优化 PNG/JPG 等位图资源</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">整理与格式化压缩后的 SVG 片段</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/base64-encoder-decoder" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">Base64 编码解码工具</div>
+                  <div class="text-xs text-theme-secondary">处理 Data URI 与内联资源场景</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PeriodicTable from '../../components/tools/PeriodicTable';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线元素周期表"
 description: "免费在线交互式元素周期表，提供118种化学元素的详细信息，包括原子序数、原子量、电子排布、物理性质等，支持分类筛选和搜索。"
 technologies: "React, TailwindCSS, JSON"
 category: "developer"
 order: 100
+
+const pageTitle = "在线元素周期表";
+const pageDescription = "免费在线交互式元素周期表，提供118种化学元素的详细信息，包括原子序数、原子量、电子排布、物理性质等，支持分类筛选和搜索。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线元素周期表",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/periodic-table",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "118 种化学元素完整数据",
+        "按元素分类快速筛选",
+        "支持元素符号与名称搜索",
+        "查看原子量、电子排布与物理性质",
+        "交互式界面便于教学与复习"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "这个周期表适合中学学习吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "适合。你可以快速查看常见元素信息，并通过分类高亮理解金属、非金属与惰性气体等分组。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "能否用于大学化学入门？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。页面提供电子排布、原子量和基础物理参数，适合课堂复习与实验前预习。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "是否支持按元素名称搜索？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持。可通过元素名称、符号或原子序数进行快速定位。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何高效使用在线元素周期表",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "搜索目标元素",
+          "text": "输入元素名称、符号或原子序数定位目标元素。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "查看详细属性",
+          "text": "点击元素卡片查看电子排布、原子量与熔沸点等关键参数。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "按分类对比",
+          "text": "切换分类筛选并对比同族元素性质变化规律。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线元素周期表" description="免费在线交互式元素周期表，提供118种化学元素的详细信息，包括原子序数、原子量、电子排布、物理性质等，支持分类筛选和搜索。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线元素周期表</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          交互式化学元素周期表，包含所有 118 种元素的详细属性。点击任意元素查看电子排布、熔沸点、密度等数据，支持按族分类高亮显示。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          一站式查询 118 种元素核心信息。<span class="text-accent font-semibold">支持筛选、搜索与属性对比</span>，学习化学与备课复习更高效。
         </p>
       </div>
       
-      <div class="max-w-[1400px] mx-auto">
+      <div class="max-w-[1400px] mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <PeriodicTable client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 在线元素周期表适合哪些场景？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              无论是中学化学课程、大学基础化学学习，还是科研与工程中的常见元素查询，快速访问可靠参数都能显著提升学习和工作效率。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线元素周期表</strong> 提供易读、可交互的数据展示体验，帮助你快速掌握元素分类规律与核心物化属性。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧪</div>
+                <h3 class="text-xl font-semibold mb-2">全元素数据覆盖</h3>
+                <p class="text-theme-secondary">完整收录 118 种元素，满足日常学习和基础查询需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔎</div>
+                <h3 class="text-xl font-semibold mb-2">检索定位更快捷</h3>
+                <p class="text-theme-secondary">支持按名称、符号与序数查找，减少翻找时间。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧭</div>
+                <h3 class="text-xl font-semibold mb-2">分类学习更直观</h3>
+                <p class="text-theme-secondary">按元素族与性质分组显示，便于理解周期性变化。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📘</div>
+                <h3 class="text-xl font-semibold mb-2">课堂复习友好</h3>
+                <p class="text-theme-secondary">点击即可查看重点属性，适合课前预习和考前复盘。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成元素查询</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入关键词</h3>
+                  <p class="text-theme-secondary">通过元素名称、符号或序数快速定位目标元素。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">查看属性详情</h3>
+                  <p class="text-theme-secondary">读取原子量、电子排布、物理性质等核心数据。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">按族对比规律</h3>
+                  <p class="text-theme-secondary">结合分类筛选对比同族差异，加深周期律理解。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>元素数据更新频率高吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  页面会基于常见权威资料维护基础数据，适合作为学习与常规查询参考。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>手机端可以正常使用吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以。响应式布局已适配移动设备，便于随时查看元素信息。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>能用于考试复习吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  非常适合，特别是元素符号记忆、分类规律和关键参数快速复盘。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关工具推荐</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/unit-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">在线全能单位换算器</div>
+                  <div class="text-xs text-theme-secondary">实验数据与单位换算更便捷</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/volume-calculator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">体积计算器</div>
+                  <div class="text-xs text-theme-secondary">结合物理化学题进行几何体积计算</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-formatter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">多格式文本格式化工具</div>
+                  <div class="text-xs text-theme-secondary">整理实验记录与结构化文本数据</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

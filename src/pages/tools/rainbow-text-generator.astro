@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import RainbowTextGenerator from '../../components/tools/RainbowTextGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线彩虹文字生成器 (Rainbow Text)"
 description: "免费在线彩虹文字生成器，一键生成渐变色文字，支持 HTML, BBCode, Markdown 格式，适用于论坛发帖、博客排版和个性签名。"
 technologies: "React, TailwindCSS"
 category: "text"
 order: 100
+
+const pageTitle = "在线彩虹文字生成器 (Rainbow Text)";
+const pageDescription = "免费在线彩虹文字生成器，一键生成渐变色文字，支持 HTML, BBCode, Markdown 格式，适用于论坛发帖、博客排版和个性签名。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线彩虹文字生成器",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/rainbow-text-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "一键生成彩虹渐变文字",
+        "支持 HTML、BBCode、Markdown 输出",
+        "自定义颜色顺序与文本样式",
+        "适配论坛签名与社媒文案",
+        "在线生成无需安装"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "生成后的代码可以直接粘贴使用吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。根据目标平台选择 HTML、BBCode 或 Markdown 格式后复制即可。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "为什么有的平台不显示颜色？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "部分平台会过滤样式标签或限制富文本，建议切换输出格式并先在目标平台预览。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持中文和彩色 Emoji 吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持中文字符。Emoji 显示效果取决于平台字体与渲染能力。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何制作彩虹渐变文字",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入文本",
+          "text": "填写需要着色的标题、昵称或文案。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "选择输出格式",
+          "text": "按发布平台选择 HTML、BBCode 或 Markdown。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制并发布",
+          "text": "复制生成结果并粘贴到论坛、博客或社媒平台。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线彩虹文字生成器 (Rainbow Text)" description="免费在线彩虹文字生成器，一键生成渐变色文字，支持 HTML, BBCode, Markdown 格式，适用于论坛发帖、博客排版和个性签名。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        彩虹文字生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        让你的文字绚丽多彩！自动为每个字符分配渐变颜色，支持生成 HTML、BBCode 和 Markdown 代码，适用于各种网络平台。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线彩虹文字生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          一键把普通文本变成高辨识度渐变文案。<span class="text-accent font-semibold">支持多格式导出，发布更省心</span>，适配论坛、博客与社交平台。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <RainbowTextGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 彩虹文字适合哪些内容场景？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              彩虹文字常用于标题强化、活动宣发、个性签名和社区发帖，能快速吸引注意力并提升文本视觉层次。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 彩虹文字生成器</strong> 提供多格式输出，帮助你快速适配不同平台规则，减少手工改样式的时间成本。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🌈</div>
+                <h3 class="text-xl font-semibold mb-2">渐变色自动生成</h3>
+                <p class="text-theme-secondary">为每个字符自动分配颜色，快速形成连贯彩虹效果。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧩</div>
+                <h3 class="text-xl font-semibold mb-2">多平台格式支持</h3>
+                <p class="text-theme-secondary">支持 HTML、BBCode、Markdown，减少跨平台转换成本。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">✍️</div>
+                <h3 class="text-xl font-semibold mb-2">文案展示更醒目</h3>
+                <p class="text-theme-secondary">适合活动标题和签名展示，提升文本识别度与互动率。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">零门槛在线使用</h3>
+                <p class="text-theme-secondary">无需安装软件，输入文本即可实时生成并复制结果。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成彩虹文字</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入目标文案</h3>
+                  <p class="text-theme-secondary">填写昵称、标题或活动信息文本内容。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">调整色彩方案</h3>
+                  <p class="text-theme-secondary">选择或微调渐变颜色顺序，匹配你的品牌风格。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">导出并发布</h3>
+                  <p class="text-theme-secondary">复制对应格式代码并粘贴到目标平台完成发布。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>是否支持长段落着色？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  支持，但建议控制长度，避免输出代码过长影响平台加载和编辑体验。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>Markdown 一定能显示彩色吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不同平台 Markdown 渲染策略不同，建议优先测试目标站点的样式支持能力。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>生成内容可以商用吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  一般可用于商用内容排版，具体请结合目标平台内容规范与品牌规范执行。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/wing-nickname-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">翅膀昵称生成器</div>
+                  <div class="text-xs text-theme-secondary">个性昵称与彩色文本搭配更吸睛</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/scrambled-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">乱序文字生成器</div>
+                  <div class="text-xs text-theme-secondary">制作趣味互动文案与挑战文本</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-counter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本计数器</div>
+                  <div class="text-xs text-theme-secondary">发布前统计字数与段落结构</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <RainbowTextGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

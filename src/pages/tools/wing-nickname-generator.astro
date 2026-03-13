@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import WingNicknameGenerator from '../../components/tools/WingNicknameGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线翅膀昵称生成器 (Wing Nicknames)"
 description: "免费在线翅膀昵称生成器，为你的网名添加各种炫酷的翅膀符号和特殊字符，适用于王者荣耀、和平精英等游戏和社交平台。"
 technologies: "React, TailwindCSS"
 category: "developer"
 order: 100
+
+const pageTitle = "在线翅膀昵称生成器 (Wing Nicknames)";
+const pageDescription = "免费在线翅膀昵称生成器，为你的网名添加各种炫酷的翅膀符号和特殊字符，适用于王者荣耀、和平精英等游戏和社交平台。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线翅膀昵称生成器",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/wing-nickname-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "昵称添加翅膀和特殊符号",
+        "多风格模板一键生成",
+        "适配游戏 ID 与社交昵称",
+        "支持复制并快速粘贴使用",
+        "在线生成无需安装"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "生成昵称会不会太长？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "取决于平台字数限制，建议优先选择短模板并在提交前检查字符长度。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "所有符号都能在游戏里显示吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不一定。不同平台字体和字符集支持不同，建议在目标平台先试用。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以用于社交平台昵称吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以，常见社交平台和社区昵称场景都可使用，具体以平台规则为准。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何生成个性翅膀昵称",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入昵称",
+          "text": "输入基础名称或你常用的游戏 ID。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "选择符号模板",
+          "text": "挑选翅膀样式与特殊字符组合。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制并使用",
+          "text": "复制生成结果并粘贴到游戏或社交平台昵称设置页。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线翅膀昵称生成器 (Wing Nicknames)" description="免费在线翅膀昵称生成器，为你的网名添加各种炫酷的翅膀符号和特殊字符，适用于王者荣耀、和平精英等游戏和社交平台。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        翅膀昵称生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        输入你的名字，一键生成带有 ꧁翅膀꧂、❀花朵❀、★星星★ 等特殊符号的个性化昵称。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">翅膀昵称生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          快速创建带符号的个性昵称。<span class="text-accent font-semibold">多种翅膀与装饰样式可选</span>，适配游戏 ID、社交签名和社区昵称。
+        </p>
+      </div>
+      
+      <div class="max-w-5xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <WingNicknameGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么翅膀昵称在游戏和社交场景很受欢迎？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              个性化昵称是用户身份表达的一部分。通过符号装饰和视觉风格强化，昵称更容易被记住，也更容易形成个人标签。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 翅膀昵称生成器</strong> 提供多套风格模板，帮助你快速完成“名字 + 装饰符号”的组合设计。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🪽</div>
+                <h3 class="text-xl font-semibold mb-2">翅膀风格丰富</h3>
+                <p class="text-theme-secondary">支持多种左右装饰符号组合，快速形成标志性昵称样式。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">✨</div>
+                <h3 class="text-xl font-semibold mb-2">符号模板即选即用</h3>
+                <p class="text-theme-secondary">无需手工拼接字符，一键生成并复制更高效。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎮</div>
+                <h3 class="text-xl font-semibold mb-2">适配多平台昵称</h3>
+                <p class="text-theme-secondary">适用于游戏角色名、社区 ID 和社交账号展示名称。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📋</div>
+                <h3 class="text-xl font-semibold mb-2">复制粘贴零门槛</h3>
+                <p class="text-theme-secondary">生成后可直接粘贴到目标平台，快速完成昵称更新。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成个性昵称</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入基础名字</h3>
+                  <p class="text-theme-secondary">填写你常用的昵称、ID 或品牌名称。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择装饰模板</h3>
+                  <p class="text-theme-secondary">挑选翅膀、花朵、星形等符号组合风格。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制并设置昵称</h3>
+                  <p class="text-theme-secondary">复制生成结果并粘贴到目标平台完成更新。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>平台提示昵称非法怎么办？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  建议更换符号模板或缩短字符长度，不同平台审核规则会有差异。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>能保留原始名字不变吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以。你可仅在前后添加少量符号，保持名字主体不变。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>生成昵称可以重复使用吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以重复使用和二次编辑，方便在不同平台维护统一风格昵称。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/rainbow-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">彩虹文字生成器</div>
+                  <div class="text-xs text-theme-secondary">将昵称做彩色展示增强辨识度</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/scrambled-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">乱序文字生成器</div>
+                  <div class="text-xs text-theme-secondary">制作趣味昵称文案和互动内容</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/password-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">随机密码生成器</div>
+                  <div class="text-xs text-theme-secondary">昵称设置后同步加强账号安全</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="max-w-5xl mx-auto">
-      <WingNicknameGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

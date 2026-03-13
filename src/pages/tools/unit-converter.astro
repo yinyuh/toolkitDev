@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import UnitConverter from '../../components/tools/UnitConverter';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线全能单位换算器"
 description: "免费在线全能单位换算器，支持长度、重量、温度、面积、体积、速度、时间、数据存储等 12 类常用单位的实时换算。"
 technologies: "Convert-units, React, TailwindCSS"
 category: "calculator"
 order: 100
+
+const pageTitle = "在线全能单位换算器";
+const pageDescription = "免费在线全能单位换算器，支持长度、重量、温度、面积、体积、速度、时间、数据存储等 12 类常用单位的实时换算。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线全能单位换算器",
+      "applicationCategory": "CalculatorApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/unit-converter",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "支持长度、重量、温度等多类换算",
+        "输入一次即可同步显示多单位结果",
+        "适合学习、工程与日常生活场景",
+        "界面简洁，移动端也可快速使用",
+        "免费在线无需安装"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "温度换算支持摄氏和华氏吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持。常见温度单位之间可快速互转，便于实验、烹饪和国际资料阅读。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "换算结果精度如何控制？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "页面会按常见显示精度输出，关键业务场景建议结合行业规范保留有效位数。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "单位分类很多，如何快速找到？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可先选择目标类别，再输入数值，即可查看相关单位的换算结果。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何使用单位换算器",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "选择换算类别",
+          "text": "先选择长度、质量、温度或其他目标分类。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "输入数值和单位",
+          "text": "填写待换算数据并指定原始单位。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "读取结果",
+          "text": "查看各目标单位结果并复制到报告或计算流程中。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线全能单位换算器" description="免费在线全能单位换算器，支持长度、重量、温度、面积、体积、速度、时间、数据存储等 12 类常用单位的实时换算。">
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <section class="bg-theme-primary min-h-screen py-12">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线全能单位换算器</h1>
-        <p class="text-theme-secondary max-w-3xl mx-auto">
-          一键实现常用单位之间的相互转换。输入一个数值，即刻查看所有相关单位的换算结果，支持长度、重量、温度等多种类型。
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          常见单位一站式换算。<span class="text-accent font-semibold">输入一次即得多单位结果</span>，学习、工程、办公和生活场景都适用。
         </p>
       </div>
       
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
         <UnitConverter client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么在线单位换算器很实用？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              跨学科与跨地域协作常涉及单位差异，例如国际论文、工程图纸、供应链文档和产品规格说明。手工换算费时且容易出错。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线全能单位换算器</strong> 帮你快速完成多类别转换，减少计算错误并提升处理效率。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📏</div>
+                <h3 class="text-xl font-semibold mb-2">多类别全覆盖</h3>
+                <p class="text-theme-secondary">长度、面积、体积、温度等常用类别可快速切换。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚡</div>
+                <h3 class="text-xl font-semibold mb-2">实时换算反馈</h3>
+                <p class="text-theme-secondary">输入后即时得到结果，适合高频数据处理。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧮</div>
+                <h3 class="text-xl font-semibold mb-2">减少人工误差</h3>
+                <p class="text-theme-secondary">避免手算和多次查表带来的计算偏差与遗漏。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📱</div>
+                <h3 class="text-xl font-semibold mb-2">多端随时可用</h3>
+                <p class="text-theme-secondary">桌面和移动设备均可访问，临时换算更便捷。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步完成单位换算</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择类别</h3>
+                  <p class="text-theme-secondary">先确定长度、质量、温度或其他目标类别。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入数值</h3>
+                  <p class="text-theme-secondary">填写原始值并选择原始单位。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">读取并应用结果</h3>
+                  <p class="text-theme-secondary">复制目标单位数据用于报告、表格或工程计算。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>结果和专业软件一致吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  常见换算通常一致，关键工程场景建议再按行业标准复核。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>可以换算非常大的数值吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以，但极端大数或高精度需求建议结合专业计算工具复验。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>支持移动端快速输入吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  支持，手机端可直接输入并切换单位，适合现场或外出使用。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关计算工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/volume-calculator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">体积计算器</div>
+                  <div class="text-xs text-theme-secondary">几何体积计算后再做单位转换</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/periodic-table" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">在线元素周期表</div>
+                  <div class="text-xs text-theme-secondary">结合化学参数进行换算分析</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-counter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本计数器</div>
+                  <div class="text-xs text-theme-secondary">整理计算说明与实验记录字数</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>

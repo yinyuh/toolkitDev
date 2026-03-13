@@ -1,27 +1,267 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ScrambledTextGenerator from '../../components/tools/ScrambledTextGenerator';
+import AdSense from "../../components/ads/AdSense.astro";
 
 title: "在线乱序文字生成器 (Typoglycemia)"
 description: "免费在线乱序文字生成器，基于 Typoglycemia 原理打乱单词内部字母顺序，但仍可阅读，支持中文和英文。"
 technologies: "React, TailwindCSS"
 category: "text"
 order: 100
+
+const pageTitle = "在线乱序文字生成器 (Typoglycemia)";
+const pageDescription = "免费在线乱序文字生成器，基于 Typoglycemia 原理打乱单词内部字母顺序，但仍可阅读，支持中文和英文。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线乱序文字生成器",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/scrambled-text-generator",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "featureList": [
+        "基于 Typoglycemia 原理生成乱序文字",
+        "支持中文与英文文本处理",
+        "可调节乱序强度与展示风格",
+        "适合趣味互动和教育演示",
+        "在线生成即用即复制"
+      ],
+      "author": {
+        "@type": "Organization",
+        "name": "Toolkit.ren"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "为什么乱序后还能读懂？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "人脑会结合上下文自动纠错，尤其是词首词尾保留时，阅读仍然具有较高可理解性。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "中文和英文效果一样吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不完全一样。英文单词内部字母乱序效果更典型，中文更依赖词组和语境。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "可以用于课堂演示吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "可以。适合用于认知心理学、阅读实验和语言学习中的趣味互动。"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "如何生成乱序可读文字",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "输入原始文本",
+          "text": "粘贴或输入要转换的句子或段落。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "设置乱序规则",
+          "text": "选择乱序强度并保持可读性平衡。"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "复制结果",
+          "text": "生成后复制文本，用于分享、演示或互动内容。"
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="在线乱序文字生成器 (Typoglycemia)" description="免费在线乱序文字生成器，基于 Typoglycemia 原理打乱单词内部字母顺序，但仍可阅读，支持中文和英文。">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">
-        乱序文字生成器
-      </h1>
-      <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-        "研表究明，汉字的序顺并不定一能影阅响读"。利用人脑的自动纠错能力，生成看似混乱实则可读的趣味文本。
-      </p>
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线乱序文字生成器</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          生成“看似打乱、仍可阅读”的趣味文本。<span class="text-accent font-semibold">适合互动海报、课堂演示与社群活动</span>，让内容更有记忆点。
+        </p>
+      </div>
+      
+      <div class="max-w-6xl mx-auto bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
+        <ScrambledTextGenerator client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> Typoglycemia 为什么有趣又实用？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              乱序文字展示了人类阅读并非逐字解码，而是依赖模式识别与语义预测。这种现象非常适合做认知实验、课堂互动和社交传播内容。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 乱序文字生成器</strong> 帮你快速创建兼具趣味性与可读性的文本，便于传播和演示。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🧠</div>
+                <h3 class="text-xl font-semibold mb-2">认知现象可视化</h3>
+                <p class="text-theme-secondary">将阅读自动纠错过程变成直观可体验的文本效果。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🌐</div>
+                <h3 class="text-xl font-semibold mb-2">中英文本均可处理</h3>
+                <p class="text-theme-secondary">支持不同语种内容，适合跨场景创作与演示。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🎯</div>
+                <h3 class="text-xl font-semibold mb-2">可读与混乱平衡</h3>
+                <p class="text-theme-secondary">在趣味效果与可理解性之间保持较好平衡。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">📢</div>
+                <h3 class="text-xl font-semibold mb-2">传播互动更吸引</h3>
+                <p class="text-theme-secondary">适用于社媒挑战、课堂提问和品牌互动文案。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成乱序文字</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">输入原文</h3>
+                  <p class="text-theme-secondary">粘贴文章片段、标题或活动文案。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">生成乱序效果</h3>
+                  <p class="text-theme-secondary">根据规则打乱文本内部顺序并保留可阅读性。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">复制分享</h3>
+                  <p class="text-theme-secondary">将结果用于海报、帖文或教学场景，提升互动参与。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>乱序后能保证完全可读吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不能完全保证，文本长度、词频和上下文都会影响可读性。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>适合正式文档吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  不建议用于正式提交材料，更适合创意表达、教学展示和互动内容。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>可以处理很长文章吗？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  可以处理较长内容，但建议分段转换，便于控制效果和阅读节奏。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关文本工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/rainbow-text-generator" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">彩虹文字生成器</div>
+                  <div class="text-xs text-theme-secondary">将乱序内容进一步做视觉强化</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-counter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本计数器</div>
+                  <div class="text-xs text-theme-secondary">统计转换前后的字数与段落变化</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/text-diff" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">文本差异对比工具</div>
+                  <div class="text-xs text-theme-secondary">对比原文与乱序文本差异</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="bg-theme-primary rounded-2xl shadow-xl overflow-hidden">
-      <ScrambledTextGenerator client:only="react" />
-    </div>
-  </div>
+  </section>
+
+  <style>
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary ~ * {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </Layout>
