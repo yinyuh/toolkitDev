@@ -5,6 +5,7 @@ import Footer from "../components/commons/footer/footer.astro";
 import Breadcrumb from "../components/commons/breadcrumb/Breadcrumb.astro";
 import Analytics from '@vercel/analytics/astro'
 import  SpeedInsights  from "@vercel/speed-insights/astro"
+import { themeBootstrapScript } from "../scripts/theme-runtime";
 
 interface Props {
   title?: string;
@@ -27,7 +28,7 @@ const socialImageURL = new URL(image, Astro.url);
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="theme-light">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -56,21 +57,7 @@ const socialImageURL = new URL(image, Astro.url);
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={socialImageURL} />
     
-    <!-- Theme initialization script -->
-    <script>
-      // 初始化主题
-      (function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        document.documentElement.classList.add(`theme-${savedTheme}`);
-        // 添加或移除 dark 类以支持 Tailwind 的深色模式
-        if (savedTheme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      })();
-    </script>
+    <script is:inline set:html={themeBootstrapScript}></script>
     {import.meta.env.PROD && (
       <script
         async
@@ -79,7 +66,7 @@ const socialImageURL = new URL(image, Astro.url);
       />
     )}
   </head>
-  <body class="text-theme-primary transition-colors duration-300">
+  <body class="text-theme-primary">
     <!-- Animated background -->
     <div class="fixed inset-0 z-[-1] overflow-hidden">
       <div

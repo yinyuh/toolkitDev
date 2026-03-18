@@ -155,6 +155,7 @@
   --div-bg: #f8fafc;
   --div-border: #e5e7eb;
   --div-text: #1f2937;
+  --surface-bg: #f8fafc;
 }
 
 /* Dark theme */
@@ -175,12 +176,12 @@
   --div-bg: #1f2937;
   --div-border: #374151;
   --div-text: #f9fafb;
+  --surface-bg: #1f2937;
 }
 
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .border {
@@ -196,6 +197,10 @@ body {
   background-color: var(--bg-secondary);
 }
 
+.bg-theme-surface {
+  background-color: var(--surface-bg);
+}
+
 .text-theme-primary {
   color: var(--text-primary);
 }
@@ -205,6 +210,10 @@ body {
 }
 
 .border-theme {
+  border-color: var(--border-color);
+}
+
+.border-theme-border {
   border-color: var(--border-color);
 }
 
@@ -260,9 +269,10 @@ body {
   color: var(--text-primary);
 }
 
-/* Smooth theme transitions */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition-property: none !important;
 }
 
 /* Unit scrollbar styles */
@@ -299,4 +309,9 @@ body {
 .theme-option:hover {
   background-color: var(--accent-color);
   color: white;
+}
+
+.theme-toggle-icon {
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }

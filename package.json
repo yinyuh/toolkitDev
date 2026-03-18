@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 30001",
     "build": "astro build",
+    "test:theme": "node --test tests/theme-runtime.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

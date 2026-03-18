@@ -158,7 +158,7 @@ const searchableItems = [...toolPages, ...articles];
 
         <div class="flex items-center gap-3">
           <!-- 主题切换器 -->
-          <ThemeSwitcher client:visible />
+          <ThemeSwitcher client:load />
 
           <!-- 语言选择下拉菜单 -->
           <div class="relative group">
@@ -190,7 +190,7 @@ const searchableItems = [...toolPages, ...articles];
       <div class="flex md:hidden items-center gap-4 z-50">
         <!-- Mobile theme switcher -->
         <div class="md:hidden">
-          <ThemeSwitcher client:visible />
+          <ThemeSwitcher client:load />
         </div>
         
         <!-- Mobile language selector -->
@@ -261,7 +261,7 @@ const searchableItems = [...toolPages, ...articles];
         <div class="flex justify-between items-center">
           <span class="text-theme-primary">主题:</span>
           <div class="md:hidden">
-            <ThemeSwitcher client:visible />
+            <ThemeSwitcher client:load />
           </div>
         </div>
         <div class="flex flex-col">

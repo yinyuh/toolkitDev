@@ -1,90 +1,59 @@
-import { useState, useEffect } from 'react';
-
-const themes = [
-  {
-    name: 'light',
-    label: '明亮模式',
-    icon: '☀️',
-    colors: {
-      bg: 'bg-theme-background',
-      text: 'text-theme-primary',
-      primary: 'bg-theme-accent',
-      secondary: 'bg-theme-secondary',
-      button: 'bg-theme-button text-theme-button-text',
-      buttonHover: 'bg-theme-button-hover text-theme-button-text',
-      link: 'text-theme-link',
-      linkHover: 'text-theme-link-hover'
-    }
-  },
-  {
-    name: 'dark',
-    label: '暗黑模式',
-    icon: '🌙',
-    colors: {
-      bg: 'bg-theme-background',
-      text: 'text-theme-primary',
-      primary: 'bg-theme-accent',
-      secondary: 'bg-theme-secondary',
-      button: 'bg-theme-button text-theme-button-text',
-      buttonHover: 'bg-theme-button-hover text-theme-button-text',
-      link: 'text-theme-link',
-      linkHover: 'text-theme-link-hover'
-    }
-  }
-];
+import { useEffect, useState } from "react";
+import { getNextTheme, normalizeTheme } from "../../../scripts/theme-runtime";
 
 export default function ThemeSwitcher() {
-  const [currentTheme, setCurrentTheme] = useState('light');
+  const [currentTheme, setCurrentTheme] = useState("light");
+  const [isSwitching, setIsSwitching] = useState(false);
 
   useEffect(() => {
-    // 从localStorage获取保存的主题
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setCurrentTheme(savedTheme);
-    applyTheme(savedTheme);
+    if (typeof window === "undefined") return;
+    const store = window.__THEME_STORE__;
+    if (!store) {
+      const fallbackTheme = normalizeTheme(localStorage.getItem("theme"));
+      setCurrentTheme(fallbackTheme);
+      return;
+    }
+
+    setCurrentTheme(store.getTheme());
+    const unsubscribe = store.subscribe((detail) => {
+      setCurrentTheme(detail.theme);
+      if (detail.source === "user") {
+        setIsSwitching(false);
+      }
+    });
+
+    return unsubscribe;
   }, []);
 
-  const applyTheme = (themeName) => {
-    const theme = themes.find(t => t.name === themeName) || themes[0];
-    
-    // 移除所有主题类
-    themes.forEach(t => {
-      document.documentElement.classList.remove(`theme-${t.name}`);
-    });
-    
-    // 添加当前主题类
-    document.documentElement.classList.add(`theme-${themeName}`);
-    
-    // 设置data-theme属性用于CSS变量
-    document.documentElement.setAttribute('data-theme', themeName);
-    
-    // 同步dark类用于Tailwind CSS暗模式
-    if (themeName === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    // 保存到localStorage
-    localStorage.setItem('theme', themeName);
-  };
-
   const toggleTheme = () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    setCurrentTheme(newTheme);
-    applyTheme(newTheme);
-  };
+    if (typeof window === "undefined" || isSwitching) return;
+    const store = window.__THEME_STORE__;
+    const nextTheme = getNextTheme(currentTheme);
+    if (!store) {
+      setCurrentTheme(nextTheme);
+      document.documentElement.setAttribute("data-theme", nextTheme);
+      document.documentElement.classList.toggle("dark", nextTheme === "dark");
+      localStorage.setItem("theme", nextTheme);
+      return;
+    }
 
-  const currentThemeData = themes.find(t => t.name === currentTheme) || themes[0];
+    setIsSwitching(true);
+    const result = store.setTheme(nextTheme, { source: "user", atomic: true });
+    if (result.throttled) {
+      setIsSwitching(false);
+    }
+  };
 
   return (
     <div className="relative">
       <button
         onClick={toggleTheme}
-        className="flex items-center justify-center p-2 rounded-lg text-theme-secondary hover:bg-theme-secondary/50 transition-all duration-200 cursor-pointer"
+        disabled={isSwitching}
+        className="flex items-center justify-center p-2 rounded-lg text-theme-secondary hover:bg-theme-secondary/50 transition-transform duration-150 will-change-transform active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         aria-label="切换主题"
-        title={`切换到${currentTheme === 'light' ? '暗黑' : '明亮'}模式`}
+        title={`切换到${currentTheme === "light" ? "暗黑" : "明亮"}模式`}
       >
-        <span className="text-lg">{currentThemeData.icon}</span>
+        <span className="text-lg theme-toggle-icon">{currentTheme === "light" ? "☀️" : "🌙"}</span>
       </button>
     </div>
   );
