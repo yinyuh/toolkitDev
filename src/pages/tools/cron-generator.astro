@@ -3,14 +3,14 @@ import Layout from "../../layouts/Layout.astro";
 import CronGenerator from '../../components/tools/CronGenerator';
 import AdSense from "../../components/ads/AdSense.astro";
 
-title: "在线 Cron 表达式生成器 - 可视化定时任务规则配置工具"
-description: "免费在线 Cron 表达式生成器，通过可视化方式配置分钟、小时、日期、月份和星期规则，实时生成表达式并翻译为中文说明，支持预览执行时间。"
+title: "在线 Cron 表达式生成器 - 支持 Linux、Spring、Quartz 的可视化定时规则工具"
+description: "免费在线 Cron 表达式生成器，支持 Linux Crontab、Java Spring、Java Quartz 三种格式，可视化配置字段、常用预设、中文释义和接下来运行时间。"
 technologies: "Cronstrue, Cron-parser, React, TailwindCSS"
 category: "generator"
 order: 11
 
-const pageTitle = "在线 Cron 表达式生成器 - 可视化定时任务规则配置工具";
-const pageDescription = "免费在线 Cron 表达式生成器，通过可视化方式配置分钟、小时、日期、月份和星期规则，实时生成表达式并翻译为中文说明，支持预览执行时间。";
+const pageTitle = "在线 Cron 表达式生成器 - 支持 Linux、Spring、Quartz 的可视化定时规则工具";
+const pageDescription = "免费在线 Cron 表达式生成器，支持 Linux Crontab、Java Spring、Java Quartz 三种格式，可视化配置字段、常用预设、中文释义和接下来运行时间。";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -28,11 +28,11 @@ const structuredData = {
         "priceCurrency": "CNY"
       },
       "featureList": [
-        "可视化配置 Cron 各字段",
+        "支持 Linux、Spring、Quartz 三种 Cron 类型",
+        "可视化配置秒、分钟、小时、日期、月份、星期字段",
+        "按类型切换预设模板、中文解释与运行时间预览",
         "实时生成标准 Cron 表达式",
-        "中文自然语言解释",
         "预览最近执行时间",
-        "预设模板快速套用",
         "浏览器本地处理，安全高效"
       ],
       "author": {
@@ -48,7 +48,7 @@ const structuredData = {
           "name": "Cron 表达式是 5 位还是 6 位？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "大多数 Linux 系统 crontab 使用 5 位格式：分钟、小时、日期、月份、星期。部分框架（如 Quartz）会使用 6 位或 7 位格式，增加“秒”和“年”字段。使用前请确认目标平台规范。"
+            "text": "Linux Crontab 通常使用 5 位格式：分钟、小时、日期、月份、星期。Spring 和 Quartz 常见为 6 位格式，会增加“秒”字段。不同平台实现细节不同，生成前请先选择目标类型。"
           }
         },
         {
@@ -56,7 +56,7 @@ const structuredData = {
           "name": "为什么我的表达式在系统中不生效？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "通常与时区配置、字段范围、星期定义差异或系统 Cron 实现不一致有关。建议先用工具预览执行时间，再对照目标平台文档逐项核对。"
+            "text": "通常与表达式类型选错、字段范围不合法、日期与星期冲突或目标平台实现差异有关。建议先选择对应的 Linux、Spring 或 Quartz 类型，再核对最近运行时间。"
           }
         },
         {
@@ -64,7 +64,7 @@ const structuredData = {
           "name": "可以用这个工具生成复杂周期任务吗？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "可以。通过步长、范围、列表和通配符组合，能够覆盖大多数运维与业务调度场景，例如每 15 分钟、每周一早上 8 点或每月 1 号执行。"
+            "text": "可以。工具支持通配符、范围、列表、步长和 Java 场景常见的 ? 字符，能够覆盖运维任务、Spring 定时任务和 Quartz 业务作业等常见开发需求。"
           }
         }
       ]
@@ -76,17 +76,17 @@ const structuredData = {
         {
           "@type": "HowToStep",
           "name": "选择调度周期",
-          "text": "先确定任务频率，例如每小时、每天、每周或每月执行一次。"
+          "text": "先确认目标平台是 Linux Crontab、Spring 还是 Quartz，再确定任务频率。"
         },
         {
           "@type": "HowToStep",
           "name": "配置字段参数",
-          "text": "按分钟、小时、日期、月份、星期依次设置取值，必要时使用范围、列表和步长。"
+          "text": "按当前类型逐项设置秒、分钟、小时、日期、月份和星期字段，必要时使用范围、列表、步长或 ?。"
         },
         {
           "@type": "HowToStep",
           "name": "校验并复制表达式",
-          "text": "查看中文解释和最近执行时间，确认无误后复制到服务器、容器或任务平台。"
+          "text": "查看中文解释和最近执行时间，确认无误后复制到服务器、Spring 应用或 Quartz 任务中心。"
         }
       ]
     }
@@ -102,7 +102,7 @@ const structuredData = {
       <div class="mb-12 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线 Cron 表达式生成器</h1>
         <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
-          用可视化方式快速生成 Cron 规则，实时查看中文释义与执行计划。<span class="text-accent font-semibold">无需死记硬背语法</span>，调度配置更准确更高效。
+          用可视化方式快速生成 Linux、Java(Spring)、Java(Quartz) 三种 Cron 规则，实时查看中文释义与执行计划。<span class="text-accent font-semibold">无需死记硬背语法</span>，调度配置更准确更高效。
         </p>
       </div>
       
@@ -121,10 +121,10 @@ const structuredData = {
               <span class="text-accent">#</span> 为什么需要 Cron 表达式生成器？
             </h2>
             <p class="text-lg leading-relaxed text-theme-secondary">
-              在后端开发、系统运维和自动化流程中，定时任务是最常见的基础能力之一。无论是数据库备份、日志清理、报表生成，还是定时通知，都依赖稳定的调度规则。
+              在后端开发、系统运维和自动化流程中，定时任务是最常见的基础能力之一。无论是数据库备份、日志清理、报表生成、缓存刷新还是定时通知，都依赖稳定的调度规则。
             </p>
             <p class="text-lg leading-relaxed text-theme-secondary mt-4">
-              但 Cron 语法对初学者并不友好，尤其在涉及范围、步长和星期字段时，容易因一个字符写错而导致任务执行异常。<strong>Toolkit.ren 在线 Cron 表达式生成器</strong> 提供可视化配置、中文解释和执行时间预览，帮助你快速输出可落地的调度表达式，显著降低出错率。
+              但 Cron 语法对初学者并不友好，尤其在 Linux 5 位、Spring 6 位、Quartz 6 位等不同规范之间切换时，更容易因字段错位、秒字段缺失或日期/星期配置冲突而导致任务执行异常。<strong>Toolkit.ren 在线 Cron 表达式生成器</strong> 提供多类型切换、可视化配置、中文解释和执行时间预览，帮助你快速输出可落地的调度表达式，显著降低出错率。
             </p>
           </section>
 
@@ -133,49 +133,49 @@ const structuredData = {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
                 <div class="text-3xl mb-3">🧭</div>
-                <h3 class="text-xl font-semibold mb-2">可视化字段配置</h3>
-                <p class="text-theme-secondary">分钟、小时、日期、月份、星期逐项设置，减少手写语法时的字段错位问题。</p>
+                <h3 class="text-xl font-semibold mb-2">多类型可视化字段配置</h3>
+                <p class="text-theme-secondary">支持 Linux、Spring、Quartz 三种模式，按类型显示秒、分钟、小时、日期、月份、星期等字段。</p>
               </div>
               <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
                 <div class="text-3xl mb-3">🈶</div>
                 <h3 class="text-xl font-semibold mb-2">中文语义实时翻译</h3>
-                <p class="text-theme-secondary">表达式变更后立即输出自然语言说明，快速确认任务触发逻辑是否符合预期。</p>
+                <p class="text-theme-secondary">表达式变更后立即输出与当前类型匹配的自然语言说明，快速确认任务触发逻辑是否符合预期。</p>
               </div>
               <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
                 <div class="text-3xl mb-3">📅</div>
                 <h3 class="text-xl font-semibold mb-2">执行时间预览</h3>
-                <p class="text-theme-secondary">实时预估最近触发时刻，提前发现边界日期、星期配置和周期偏差问题。</p>
+                <p class="text-theme-secondary">根据当前类型实时预估最近触发时刻，提前发现秒级任务、日期/星期配置和周期偏差问题。</p>
               </div>
               <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
                 <div class="text-3xl mb-3">⚙️</div>
                 <h3 class="text-xl font-semibold mb-2">预设模板快速套用</h3>
-                <p class="text-theme-secondary">内置常用任务模板，一键生成高频表达式，适合开发、测试与生产环境复用。</p>
+                <p class="text-theme-secondary">按 Linux、Spring、Quartz 分类提供常用任务模板，一键生成开发和生产中常见的调度规则。</p>
               </div>
             </div>
           </section>
 
           <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
-            <h2 class="text-2xl font-bold text-theme-primary mb-6">三步配置 Cron 定时任务</h2>
+              <h2 class="text-2xl font-bold text-theme-primary mb-6">三步生成可落地的 Cron 定时任务</h2>
             <ol class="space-y-6">
               <li class="flex gap-4">
                 <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
                 <div>
-                  <h3 class="text-lg font-semibold mb-1">明确任务执行频率</h3>
-                  <p class="text-theme-secondary">先定义是按分钟、按天、按周还是按月执行，避免后续字段配置与业务目标不一致。</p>
+                  <h3 class="text-lg font-semibold mb-1">先选择表达式类型</h3>
+                  <p class="text-theme-secondary">根据目标平台选择 Linux Crontab、Java Spring 或 Java Quartz，避免字段数量和语法规则一开始就选错。</p>
                 </div>
               </li>
               <li class="flex gap-4">
                 <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
                 <div>
                   <h3 class="text-lg font-semibold mb-1">按字段设置时间规则</h3>
-                  <p class="text-theme-secondary">根据业务需求组合通配符、范围、列表与步长，完成表达式生成并检查中文解释。</p>
+                  <p class="text-theme-secondary">根据业务需求组合通配符、范围、列表、步长和 ? 等语法，完成表达式生成并检查中文解释。</p>
                 </div>
               </li>
               <li class="flex gap-4">
                 <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
                 <div>
-                  <h3 class="text-lg font-semibold mb-1">预览执行时间后部署</h3>
-                  <p class="text-theme-secondary">确认最近触发记录符合预期，再复制到 crontab、任务中心或云平台定时器中使用。</p>
+                  <h3 class="text-lg font-semibold mb-1">预览运行时间后再部署</h3>
+                  <p class="text-theme-secondary">确认最近触发记录符合预期，再复制到 crontab、Spring 应用、Quartz 任务中心或云平台定时器中使用。</p>
                 </div>
               </li>
             </ol>
@@ -194,7 +194,7 @@ const structuredData = {
                   </span>
                 </summary>
                 <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
-                  在常见 5 位 Cron 中，* 表示“任意值”。? 多见于 Quartz 扩展语法，表示“该字段不指定”，通常用于日期和星期二选一的场景。
+                  在 Linux 5 位 Cron 中，* 表示“任意值”，通常不会用到 ?。在 Spring 和 Quartz 中，? 表示“该字段不指定”，常用于日期和星期二选一的场景。
                 </p>
               </details>
               <details class="group pt-4 border-t border-theme-border">
@@ -205,7 +205,7 @@ const structuredData = {
                   </span>
                 </summary>
                 <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
-                  在多数实现中，0 和 7 都可表示周日，但不同平台存在差异。建议部署前查阅目标系统文档并实际验证一次。
+                  不同平台对星期编号的定义略有差异。Linux 常见为 0-6，Spring 与 Quartz 常见为 1-7。部署前请确认目标系统文档并实际验证一次。
                 </p>
               </details>
               <details class="group pt-4 border-t border-theme-border">
@@ -216,7 +216,7 @@ const structuredData = {
                   </span>
                 </summary>
                 <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
-                  统一服务器和应用时区设置，优先使用 UTC 或固定时区策略，并在灰度环境中先验证一轮真实触发时间。
+                  统一服务器和应用时区设置，优先使用 UTC 或固定时区策略，并在灰度环境中结合“接下来运行时间”先验证一轮真实触发时间。
                 </p>
               </details>
             </div>
