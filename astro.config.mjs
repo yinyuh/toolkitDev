@@ -8,6 +8,9 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.toolkit.ren",
+  build: {
+    inlineStylesheets: "always",
+  },
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

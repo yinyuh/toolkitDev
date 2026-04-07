@@ -89,7 +89,7 @@ const socialImageURL = new URL(image, Astro.url);
       <slot />
     </div>
     <Footer />
-    <Analytics/>
-    <SpeedInsights/>
+    {import.meta.env.PROD && <Analytics />}
+    {import.meta.env.PROD && <SpeedInsights />}
   </body>
 </html>
