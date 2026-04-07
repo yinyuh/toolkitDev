@@ -20,7 +20,7 @@ const TIMEZONES = [
   { value: 'Asia/Ho_Chi_Minh', label: '越南 - 胡志明 (Ho Chi Minh)' },
   { value: 'Asia/Kuala_Lumpur', label: '马来西亚 - 吉隆坡 (Kuala Lumpur)' },
   { value: 'Asia/Manila', label: '菲律宾 - 马尼拉 (Manila)' },
-  { value: 'Asia/Mumbai', label: '印度 - 孟买 (Mumbai)' },
+  { value: 'Asia/Kolkata', label: '印度 - 孟买 (Mumbai)' },
   { value: 'Asia/Riyadh', label: '沙特 - 利雅得 (Riyadh)' },
   // Europe
   { value: 'Europe/London', label: '英国 - 伦敦 (London)' },
@@ -73,12 +73,19 @@ const TimestampConverter = () => {
   const [unit, setUnit] = useState('seconds'); // seconds | milliseconds
   const [timezone, setTimezone] = useState('local'); // local | utc
 
+  const normalizeTimezone = (value) => {
+    if (value === 'Asia/Mumbai') {
+      return 'Asia/Kolkata';
+    }
+    return value;
+  };
+
   // 获取实际使用的时区字符串
   const getActualTimezone = () => {
     if (timezone === 'local') {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return normalizeTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
     }
-    return timezone;
+    return normalizeTimezone(timezone);
   };
 
   // 格式化日期字符串 (带时区处理)
