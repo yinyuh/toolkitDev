@@ -311,6 +311,30 @@ body {
   color: white;
 }
 
+.bg-div-theme select,
+.bg-div-theme option,
+.bg-div-theme optgroup,
+.bg-theme-surface select,
+.bg-theme-surface option,
+.bg-theme-surface optgroup,
+.bg-theme-primary select,
+.bg-theme-primary option,
+.bg-theme-primary optgroup,
+select.bg-div-theme,
+select option,
+select optgroup {
+  background-color: var(--div-bg);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] select {
+  color-scheme: dark;
+}
+
+[data-theme="light"] select {
+  color-scheme: light;
+}
+
 .theme-toggle-icon {
   transform: translateZ(0);
   will-change: transform, opacity;
