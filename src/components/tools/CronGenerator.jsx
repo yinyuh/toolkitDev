@@ -292,6 +292,10 @@ const CronGenerator = () => {
   }));
 
   const parseExpressionToState = (expr, type = expressionType) => {
+    if (typeof expr !== 'string' || !expr.trim()) {
+      return;
+    }
+
     const targetType = CRON_TYPES[type];
     const parts = expr.trim().split(/\s+/);
 
@@ -415,8 +419,14 @@ const CronGenerator = () => {
   };
 
   const applyPreset = (preset) => {
-    setExpression(preset.expression);
-    parseExpressionToState(preset.expression, expressionType);
+    const nextExpression = preset?.expression ?? preset?.expr;
+
+    if (typeof nextExpression !== 'string' || !nextExpression.trim()) {
+      return;
+    }
+
+    setExpression(nextExpression);
+    parseExpressionToState(nextExpression, expressionType);
     setIsManualInput(false);
   };
 
