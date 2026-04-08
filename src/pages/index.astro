@@ -28,6 +28,61 @@ const categoryNameMap = {
   other: "其他"
 };
 
+const toolCardMetaMap = {
+  "audio-converter": { shortTitle: "音频转换工具", icon: "🎵" },
+  "bar-chart-generator": { shortTitle: "柱状图生成器", icon: "📊" },
+  "base-converter": { shortTitle: "进制转换器", icon: "🔢" },
+  "base64-encoder-decoder": { shortTitle: "Base64 编解码", icon: "🧾" },
+  "binary-code-calculator": { shortTitle: "原反补码计算", icon: "0/1" },
+  "bullshit-generator": { shortTitle: "文章生成器", icon: "📝" },
+  "countdown-timer": { shortTitle: "倒计时器", icon: "⏳" },
+  "cron-generator": { shortTitle: "Cron 生成器", icon: "🗓️" },
+  "favicon-generator": { shortTitle: "Favicon 生成器", icon: "🌐" },
+  "glitch-text-generator": { shortTitle: "故障文字生成", icon: "⚡" },
+  "handwriting-generator": { shortTitle: "手写文本生成", icon: "✍️" },
+  "html-to-markdown": { shortTitle: "HTML 转 Markdown", icon: "🔁" },
+  "image-background-remover": { shortTitle: "图片去背景", icon: "🪄" },
+  "image-compressor": { shortTitle: "图片压缩", icon: "🗜️" },
+  "image-cropper": { shortTitle: "图片裁剪", icon: "✂️" },
+  "image-stitcher": { shortTitle: "拼接长图", icon: "🧩" },
+  "image-watermark": { shortTitle: "图片水印", icon: "©" },
+  "ocr": { shortTitle: "文字识别 OCR", icon: "🔎" },
+  "password-generator": { shortTitle: "密码生成器", icon: "🔐" },
+  "pdf-to-image": { shortTitle: "PDF 转图片", icon: "📄" },
+  "periodic-table": { shortTitle: "元素周期表", icon: "⚗️" },
+  "pixel-art-converter": { shortTitle: "像素画转换", icon: "🟪" },
+  "qrcode-generator": { shortTitle: "二维码生成器", icon: "▦" },
+  "rainbow-text-generator": { shortTitle: "彩虹文字生成", icon: "🌈" },
+  "scrambled-text-generator": { shortTitle: "乱序文字生成", icon: "🔀" },
+  "svg-optimizer": { shortTitle: "SVG 优化工具", icon: "📐" },
+  "text-counter": { shortTitle: "文本计数器", icon: "🔤" },
+  "text-diff": { shortTitle: "文本对比工具", icon: "🆚" },
+  "text-formatter": { shortTitle: "文本格式化工具", icon: "🧹" },
+  "timestamp-converter": { shortTitle: "时间戳转换", icon: "🕒" },
+  "unit-converter": { shortTitle: "单位换算器", icon: "📏" },
+  "video-compressor": { shortTitle: "视频压缩工具", icon: "📦" },
+  "video-converter": { shortTitle: "视频格式转换", icon: "🎞️" },
+  "video-to-gif": { shortTitle: "视频转 GIF 工具", icon: "🎬" },
+  "volume-calculator": { shortTitle: "体积计算器", icon: "🧊" },
+  "wing-nickname-generator": { shortTitle: "翅膀昵称生成", icon: "🪽" }
+};
+
+const categoryIconMap = {
+  fullstack: "🛠️",
+  frontend: "🖥️",
+  backend: "🗄️",
+  tool: "🧰",
+  image: "🖼️",
+  text: "🔤",
+  video: "🎬",
+  audio: "🎵",
+  encoding: "🔁",
+  generator: "✨",
+  calculator: "🧮",
+  developer: "💻",
+  other: "🧩"
+};
+
 // 自动扫描tools目录下的页面文件
 const toolsDirectory = path.join(process.cwd(), 'src', 'pages', 'tools');
 let toolPages = [];
@@ -68,15 +123,18 @@ if (fs.existsSync(toolsDirectory)) {
       // 生成页面URL
       const fileNameWithoutExt = file.replace(/\.astro$|\.md$/, '');
       const url = `/tools/${fileNameWithoutExt}`;
+      const toolCardMeta = toolCardMetaMap[fileNameWithoutExt] || {};
       
       // 如果有title字段，才将页面添加到列表中
       if (metadata.title) {
         return {
           titulo: metadata.title,
+          shortTitle: toolCardMeta.shortTitle || metadata.title,
           descripcion: metadata.description || `这是${metadata.title}的详细页面`,
           url: url,
           tecnologias: metadata.technologies ? metadata.technologies.split(',').map(tech => tech.trim()) : [],
           categoria: metadata.category || 'tool',
+          icon: toolCardMeta.icon || categoryIconMap[metadata.category] || categoryIconMap.tool,
           isToolPage: true,
           order: metadata.order ? parseInt(metadata.order) : undefined
         };
@@ -93,6 +151,8 @@ const allProjects = [...proyectos, ...toolPages];
 // 为没有order字段的项目设置默认值
 const projectsWithOrder = allProjects.map((project, index) => ({
   ...project,
+  shortTitle: project.shortTitle || project.titulo,
+  icon: project.icon || categoryIconMap[project.categoria] || categoryIconMap.other,
   order: project.order || index + 1
 }));
 
