@@ -216,7 +216,7 @@ const PixelArtConverter = () => {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-left-color: #ffffff;

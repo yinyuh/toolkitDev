@@ -21,6 +21,14 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
+      include: [
+        "lucide-react",
+        "file-saver",
+        "date-fns",
+        "date-fns-tz",
+        "react-icons/hi",
+        "sonner"
+      ],
       exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
     },
   },
