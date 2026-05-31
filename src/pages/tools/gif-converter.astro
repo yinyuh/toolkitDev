@@ -1,0 +1,271 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GifConvertCard from '../../components/features/image-conversion/GifConvertCard';
+import AdSense from "../../components/ads/AdSense.astro";
+
+title: "在线动图转换工具 - GIF 合成 / 动图格式互转"
+description: "免费在线动图转换工具，支持多图合成 GIF、GIF 转 APNG 格式。自定义帧率、色彩深度与分辨率，Web Worker 后台处理不卡顿，浏览器本地操作保障隐私。"
+technologies: "omggif, Web Worker, Canvas API, React, TailwindCSS"
+category: "image"
+order: 17
+
+const pageTitle = "在线动图转换工具 - GIF 合成 / 动图格式互转";
+const pageDescription = "免费在线动图转换工具，支持多图合成 GIF、GIF 转 APNG 格式。自定义帧率、色彩深度与分辨率，Web Worker 后台处理不卡顿，浏览器本地操作保障隐私。";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "在线动图转换工具",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "description": pageDescription,
+      "url": "https://www.toolkit.ren/tools/gif-converter",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+      "featureList": [
+        "多张图片自动合成为 GIF 动图",
+        "GIF 转 APNG 保留全部帧序列",
+        "自定义帧率、色彩深度与分辨率",
+        "Web Worker 后台处理，页面不卡顿",
+        "浏览器本地处理，文件不会上传",
+        "免费使用，无需注册"
+      ],
+      "author": { "@type": "Organization", "name": "Toolkit.ren" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "如何将多张图片合成为 GIF？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "在工具中选择「多图→GIF」模式，上传多张图片文件，调整帧率、色彩和分辨率参数后点击开始转换即可。单张图片将生成静态 GIF，多张图片自动合成为动态 GIF。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "GIF 转 APNG 会丢失帧吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不会。转换过程完整保留原 GIF 的所有帧序列、播放速度和循环参数，输出为 PNG 协会标准的 APNG 格式动图。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "支持 GIF 转 WebP 动图吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "浏览器 Canvas API 目前不支持直接编码动态 WebP 图片。本工具支持将 GIF 转为 APNG 格式（现代浏览器广泛支持），如确需 WebP 动图请使用专业桌面软件。"
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="bg-theme-primary min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-7xl">
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-theme-primary mb-4">在线动图转换工具</h1>
+        <p class="text-xl text-theme-secondary max-w-3xl mx-auto">
+          多图合成 GIF 动图，GIF 转 APNG 格式，<span class="text-accent font-semibold">Web Worker 后台处理不卡顿</span>，本地操作更安全。
+        </p>
+      </div>
+
+      <div class="max-w-6xl mx-auto">
+        <GifConvertCard client:only="react" />
+      </div>
+
+      <div class="my-8 max-w-6xl mx-auto">
+        <AdSense />
+      </div>
+
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-theme-primary mt-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-3xl font-bold text-theme-primary mb-6 flex items-center gap-2">
+              <span class="text-accent">#</span> 为什么需要在线动图转换工具？
+            </h2>
+            <p class="text-lg leading-relaxed text-theme-secondary">
+              表情包制作、产品演示动图、教程步骤展示——这些场景都离不开 GIF 动图。但 GIF 格式诞生于 1987 年，仅支持 256 色，文件体积在同等画质下远大于现代动图格式。越来越多的平台和工具开始支持 APNG 等新一代动图格式。
+            </p>
+            <p class="text-lg leading-relaxed text-theme-secondary mt-4">
+              <strong>Toolkit.ren 在线动图转换工具</strong> 提供双向转换能力：将多张图片自动合成为动态 GIF（自定义帧率、色彩、分辨率），以及将 GIF 无损转换为更高效的 APNG 格式。所有处理在浏览器本地完成，并通过 Web Worker 在后台线程执行，不影响页面其他操作。
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">核心功能亮点</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔄</div>
+                <h3 class="text-xl font-semibold mb-2">双向转换覆盖</h3>
+                <p class="text-theme-secondary">多图合成 GIF 动图 + GIF 转 APNG 格式，满足动图制作与格式升级双向需求。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">⚙️</div>
+                <h3 class="text-xl font-semibold mb-2">精细参数控制</h3>
+                <p class="text-theme-secondary">自由调节帧率（1-30fps）、色彩深度（128/256色）、输出分辨率，精确控制输出效果。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🚀</div>
+                <h3 class="text-xl font-semibold mb-2">Web Worker 不卡顿</h3>
+                <p class="text-theme-secondary">GIF 编码在独立后台线程中执行，大文件处理时页面交互依然流畅，支持中途终止。</p>
+              </div>
+              <div class="bg-theme-surface p-6 rounded-xl border border-theme-border shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-3xl mb-3">🔒</div>
+                <h3 class="text-xl font-semibold mb-2">本地处理更隐私</h3>
+                <p class="text-theme-secondary">全部处理流程在浏览器端完成，图片数据不会离开你的设备，隐私安全有保障。</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-theme-surface p-8 rounded-2xl border border-theme-border">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">使用步骤</h2>
+            <ol class="space-y-6">
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">1</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">选择转换方向并上传文件</h3>
+                  <p class="text-theme-secondary">选择「多图→GIF」上传图片合成动图，或选择「GIF→APNG」上传 GIF 文件进行转换。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">2</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">调整转换参数</h3>
+                  <p class="text-theme-secondary">根据用途调整帧率、色彩深度和输出分辨率，高帧率更流畅但文件更大，低色彩数体积更小。</p>
+                </div>
+              </li>
+              <li class="flex gap-4">
+                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-accent text-white font-bold">3</span>
+                <div>
+                  <h3 class="text-lg font-semibold mb-1">开始转换并下载</h3>
+                  <p class="text-theme-secondary">点击转换按钮，后台线程自动处理。完成后即可下载 GIF 或 APNG 文件。</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <section class="prose dark:prose-invert max-w-none">
+            <h2 class="text-2xl font-bold text-theme-primary mb-6">动图格式对比</h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left border-collapse">
+                <thead class="bg-theme-surface">
+                  <tr>
+                    <th class="px-4 py-3 border border-theme-border font-bold">特性</th>
+                    <th class="px-4 py-3 border border-theme-border font-bold">GIF</th>
+                    <th class="px-4 py-3 border border-theme-border font-bold">APNG</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="px-4 py-3 border border-theme-border font-bold">色彩支持</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">最多 256 色</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">24-bit 真彩色 + 8-bit 透明度</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 border border-theme-border font-bold">压缩率</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">中等</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">较高（PNG 无损压缩）</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 border border-theme-border font-bold">浏览器支持</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">全面支持</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">Chrome/Edge/Firefox/Safari 均支持</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 border border-theme-border font-bold">适用场景</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">表情包、简单动图、兼容性优先</td>
+                    <td class="px-4 py-3 border border-theme-border text-theme-secondary">高质量动图、透明通道动图</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border">
+            <h3 class="text-xl font-bold text-theme-primary mb-4">常见问题 (FAQ)</h3>
+            <div class="space-y-4">
+              <details class="group">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>帧率设多少合适？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  表情包和简单动图推荐 5-10 fps；产品演示和教程推荐 10-15 fps。过高帧率会显著增大文件体积且肉眼不易察觉差异。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>128色和256色如何选择？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  256 色画质更高但文件较大，适合对色彩精度要求高的场景；128 色体积更小，适合表情包、图标等简单图像，肉眼看差异通常不明显。
+                </p>
+              </details>
+              <details class="group pt-4 border-t border-theme-border">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none text-theme-primary hover:text-accent">
+                  <span>转APNG后文件变大了？</span>
+                  <span class="transition group-open:rotate-180">
+                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p class="text-theme-secondary mt-3 text-sm leading-relaxed group-open:animate-fadeIn">
+                  APNG 支持真彩色（24-bit），色彩信息量远大于 GIF 的 256 色调色板，因此同尺寸下文件可能更大，但画质显著提升。如需减小体积可降低输出分辨率。
+                </p>
+              </details>
+            </div>
+          </div>
+
+          <div class="bg-theme-surface p-6 rounded-xl border border-theme-border sticky top-24">
+            <h3 class="text-lg font-bold text-theme-primary mb-4">相关工具</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="/tools/video-to-gif" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">视频转 GIF</div>
+                  <div class="text-xs text-theme-secondary">截取视频片段并导出高质量动图</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-format-converter" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片格式转换</div>
+                  <div class="text-xs text-theme-secondary">JPG/PNG/WebP/BMP 等格式互转</div>
+                </a>
+              </li>
+              <li>
+                <a href="/tools/image-to-pdf" class="block p-3 rounded-lg hover:bg-theme-background transition-colors group">
+                  <div class="font-medium text-theme-primary group-hover:text-accent">图片转 PDF</div>
+                  <div class="text-xs text-theme-secondary">批量图片合并为 PDF 文档</div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] summary ~ * { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-5px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</Layout>

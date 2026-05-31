@@ -27,7 +27,9 @@ export default defineConfig({
         "date-fns",
         "date-fns-tz",
         "react-icons/hi",
-        "sonner"
+        "sonner",
+        "jspdf",
+        "omggif"
       ],
       exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
     },
