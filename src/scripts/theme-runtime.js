@@ -39,7 +39,7 @@ export const themeBootstrapScript = `(function(){
       var stored = localStorage.getItem(THEME_KEY);
       if (stored) return normalize(stored);
     } catch (error) {}
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "light";
   };
 
   var notify = function(detail){
