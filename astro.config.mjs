@@ -29,7 +29,8 @@ export default defineConfig({
         "react-icons/hi",
         "sonner",
         "jspdf",
-        "omggif"
+        "omggif",
+        "image-in-browser"
       ],
       exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
     },

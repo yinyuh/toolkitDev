@@ -41,6 +41,7 @@
     "diff": "^8.0.3",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
+    "image-in-browser": "^3.5.2",
     "jsdom": "^28.0.0",
     "jspdf": "^4.2.1",
     "jszip": "^3.10.1",

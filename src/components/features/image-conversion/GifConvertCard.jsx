@@ -135,8 +135,8 @@ const GifConvertCard = () => {
               </p>
               <p className="text-xs">
                 {ffmpegLoading
-                  ? '正在加载动图转码引擎，加载完成后即可使用 WebP/APNG → GIF 转换功能'
-                  : '请确保使用最新版 Chrome/Edge 浏览器，并刷新页面后重试'}
+                  ? '正在加载视频转码引擎，加载完成后即可使用 MOV/MP4 → GIF 转换功能'
+                  : '处理引擎初始化失败，请刷新页面后重试'}
               </p>
             </div>
           </div>
@@ -243,8 +243,8 @@ const GifConvertCard = () => {
           </h4>
           <ul className="text-xs text-green-600 dark:text-green-400 space-y-1">
             <li>• <strong>多图合成 GIF</strong>：上传多张静态图片，自动合成为动态/静态 GIF（Canvas + Worker）</li>
-            <li>• <strong>WebP 动图转 GIF</strong>：WebP 动图通过 FFmpeg 逐帧解码，完整保留时序</li>
-            <li>• <strong>动图/视频转 GIF</strong>：WebP/APNG/AVIF/MOV 多帧格式走 FFmpeg 路径，保留全部帧</li>
+            <li>• <strong>WebP/APNG 动图转 GIF</strong>：纯 JS VP8/VP8L 字节级解码（image-in-browser），完整保留所有帧与时序</li>
+            <li>• <strong>视频转 GIF</strong>：MOV/MP4 短视频通过 FFmpeg 引擎转码，保留动态效果</li>
             <li>• <strong>GIF → APNG</strong>：完整保留帧序列、播放速度与循环参数</li>
           </ul>
         </div>
